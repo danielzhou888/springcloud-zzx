@@ -1,0 +1,75 @@
+server:
+  port: 8081
+spring:
+  profiles:
+    active: limit_route
+
+---
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: limit_route
+        uri: http://httpbin.org:80/get
+        predicates:
+        - After=2017-01-20T17:42:47.789-07:00[America/Denver]
+        filters:
+        - name: RequestRateLimiter
+          args:
+            key-resolver: '#{@hostAddrKeyResolver}'
+            redis-rate-limiter.replenishRate: 1
+            redis-rate-limiter.burstCapacity: 1
+  application:
+    name: gateway-limiter
+  redis:
+    host: 39.105.176.53
+    port: 6379
+    database: 0
+    password: 123456
+    jedis:
+      pool:
+        max-active: 100
+        max-idle: 10
+        min-idle: 10
+        max-wait: -1ms
+    timeout: 10000ms
+
+---
+spring:
+     cloud:
+       gateway:
+         routes:
+         - id: add_request_header_route
+           uri: http://httpbin.org:80/get
+           filters:
+           - AddRequestHeader=X-ZhouZhiXiang, bar
+           predicates:
+           - After=2019-04-07T07:00:00.456-11:00[America/Denver]
+     profiles: add_request_header_route
+
+---
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: rewritepath_route
+        uri: https://blog.csdn.net
+        predicates:
+        - Path=/zhouzhixiang/**
+        filters:
+        - RewritePath=/zhouzhixiang/(?<segment>.*), /$\{segment}
+  profiles: rewritepath_route
+
+---
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: elapse_route
+        uri: http://httpbin.org:80/get
+        filters:
+        - RequestTime=true
+        predicates:
+        - After=2017-01-20T17:42:47.789-07:00[America/Denver]
+  profiles: elapse_route
+

@@ -1,0 +1,35 @@
+#beta env
+spring:
+  redis:
+    database: 0
+    host: 39.105.176.53
+    port: 6379
+    password: 123456
+    jedis:
+      pool:
+        max-idle: 10
+        min-idle: 10
+        max-active: 100
+        max-wait: 100000ms
+    timeout: 50000ms
+#    lettuce:
+#      shutdown-timeout: 100000ms
+#      pool:
+#        max-wait: 100000ms
+#        max-idle: 10
+#        max-active: 100
+#        min-idle: 10
+
+logging:
+  level:
+    root: info
+
+server:
+  port: 8888
+  servlet:
+    context-path: /redis/
+
+
+
+
+

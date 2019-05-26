@@ -1,0 +1,25 @@
+package com.zhouzhixiang.serviceribbon.controller;
+
+import com.zhouzhixiang.serviceribbon.service.HelloService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @program: springcloud-zzx
+ * @description:
+ * @author: zhouzhixiang
+ * @create: 2019-03-25 10:42
+ */
+@RestController
+public class HelloController {
+
+    @Autowired
+    private HelloService helloService;
+
+    @GetMapping(value = "/hi")
+    public String hi(@RequestParam String name) {
+        return helloService.hiService(name);
+    }
+}
