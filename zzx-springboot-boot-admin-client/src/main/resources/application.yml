@@ -1,0 +1,54 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: boot-admin-client
+  boot:
+    admin:
+      client:
+        url: http://localhost:8080        # 要注册的server端的url地址，如果要同时在多个server端口注册，则用逗号分隔各个server端的url地址
+        enabled: true                     # 是否启用SpringBootAdmin客户端，默认为true
+        api-path: instances               # server端获取client信息的路径，默认情况下server通过访问/instances请求来获取到client端信息。
+                                          #（client端向server端注册，注册成功后server端会给该client创建一个唯一的clientID值。
+                                          # 当server端需要获取client的信息，比如health信息时，server端会发送http://111.11.11.1:8080/instances/clientID/actuator/health即可，
+                                          # 这里的http://111.11.11.1:8080是client所在服务器的IP地址，instances就是该属性的值）
+        username: zhouzhixiang            # 如果server端需要进行认证时，该属性用于配置用户名
+        password: 123456                  # 如果server端需要进行认证时，该属性用于配置密码
+        period: 10000ms                   # 注册时间间隔，单位是毫秒；默认值是10秒钟注册一次。（client通过持续不断地向server端进行注册来保持client端与server端的连接）
+        connect-timeout: 5000ms           # 注册连接超时时间，单位是毫秒，默认值是5秒。当client向server进行注册时，如果5秒钟没有注册完成则认为本次注册失败；
+        read-timeout: 5000ms              # 注册读取超时时间，单位是毫秒，默认值是5秒
+        auto-deregistration: null         # 是否开启自动注销，默认值是null。如果服务端运行在云平台，默认值是true；
+        auto-registration: true           # 是否开启自动注册，默认值是true
+        register-once: true               # 默认值为true。如果值为true的话，client只会在一个server端进行注册（按照spring.boot.admin.client.url中设置的server的顺序）。
+                                          # 如果该server端宕机，会自动在下一个server端进行注册。
+                                          # 如果该属性值为false，则会在所有的server端进行注册。
+#        instance:                        # 注册的management-url，如果可用的url不同的话可以重写该值
+#          management-url:                # 如果不配置该属性的话，默认该属性值与management-base-url 和 management.context-path两个属性值有关。
+                                          # 比如工程中该值为：managementUrl=http://192.168.200.165:8080/actuator，
+                                          # 其中http://192.168.200.165:8080为management-base-url，/actuator是management.context-path（该属性值是spring actuator的属性值）
+        instance:
+          name: boot-admin-client         # 客户端工程的名字。默认值是配置的spring.application.name的值，如果没有配置该属性的话，默认值是spring-boot-application；
+          management-base-url: http://localhost:8081
+                                          # 用于计算management-url 的基本URL。该路径值在运行时进行获取并赋值给 base url。
+                                          # 如果不配置该属性值的话，默认该属性值与management.port, service-url 以及server.servlet-path有关。
+                                          # 比如工程中该值为http://192.168.200.165:8080，其中8080端口是配置的获取actuator信息的端口。
+                                          # 192.168.200.165是设置的service-url值，如果没有设置service-url的话，则为配置的server.servlet-path值（项目的启动路径）。
+          health-url: http://localhost:8081/actuator/health
+                                          # 注册的health-url地址，如果可用的url不同可以重写该值。
+                                          # 如果不配置该属性的话，默认该属性值与management-url 以及endpoints.health.id有关。
+                                          # 比如工程中该值为：healthUrl=http://192.168.200.165:8080/actuator/health，其中http://192.168.200.165:8080/actuator是management-url，health是endpoints.health.id。
+          service-base-url: http://localhost:8081
+                                          # 用于计算service-url 的基本URL。该路径值在运行时进行获取并赋值给 base url。
+                                          # 如果不配置该属性值的话，默认该属性值与hostname, server.port有关。
+                                          # 比如工程中该值为http://p-v-9:8080，其中8080端口是配置的server.port。p-v-9是client所在服务器的hostname。
+          service-url: http://localhost:8081/
+                                          # 注册的service-url值。如果不配置该属性值的话，基于 service-base-url 和 server.context-path进行赋值。
+                                          # 比如工程中为http://p-v-9:8080/,其中p-v-9是base-url，/是工程配置的 server.context-path值。
+                                          # 这里要注意的是，当server端与client端不在同一台服务器上的时候，要配置该属性的值。
+                                          # 如果不配置的话，server端就会根据默认的命名规则来配置该值，比如http://p-v-9:8080/，如果server使用这个值来获取client的各种性能信息的话是获取不到的
+          prefer-ip: false                # 是否使用注册的ip地址来取代上述各个url中hostname的值, 默认值是false
+                                          # 也就是说默认情况下上述各个url中会使用hostname的值，比如我的电脑的hostname为p-v-9
+                                          # 如果设置了server.address或者management.address的话ip地址就是该值
+                                          # 如果没有设置这两个属性的话ip地址值是InetAddress.getLocalHost()的值。
+          metadata: .*                    # 与该应用有关的元数据，以键值对的形式赋值
