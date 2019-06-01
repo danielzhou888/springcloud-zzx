@@ -52,3 +52,8 @@ spring:
                                           # 如果设置了server.address或者management.address的话ip地址就是该值
                                           # 如果没有设置这两个属性的话ip地址值是InetAddress.getLocalHost()的值。
           metadata: .*                    # 与该应用有关的元数据，以键值对的形式赋值
+management:
+  endpoints:
+    web:
+      exposure:
+        include: *                        # As with Spring Boot 2 most of the endpoints aren’t exposed via http by default, we expose all of them. For production you should carefully choose which endpoints to expose

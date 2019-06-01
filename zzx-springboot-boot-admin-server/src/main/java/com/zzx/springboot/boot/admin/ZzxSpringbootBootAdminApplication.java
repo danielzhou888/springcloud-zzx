@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 @SpringBootApplication
 @Configuration
-// @EnableAutoConfiguration
 @EnableAdminServer
 public class ZzxSpringbootBootAdminApplication {
 

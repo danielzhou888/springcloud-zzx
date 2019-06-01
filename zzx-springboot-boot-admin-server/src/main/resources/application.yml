@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: boot-admin-server
+  boot:
+    admin:
+      context-path: http://localhost:8080/boot-admin-server
+                                          # server端的访问路径，默认是/。默认情况下server的访问地址是http://**.**.**.**:**/,
+                                          # 这里**.**.**.**:**是server所在服务器的ip地址。我们的工程设置该值是springbootAdmin，那么工程的server端访问地址是http://111.11.11.1:8000/springbootAdmin;
+      monitor:
+        period: 10000ms                   # 更新client端状态的时间间隔，单位是毫秒，默认值是10秒钟
+        status-lifetime: 10000ms          # client端状态的生命周期，该生命周期内不会更新client状态。单位是毫秒，默认值是10秒钟
+        connect-timeout: 2000ms           # 查询client状态信息时的连接超时时间，单位是毫秒，默认是2秒（如果2秒内没有获取到client的状态信息，则认为连接已经断开）
+        read-timeout: 2000ms              # 查询client状态信息时的读取超时时间，单位是毫秒，默认是2秒（如果2秒内没有获取到client的状态信息，则认为读取失败）
+      metadata-keys-to-sanitize: .password$, .*secret$, .*key$, .$token$, .credentials., .*vcap_services$
+                                          # 要被过滤掉的元数据（当与正则表达式相匹配时，这些数据会在输出的json数据中过滤掉），默认值是".password$", ".*secret$", ".*key$", ".$token$", ".credentials.", ".*vcap_services$"；
+      probed-endpoints: health, env, metrics, httptrace:trace, threaddump:dump, jolokia, info, logfile, refresh, flyway, liquibase, heapdump, loggers, auditevents
+                                          # 要获取的client的端点信息，默认是"health", "env", "metrics", "httptrace:trace", "threaddump:dump", "jolokia", "info", "logfile", "refresh", "flyway", "liquibase", "heapdump", "loggers", "auditevents"；
+      instance-proxy:
+        ignored-headers: Cookie, Set-Cookie, Authorization
+                                          # 向client发起请求时不会被转发的headers信息，默认值是"Cookie", "Set-Cookie", "Authorization"
+      ui:
+        brand: <img src="assets/img/icon-spring-boot-admin.svg"><span>Spring Boot Admin</span>
+                                          # 在导航栏中显示的brand值，默认是"<img src="assets/img/icon-spring-boot-admin.svg"><span>Spring Boot Admin</span>"
+        title: Spring Boot Admin          # 显示的页面标题，默认是"Spring Boot Admin"
