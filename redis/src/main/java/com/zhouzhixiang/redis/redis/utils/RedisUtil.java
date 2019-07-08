@@ -1,4 +1,4 @@
-package com.zhouzhixiang.redis.redis.chapter4;
+package com.zhouzhixiang.redis.redis.utils;
 
 import com.zhouzhixiang.redis.redis.chapter3.ProtoStuffSerializerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1420,5 +1420,20 @@ public class RedisUtil {
         });
         return result;
     }
+
+	/**
+	 * 开启事务
+	 */
+	public void multi() {
+    	redisTemplate.multi();
+	}
+
+	/**
+	 * 执行事务
+	 */
+	public void exec() {
+		redisTemplate.exec();
+	}
+
 
 }

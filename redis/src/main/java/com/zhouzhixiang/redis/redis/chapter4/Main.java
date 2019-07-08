@@ -1,8 +1,7 @@
 package com.zhouzhixiang.redis.redis.chapter4;
 
 import com.zhouzhixiang.redis.redis.ZhouzhixiangRedisApplication;
-import com.zhouzhixiang.redis.redis.chapter4.RedisUtil;
-import com.zhouzhixiang.redis.redis.chapter4.SecondKillService;
+import com.zhouzhixiang.redis.redis.utils.RedisUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -18,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
 /**
+ * 秒杀系统——分布式锁
  * @program: springcloud-zzx
  * @description:
  * @author: zhouzhixiang

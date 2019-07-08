@@ -1,5 +1,6 @@
 package com.zhouzhixiang.redis.redis.chapter4;
 
+import com.zhouzhixiang.redis.redis.utils.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
