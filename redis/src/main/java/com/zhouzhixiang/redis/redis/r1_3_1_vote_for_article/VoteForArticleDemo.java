@@ -1,9 +1,8 @@
-package com.zhouzhixiang.redis.redis.vote_for_article;
+package com.zhouzhixiang.redis.redis.r1_3_1_vote_for_article;
 
 import com.zhouzhixiang.redis.redis.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -88,6 +87,7 @@ public class VoteForArticleDemo {
         return articleList;
     }
 
+
     /**
      * 获取最新发布的文章集合
      * @param page
@@ -103,6 +103,66 @@ public class VoteForArticleDemo {
             articleList.add(articleMap);
         });
         return articleList;
+    }
+
+    /**
+     * 获取文章集合
+     * @param page
+     * @param order  需要查询的键，如"score:" 或 "time:" 或 "score:groupId"
+     * @return
+     */
+    public List<Map<Object, Object>> getArticles(int page, String order) {
+        int start = (page - 1) * PAGE_NUM;
+        int end = start + PAGE_NUM - 1;
+        Set<String> articles = redisUtil.zReverseRange(order, start, end);
+        List<Map<Object, Object>> articleList = new ArrayList<>();
+        articles.forEach(a -> {
+            Map<Object, Object> articleMap = redisUtil.hGetAll(a);
+            articleList.add(articleMap);
+        });
+        return articleList;
+    }
+
+    /**
+     * 添加文章到分组中，如可爱的动物组，政治组
+     * @param article
+     * @param groupIds
+     */
+    public void addArticleToGroups(String article, List<String> groupIds) {
+        groupIds.forEach(g -> {
+            String group = "group:" + g;
+            redisUtil.sAdd(group, article);
+        });
+    }
+
+    /**
+     * 从分组中移除文章，如可爱的动物组，政治组
+     * @param article
+     * @param groupIds
+     */
+    public void removeArticleFromGroups(String article, List<String> groupIds) {
+        groupIds.forEach(g -> {
+            String group = "group:" + g;
+            redisUtil.sRemove(group, article);
+        });
+    }
+
+    /**
+     * 对群组文章进行排序和分页 <br>
+     * 1. 通过ZINTERSTORE命令获取群组文章集合和分数文章有序集合交集，对其进行排序 <br>
+     * 2. 为了减少redis的工作量，对这个命令的计算结果缓存60s
+     * @param groupId
+     * @param page
+     * @param order
+     * @return
+     */
+    public List<Map<Object, Object>> orderGroupArticles(String groupId, int page, String order) {
+        String cacheKey = order + groupId;
+        if (!redisUtil.hasKey(cacheKey)) {
+            Long aLong = redisUtil.zIntersectAndStore("group:" + groupId, order, cacheKey);
+            Boolean expire = redisUtil.expire(cacheKey, 60, TimeUnit.SECONDS);
+        }
+        return getArticles(page, cacheKey);
     }
 
 }

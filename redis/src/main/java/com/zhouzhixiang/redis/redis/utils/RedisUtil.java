@@ -1435,5 +1435,4 @@ public class RedisUtil {
 		redisTemplate.exec();
 	}
 
-
 }

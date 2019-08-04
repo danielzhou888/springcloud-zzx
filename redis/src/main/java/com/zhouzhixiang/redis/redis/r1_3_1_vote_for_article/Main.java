@@ -1,10 +1,7 @@
-package com.zhouzhixiang.redis.redis.vote_for_article;
+package com.zhouzhixiang.redis.redis.r1_3_1_vote_for_article;
 
 import com.zhouzhixiang.redis.redis.ZhouzhixiangRedisApplication;
 import com.zhouzhixiang.redis.redis.utils.RedisUtil;
-import jdk.nashorn.internal.objects.annotations.Constructor;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Copyright All Rights Reserved
@@ -79,5 +73,29 @@ public class Main {
     public void testGetNewPublishedArticles() {
         List<Map<Object, Object>> newPublishedArticles = vfa.getNewPublishedArticles(1);
         System.out.println(newPublishedArticles);
+    }
+
+    @Test
+    public void testAddArticleToGroups() {
+        String[] groupArrays = {"1", "2"};
+        Set<String> articles = redisUtil.zRange("time:", 0, -1);
+        List<String> articlesList = new ArrayList<>(articles);
+        for (int i = 0; i < articlesList.size(); i++) {
+            if (i % 2 != 0) {
+                vfa.addArticleToGroups(articlesList.get(i), Arrays.asList(groupArrays));
+            }
+        }
+    }
+
+    @Test
+    public void testRemoveArticleFromGroups() {
+        String[] groupArrays = {"1"};
+        vfa.removeArticleFromGroups("article:161623e5-1326-4351-b317-d94a975f9491", Arrays.asList(groupArrays));
+    }
+
+    @Test
+    public void testOrderGroupArticles() {
+        List<Map<Object, Object>> articles = vfa.orderGroupArticles("1", 1, "time:");
+        System.out.println(articles);
     }
 }
