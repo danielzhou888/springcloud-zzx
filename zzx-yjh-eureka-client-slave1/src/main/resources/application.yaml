@@ -3,7 +3,7 @@ spring:
         name: fangjia-eureka-client-slave1
     profiles:
         active: slave1
-    security:
+#    security:
 #        user:
 #            name: eureka-client
 #            password: 123456

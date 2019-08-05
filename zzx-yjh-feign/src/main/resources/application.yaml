@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: fangjia-feign
+
+server:
+  port: 8765
+eureka:
+  instance:
+    hostname: ${spring.application.name}
+  client:
+    service-url:
+      defaultZone: http://fangjia-eureka-server:8761/eureka/
+
+feign:
+  hystrix:
+    enabled: true

@@ -1,0 +1,19 @@
+server:
+  port: 8766
+spring:
+  application:
+    name: fangjia-zuul
+eureka:
+  instance:
+    hostname: ${spring.application.name}
+  client:
+    service-url:
+      defaultZone: http://fangjia-eureka-server:8761/eureka/
+zuul:
+  routes:
+    ribbon-api:
+      path: /ribbon-api/**
+      serviceId: fangjia-ribbon
+    feign-api:
+      path: /feign-api/**
+      serviceId: fangjia-feign

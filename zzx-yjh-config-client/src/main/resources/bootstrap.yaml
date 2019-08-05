@@ -1,0 +1,14 @@
+#server:
+#  port: 8768
+#spring:
+#  application:
+#    name: fangjia-config-client
+#  profiles:
+#    active: dev
+#  cloud:
+#    config:
+#      label: master
+#      username:
+#      password:
+#      profile: dev
+#      uri: http://fangjia-config-server:8767
