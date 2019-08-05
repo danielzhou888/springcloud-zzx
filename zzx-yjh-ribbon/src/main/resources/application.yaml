@@ -1,0 +1,22 @@
+spring:
+    application:
+        name: fangjia-ribbon
+    profiles:
+        active: ribbon
+    security:
+#        user:
+#            name: eureka-client
+#            password: 123456
+eureka:
+    instance:
+        hostname: ${spring.application.name}
+        status-page-url: http://${spring.application.name}:${server.port}/swagger-ui.html
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"
+            cors:
+                allowed-origins: "*"
+                allowed-methods: "*"

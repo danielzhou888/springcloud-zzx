@@ -1,0 +1,6 @@
+server:
+  port: 8763
+eureka:
+  client:
+    service-url:
+      defaultZone: http://fangjia-eureka-server:8761/eureka/
