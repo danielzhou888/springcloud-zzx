@@ -1,14 +1,17 @@
-#server:
-#  port: 8768
-#spring:
-#  application:
-#    name: fangjia-config-client
-#  profiles:
-#    active: dev
-#  cloud:
-#    config:
-#      label: master
-#      username:
-#      password:
-#      profile: dev
+server:
+  port: 8768
+spring:
+  application:
+    name: fangjia-config-client
+  cloud:
+    config:
+      label: master
+      profile: dev
 #      uri: http://fangjia-config-server:8767
+      discovery:
+        enabled: true
+        service-id: FANGJIA-CONFIG-SERVER
+eureka:
+  client:
+    service-url:
+      defaultZone: http://fangjia-eureka-server:8761/eureka/
