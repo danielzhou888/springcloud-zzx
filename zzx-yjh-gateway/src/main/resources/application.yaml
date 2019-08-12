@@ -1,0 +1,26 @@
+server:
+  port: 8789
+spring:
+  application:
+    name: fangjia-gateway
+  profiles:
+    active: after_route
+
+---
+#spring:
+#  cloud:
+#    gateway:
+#      routes:
+#      - id: after_route
+#        uri: http://www.baidu.com
+#        predicates:
+#        - After=2019-08-11T23:33:36+08:00[Asia/Shanghai]
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: after_route
+#        uri: http://localhost:8777/user/getUserInfoByUserId?userId=12
+        uri: http://www.baidu.com
+        predicates:
+        - After=2019-08-11T23:37:39+08:00[Asia/Shanghai]
