@@ -1,0 +1,24 @@
+server:
+  port: 8790
+spring:
+  application:
+    name: fangjia-turbine
+eureka:
+  client:
+    service-url:
+      defaultZone: http://fangjia-eureka-server:8761/eureka/
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      cors:
+        allowed-origins: '*'
+        allowed-methods: '*'
+turbine:
+  app-config: fangjia-user, fangjia-order
+  aggregator:
+    cluster-config: default
+  cluster-name-expression: new String("default")
+  combine-host-port: true
+  instanceUrlSuffix: /hystrix.stream

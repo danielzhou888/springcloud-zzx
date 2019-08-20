@@ -1,0 +1,20 @@
+server:
+  port: 8767
+spring:
+  application:
+    name: fangjia-config-server
+  cloud:
+    config:
+      server:
+        git:
+#          uri: https://github.com/forezp/SpringcloudConfig/
+          uri: https://github.com/danielzhou888/springcloud-config/
+          username:
+          passphrase:
+#          search-paths: resources.prod
+      label: master
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://fangjia-eureka-server:8761/eureka/

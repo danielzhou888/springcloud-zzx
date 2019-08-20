@@ -1,0 +1,22 @@
+spring:
+    application:
+        name: fangjia-eureka-client-slave2
+    profiles:
+        active: slave2
+    security:
+#        user:
+#            name: eureka-client
+#            password: 123456
+eureka:
+    instance:
+        hostname: fangjia-eureka-client-slave2
+        status-page-url: http://${eureka.instance.hostname}:${server.port}/swagger-ui.html
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"
+            cors:
+                allowed-origins: "*"
+                allowed-methods: "*"

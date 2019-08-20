@@ -1,5 +1,7 @@
 package com.zhouzhixiang.redis.redis.chapter4;
 
+import com.zhouzhixiang.redis.redis.utils.RedisUtil;
+
 /**
  * @program: 秒杀测试线程类
  * @description:
