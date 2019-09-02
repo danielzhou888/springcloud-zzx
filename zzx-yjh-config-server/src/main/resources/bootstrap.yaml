@@ -13,6 +13,7 @@ spring:
           passphrase:
 #          search-paths: resources.prod
       label: master
+
 eureka:
   client:
     service-url:

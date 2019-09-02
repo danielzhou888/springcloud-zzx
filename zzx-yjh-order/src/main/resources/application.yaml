@@ -1,0 +1,16 @@
+server:
+  port: 8778
+spring:
+  application:
+    name: fangjia-order
+  zipkin:
+    base-url: http://fangjia-zipkin:9411
+eureka:
+  instance:
+    hostname: fangjia-order
+  client:
+    service-url:
+      defaultZone: http://fangjia-eureka-server:8761/eureka
+feign:
+  hystrix:
+    enabled: true

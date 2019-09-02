@@ -2,7 +2,7 @@ server:
   port: 8768
 spring:
   application:
-    name: fangjia-config-client
+    name: fangjia-config-client1
   cloud:
     config:
       label: master
@@ -11,7 +11,21 @@ spring:
       discovery:
         enabled: true
         service-id: FANGJIA-CONFIG-SERVER
+    bus:
+      enabled: true
+      trace:
+        enabled: true
+  rabbitmq:
+    host: 39.105.176.53
+    username: zhouzhixiang
+    password: 123456
+    port: 5672
 eureka:
   client:
     service-url:
       defaultZone: http://fangjia-eureka-server:8761/eureka/
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
