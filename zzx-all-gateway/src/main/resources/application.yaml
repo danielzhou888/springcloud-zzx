@@ -1,0 +1,44 @@
+server:
+  port: 8889
+spring:
+  application:
+    name: all-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # 是否与服务发现组件进行结合，通过 serviceId 转发到具体的服务实例。默认为false，设为true便开启通过服务中心的自动根据 serviceId 创建路由的功能。
+      routes:
+        # 认证中心
+        - id: zzx-auth
+          uri: lb://zzx-auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/zzx
+        # 代码生成
+        - id: zzx-gen
+          uri: lb://zzx-gen
+          predicates:
+            - Path=/gen/**
+          filters:
+            - StripPrefix=1
+        # 系统服务
+        - id : zzx-system
+          uri: lb://zzx-system
+          predicates:
+            - Path=/system/**
+          filters:
+            # 限流配置
+            - StripPrefix=1
+            - name: RequestRateLimiter
+              args:
+                key-resolver: '#{@remoteAddrKeyResolver}'  # 使用名为remoteAddKeyResolver的限流配置配置类，此限流方式采用的是令牌桶算法的限流方式
+                redis-rate-limiter.replenishRate: 10       # 令牌桶每秒填充平均速率。
+                redis-rate-limiter.burstCapacity: 20       # 令牌桶的总容量
+            # 降级
+            - name: Hystirx
+              args:
+                name: HystrixCommand
+                fallbackUri: forward:/fallback
