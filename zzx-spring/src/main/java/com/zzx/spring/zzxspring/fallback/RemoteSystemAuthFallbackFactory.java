@@ -1,6 +1,6 @@
 package com.zzx.spring.zzxspring.fallback;
 
-import com.zzx.spring.zzxspring.feign.RemoteSystemAuth;
+import com.zzx.spring.zzxspring.feign.RemoteSystemAuthFeign;
 import feign.hystrix.FallbackFactory;
 
 import java.util.Set;
@@ -11,10 +11,10 @@ import java.util.Set;
  *
  * @author Daniel Zhou / zzx
  **/
-public class RemoteSystemAuthFallbackFactory implements FallbackFactory<RemoteSystemAuth> {
+public class RemoteSystemAuthFallbackFactory implements FallbackFactory<RemoteSystemAuthFeign> {
     @Override
-    public RemoteSystemAuth create(Throwable throwable) {
-        return new RemoteSystemAuth() {
+    public RemoteSystemAuthFeign create(Throwable throwable) {
+        return new RemoteSystemAuthFeign() {
             @Override
             public Set<String> selectAuthsByUserId(Long userId) {
                 return null;

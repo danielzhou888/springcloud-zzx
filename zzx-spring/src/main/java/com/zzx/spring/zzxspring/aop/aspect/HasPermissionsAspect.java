@@ -2,7 +2,7 @@ package com.zzx.spring.zzxspring.aop.aspect;
 
 import com.zzx.spring.zzxspring.aop.annotation.HasPermissions;
 import com.zzx.spring.zzxspring.exception.ForbiddenException;
-import com.zzx.spring.zzxspring.feign.RemoteSystemAuth;
+import com.zzx.spring.zzxspring.feign.RemoteSystemAuthFeign;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -28,7 +28,7 @@ import java.util.Optional;
 public class HasPermissionsAspect {
 
     @Autowired
-    private RemoteSystemAuth remoteSystemAuth;
+    private RemoteSystemAuthFeign remoteSystemAuthFeign;
 
     @Around("@annotation(com.zzx.spring.zzxspring.aop.annotation.HasPermissions)")
     public Object around(ProceedingJoinPoint point) throws Throwable {
@@ -56,7 +56,7 @@ public class HasPermissionsAspect {
             if (userId == 1L) {
                 return true;
             }
-            return remoteSystemAuth.selectAuthsByUserId(userId).stream().anyMatch(auth::equals);
+            return remoteSystemAuthFeign.selectAuthsByUserId(userId).stream().anyMatch(auth::equals);
         }
         return false;
     }

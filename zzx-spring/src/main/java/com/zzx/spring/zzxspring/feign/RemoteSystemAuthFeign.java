@@ -14,7 +14,7 @@ import java.util.Set;
  * @author Daniel Zhou / zzx
  **/
 @FeignClient(value = "zzx-system", fallback = RemoteSystemAuthFallbackFactory.class)
-public interface RemoteSystemAuth {
+public interface RemoteSystemAuthFeign {
 
     @GetMapping("/system/auth/{userId}")
     Set<String> selectAuthsByUserId(@PathVariable("userId") Long userId);
