@@ -17,7 +17,7 @@ import java.util.stream.Collector;
 
 /**
  * <p>Copyright: All Rights Reserved</p>
- * <p>Company: 创盛视联数码科技（北京）有限公司   https://www.bokecc.com/ </p>
+ * <p>Company: 叮当快药科技集团有限公司 </p>
  * <p>Description:  </p>
  */
 public class ListAndMap {

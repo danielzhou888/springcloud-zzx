@@ -11,7 +11,5 @@ import org.springframework.context.ApplicationContextAware;
  */
 public class Main {
     public static void main(String[] args) {
-        ApplicationContext ap = new ApplicationContextAware();
-        ap.getResource()
     }
 }

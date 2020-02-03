@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  * 网页缓存：使用redis缓存来减少载入不常改变页面所需的时间
  * @Copyright All Rights Reserved
- * @Company 创盛视联数码科技（北京）有限公司   https://www.bokecc.com/
+ * @Company 叮当快药科技集团有限公司
  * @Author Daniel Zhou / zzx
  * @Date 2019-07-14 18:58
  **/

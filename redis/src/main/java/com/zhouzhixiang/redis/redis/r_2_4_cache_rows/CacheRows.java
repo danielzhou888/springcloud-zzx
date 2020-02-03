@@ -14,7 +14,7 @@ import java.util.Set;
  * 1. 促销活动，用户非常多的情况下，建议每隔几秒更新一次数据行缓存；<br>
  * 2. 并发不高，商品显示缺货可以接受，建议每隔一分钟更新一次数据行缓存
  * @Copyright All Rights Reserved
- * @Company 创盛视联数码科技（北京）有限公司   https://www.bokecc.com/
+ * @Company 叮当快药科技集团有限公司
  * @Author Daniel Zhou / zzx
  * @Date 2019-07-14 21:38
  **/

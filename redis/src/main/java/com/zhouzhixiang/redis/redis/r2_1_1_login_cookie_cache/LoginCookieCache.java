@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 /**
  * 登录和Cookie缓存
  * @Copyright All Rights Reserved
- * @Company 创盛视联数码科技（北京）有限公司   https://www.bokecc.com/
+ * @Company 叮当快药科技集团有限公司
  * @Author Daniel Zhou / zzx
  * @Date 2019-07-09 22:58
  **/

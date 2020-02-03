@@ -8,7 +8,7 @@ package com.zzx.geektime.concurrency.chapter1;
  *     细粒度锁：通过使用两把不同的锁，可使取款和修改密码并行，提升性能
  * </p>
  * @Copyright All Rights Reserved
- * @Company 创盛视联数码科技（北京）有限公司   https://www.bokecc.com/
+ * @Company 叮当快药科技集团有限公司
  * @Author Zhou / zzx
  * @Date 2019-05-31 22:54
  **/

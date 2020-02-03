@@ -6,7 +6,7 @@ import java.io.StringWriter;
 
 /**
  * @Copyright All Rights Reserved
- * @Company 创盛视联数码科技（北京）有限公司   https://www.bokecc.com/
+ * @Company 叮当快药科技集团有限公司
  * @Author Zhou / zzx
  * @Date 2019-05-25 16:42
  **/

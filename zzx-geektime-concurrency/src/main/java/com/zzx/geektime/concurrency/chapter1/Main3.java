@@ -11,7 +11,7 @@ import java.util.List;
  *     用"通知等待"机制优化循环等待
  * </p>
  * @Copyright All Rights Reserved
- * @Company 创盛视联数码科技（北京）有限公司   https://www.bokecc.com/
+ * @Company 叮当快药科技集团有限公司
  * @Author Zhou / zzx
  * @Date 2019-06-01 15:45
  **/

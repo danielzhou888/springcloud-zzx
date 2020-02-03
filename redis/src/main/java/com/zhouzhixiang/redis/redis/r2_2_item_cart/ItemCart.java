@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 1. 程序需要解析和验证cookie，保证cookie格式正确，并且包含的商品都是真正可购买的商品<br>
  * 2. 浏览器每次发送请求都会连着cookie一起发送，如果cookie体积较大，那么请求发送和处理速度可能会降低
  * @Copyright All Rights Reserved
- * @Company 创盛视联数码科技（北京）有限公司   https://www.bokecc.com/
+ * @Company 叮当快药科技集团有限公司
  * @Author Daniel Zhou / zzx
  * @Date 2019-07-14 15:19
  **/
