@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzx.tools.example.TestMapper" >
+  <resultMap id="BaseResultMap" type="com.zzx.tools.example.TestEntity" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="GB_NO" property="gbNo" jdbcType="VARCHAR" />
+    <result column="GB_NAME" property="gbName" jdbcType="VARCHAR" />
+    <result column="GB_TYPE" property="gbType" jdbcType="VARCHAR" />
+    <result column="ICD10_NO" property="icd10No" jdbcType="VARCHAR" />
+    <result column="ICD10_NAME" property="icd10Name" jdbcType="VARCHAR" />
+    <result column="CREATED_AT" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+    <result column="CHANGED_AT" property="changedAt" jdbcType="TIMESTAMP" />
+    <result column="CHANGED_BY" property="changedBy" jdbcType="VARCHAR" />
+    <result column="ICD10_HELP_NO" property="icd10HelpNo" jdbcType="VARCHAR" />
+    <result column="VERSION" property="version" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+  </resultMap>
+  <resultMap id="resultMap" type="com.zzx.tools.example.TestEntity">
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="GB_NO" property="gbNo" jdbcType="VARCHAR" />
+    <result column="GB_NAME" property="gbName" jdbcType="VARCHAR" />
+    <result column="GB_TYPE" property="gbType" jdbcType="VARCHAR" />
+    <result column="ICD10_NO" property="icd10No" jdbcType="VARCHAR" />
+    <result column="ICD10_NAME" property="icd10Name" jdbcType="VARCHAR" />
+    <result column="CREATED_AT" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+    <result column="CHANGED_AT" property="changedAt" jdbcType="TIMESTAMP" />
+    <result column="CHANGED_BY" property="changedBy" jdbcType="VARCHAR" />
+    <result column="ICD10_HELP_NO" property="icd10HelpNo" jdbcType="VARCHAR" />
+    <result column="VERSION" property="version" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+
+  <sql id="Base_Column_List" >
+    ID, GB_NO, GB_NAME, GB_TYPE, ICD10_NO, ICD10_NAME, CREATED_AT, CREATED_BY, CHANGED_AT, CHANGED_BY, VERSION, STATUS, ICD10_HELP_NO
+  </sql>
+
+  <sql id="Base_Column_Value" >
+    #{id,jdbcType=DECIMAL}, #{gbNo,jdbcType=VARCHAR}, #{gbName,jdbcType=VARCHAR}, #{gbType,jdbcType=VARCHAR}, #{icd10No,jdbcType=VARCHAR},
+    #{icd10Name,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=VARCHAR}, #{changedAt,jdbcType=TIMESTAMP}, #{changedBy,jdbcType=VARCHAR},
+    #{version,jdbcType=VARCHAR}, #{status,jdbcType=DECIMAL}, #{icd10HelpNo,jdbcType=VARCHAR}
+  </sql>
+
+  <sql id="TableName">
+    P_GB
+  </sql>
+
+  <select id="queryByIds" resultMap="resultMap">
+  	select <include refid="Base_Column_List"/> from <include refid="TableName"/> where id in(${ids})
+  </select>
+
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zzx.tools.example.TestExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from <include refid="TableName"/>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Short" >
+    select 
+    <include refid="Base_Column_List" />
+    from <include refid="TableName"/>
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short" >
+    delete from <include refid="TableName"/>
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+
+  <delete id="deleteByExample" parameterType="com.zzx.tools.example.TestExample" >
+    delete from <include refid="TableName"/>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+
+  <insert id="insert" parameterType="com.zzx.tools.example.TestEntity" >
+    insert into <include refid="TableName"/>
+    (<include refid="Base_Column_List"/>)
+    values
+    (<include refid="Base_Column_Value"/>)
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.zzx.tools.example.TestEntity" >
+    insert into <include refid="TableName"/>
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="gbNo != null and gbNo != ''" >
+        GB_NO,
+      </if>
+      <if test="gbName != null and gbName != ''" >
+        GB_NAME,
+      </if>
+      <if test="gbType != null and gbType != ''" >
+        GB_TYPE,
+      </if>
+      <if test="icd10No != null and icd10No != ''" >
+        ICD10_NO,
+      </if>
+      <if test="icd10Name != null and icd10Name != ''" >
+        ICD10_NAME,
+      </if>
+      <if test="createdAt != null" >
+        CREATED_AT,
+      </if>
+      <if test="createdBy != null" >
+        CREATED_BY,
+      </if>
+      <if test="changedAt != null" >
+        CHANGED_AT,
+      </if>
+      <if test="changedBy != null" >
+        CHANGED_BY,
+      </if>
+      <if test="version != null" >
+        VERSION,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="icd10HelpNo != null and icd10HelpNo != ''" >
+        ICD10_HELP_NO,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="gbNo != null and gbNo != ''" >
+        #{gbNo,jdbcType=VARCHAR},
+      </if>
+      <if test="gbName != null and gbName != ''" >
+        #{gbName,jdbcType=VARCHAR},
+      </if>
+      <if test="gbType != null and gbType != ''" >
+        #{gbType,jdbcType=VARCHAR},
+      </if>
+      <if test="icd10No != null and icd10No != ''" >
+        #{icd10No,jdbcType=VARCHAR},
+      </if>
+      <if test="icd10Name != null and icd10Name != ''" >
+        #{icd10Name,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null" >
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null" >
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="changedAt != null" >
+        #{changedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changedBy != null" >
+        #{changedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="icd10HelpNo != null and icd10HelpNo != ''" >
+        #{icd10HelpNo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="countByExample" parameterType="com.zzx.tools.example.TestExample" resultType="java.lang.Integer" >
+    select count(*) from <include refid="TableName"/>
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+
+  <update id="updateByExampleSelective" parameterType="map" >
+    update <include refid="TableName"/>
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.gbNo != null and record.gbNo != ''" >
+        URL = #{record.gbNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gbName != null and record.gbName != ''" >
+        NAME = #{record.gbName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gbType != null and record.gbType != ''" >
+        NAME = #{record.gbType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.icd10No != null and record.icd10No != ''" >
+        NAME = #{record.icd10No,jdbcType=VARCHAR},
+      </if>
+      <if test="record.icd10Name != null and record.icd10Name != ''" >
+        NAME = #{record.icd10Name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createdAt != null" >
+        CREATED_AT = #{record.createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createdBy != null" >
+        CREATED_BY = #{record.createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.changedAt != null" >
+        CHANGED_AT = #{record.changedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.changedBy != null" >
+        CHANGED_BY = #{record.changedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null" >
+        VERSION = #{record.version,jdbcType=DECIMAL},
+      </if>
+      <if test="record.status != null" >
+        VERSION = #{record.status,jdbcType=DECIMAL},
+      </if>
+      <if test="record.icd10HelpNo != null and record.icd10HelpNo" >
+        VERSION = #{record.icd10HelpNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+
+  </update>
+
+  <update id="updateByExample" parameterType="map" >
+    update <include refid="TableName"/>
+    set ID = #{record.id,jdbcType=DECIMAL},
+      GB_NO = #{record.gbNo,jdbcType=VARCHAR},
+      GB_NAME = #{record.gbName,jdbcType=VARCHAR},
+      GB_TYPE = #{record.gbType,jdbcType=VARCHAR},
+      ICD10_NO = #{record.icd10No,jdbcType=VARCHAR},
+      ICD10_NAME = #{record.icd10Name,jdbcType=VARCHAR},
+      CREATED_AT = #{record.createdAt,jdbcType=TIMESTAMP},
+      CREATED_BY = #{record.createdBy,jdbcType=VARCHAR},
+      CHANGED_AT = #{record.changedAt,jdbcType=TIMESTAMP},
+      CHANGED_BY = #{record.changedBy,jdbcType=VARCHAR},
+      VERSION = #{record.version,jdbcType=DECIMAL},
+      STATUS = #{record.status,jdbcType=DECIMAL},
+      ICD10_HELP_NO = #{record.icd10HelpNo,jdbcType=VARCHAR}
+
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzx.tools.example.TestEntity" >
+    update <include refid="TableName"/>
+    <set >
+      <if test="gbNo != null and gbNo != ''" >
+        GB_NO = #{gbNo,jdbcType=VARCHAR},
+      </if>
+      <if test="gbName != null and gbName != ''" >
+        GB_NAME = #{gbName,jdbcType=VARCHAR},
+      </if>
+      <if test="gbType != null and gbType != ''" >
+        GB_TYPE = #{gbType,jdbcType=VARCHAR},
+      </if>
+      <if test="icd10No != null and icd10No != ''" >
+        ICD10_NO = #{icd10No,jdbcType=VARCHAR},
+      </if>
+      <if test="icd10Name != null and icd10Name != ''" >
+        ICD10_NAME = #{icd10Name,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null" >
+        CREATED_AT = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null" >
+        CREATED_BY = #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="changedAt != null" >
+        CHANGED_AT = #{changedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changedBy != null" >
+        CHANGED_BY = #{changedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        VERSION = #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="icd10HelpNo != null and icd10HelpNo != ''" >
+        ICD10_HELP_NO = #{icd10HelpNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.zzx.tools.example.TestEntity" >
+    update <include refid="TableName"/>
+    set
+      GB_NO = #{gbNo,jdbcType=VARCHAR},
+      GB_NAME = #{gbName,jdbcType=VARCHAR},
+      GB_TYPE = #{gbType,jdbcType=VARCHAR},
+      ICD10_NO = #{icd10No,jdbcType=VARCHAR},
+      ICD10_NAME = #{icd10Namew,jdbcType=VARCHAR},
+      CREATED_AT = #{createdAt,jdbcType=TIMESTAMP},
+      CREATED_BY = #{createdBy,jdbcType=VARCHAR},
+      CHANGED_AT = #{changedAt,jdbcType=TIMESTAMP},
+      CHANGED_BY = #{changedBy,jdbcType=VARCHAR},
+      VERSION = #{version,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=DECIMAL},
+      ICD10_HELP_NO = #{icd10HelpNo,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>
