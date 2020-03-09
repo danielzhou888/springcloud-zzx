@@ -235,6 +235,134 @@
     </trim>
   </insert>
 
+  <insert id="batchInsertSelective" parameterType="java.util.List">
+    begin
+    <foreach collection="list" index="index" item="info" open="" separator=";" close="">
+      insert into c_suborder_info
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+        ID,VERSION,
+        <if test="info.orderId != null">
+          ORDER_ID ,
+        </if>
+        <if test="info.parentOrderId != null">
+          PARENT_ORDER_ID ,
+        </if>
+        <if test="info.phaseNum != null">
+          PHASE_NUM,
+        </if>
+        <if test="info.totalpay != null">
+          TOTALPAY,
+        </if>
+        <if test="info.createdAt != null" >
+          CREATED_AT,
+        </if>
+        <if test="info.createdBy != null" >
+          CREATED_BY,
+        </if>
+        <if test="info.changedAt != null" >
+          CHANGED_AT,
+        </if>
+        <if test="info.changedBy != null" >
+          CHANGED_BY,
+        </if>
+        <if test="info.status != null" >
+          status,
+        </if>
+        <if test="info.createTime != null" >
+          create_time,
+        </if>
+        <if test="info.receiveTime != null" >
+          receive_time,
+        </if>
+        <if test="info.eachQuantity != null" >
+          each_quantity,
+        </if>
+        <if test="info.voucherPay != null" >
+          voucher_pay,
+        </if>
+        <if test="info.discountPay != null" >
+          discount_pay,
+        </if>
+        <if test="info.totalPrice != null" >
+          total_price,
+        </if>
+        <if test="info.minusDiscountPay != null" >
+          minus_discount_pay,
+        </if>
+        <if test="info.deliverPay != null" >
+          deliver_pay,
+        </if>
+        <if test="info.userId != null" >
+          user_id,
+        </if>
+        <if test="info.acceptTime != null" >
+          accept_time
+        </if>
+      </trim>
+      <trim prefix="values (" suffix=")" suffixOverrides="," >
+        #{info.id,jdbcType=DECIMAL},1,
+        <if test="info.orderId != null">
+          #{info.orderId,jdbcType=DECIMAL},
+        </if>
+        <if test="info.parentOrderId != null">
+          #{info.parentOrderId,jdbcType=DECIMAL},
+        </if>
+        <if test="info.phaseNum != null">
+          #{info.phaseNum,jdbcType=DECIMAL},
+        </if>
+        <if test="info.totalpay != null">
+          #{info.totalpay,jdbcType=DECIMAL},
+        </if>
+        <if test="info.createdAt != null" >
+          #{info.createdAt,jdbcType=TIMESTAMP},
+        </if>
+        <if test="info.createdBy != null" >
+          #{info.createdBy,jdbcType=VARCHAR},
+        </if>
+        <if test="info.changedAt != null" >
+          #{info.changedAt,jdbcType=TIMESTAMP},
+        </if>
+        <if test="info.changedBy != null" >
+          #{info.changedBy,jdbcType=VARCHAR},
+        </if>
+        <if test="info.status != null" >
+          #{info.status,jdbcType=DECIMAL},
+        </if>
+        <if test="info.createTime != null" >
+          #{info.createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="info.receiveTime != null" >
+          #{info.receiveTime,jdbcType=VARCHAR},
+        </if>
+        <if test="info.eachQuantity != null" >
+          #{info.eachQuantity,jdbcType=DECIMAL},
+        </if>
+        <if test="info.voucherPay != null" >
+          #{info.voucherPay,jdbcType=DECIMAL},
+        </if>
+        <if test="info.discountPay != null" >
+          #{info.discountPay,jdbcType=DECIMAL},
+        </if>
+        <if test="info.totalPrice != null" >
+          #{info.totalPrice,jdbcType=DECIMAL},
+        </if>
+        <if test="info.minusDiscountPay != null" >
+          #{info.minusDiscountPay,jdbcType=DECIMAL},
+        </if>
+        <if test="info.deliverPay != null" >
+          #{info.deliverPay,jdbcType=DECIMAL},
+        </if>
+        <if test="info.userId != null" >
+          #{info.userId,jdbcType=DECIMAL}
+        </if>
+        <if test="info.acceptTime != null" >
+          #{acceptTime,jdbcType=TIMESTAMP}
+        </if>
+      </trim>
+    </foreach>
+    ;end;
+  </insert>
+
   <select id="countByExample" parameterType="com.zzx.tools.example.TestExample" resultType="java.lang.Integer" >
     select count(*) from <include refid="TableName"/>
     <if test="_parameter != null" >
