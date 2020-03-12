@@ -1,3 +1,7 @@
+DROP SCHEMA IF EXISTS im_bis;
+CREATE SCHEMA IF NOT EXISTS im_bis;
+use im_bis;
+
 /*
  Navicat Premium Data Transfer
 
@@ -22,10 +26,10 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `im_team_message`;
 CREATE TABLE `im_team_message` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` bigint(20) NOT NULL COMMENT '主键id',
   `team_msg_id` bigint(20) DEFAULT NULL COMMENT '群消息id(服务端生成消息id)',
   `team_client_msg_id` varchar(32) DEFAULT '' COMMENT '群消息id（客户端生成）',
-  `team_id` varchar(32) DEFAULT '' COMMENT '群组id（对应群组的accid）',
+  `team_id` bigint(20) DEFAULT NULL COMMENT '群组id（对应群组的accid）',
   `msg_type` varchar(15) DEFAULT 'TEXT' COMMENT '消息类型：TEXT-文本，PICTURE-图片，AUDIO-音频，VIDEO-视频，FILE-文件，GEO-地理位置，CUSTOM-自定义，TIP-提醒，ROBOT-AI机器人，NOTICATION-群通知，TEAM_INVITE-邀请入群，TEAM_INVITE_REJECT-拒绝邀请，CUSTOM_TEAM_MSG -群组自定义系统通知',
   `event_type` tinyint(4) DEFAULT '1' COMMENT '事件类型：1-会话类型消息（p2p消息、群聊消息、自定义系统通知、云信内置系统通知），2-登录事件，3-登出/离线事件，4-聊天室聊天消息，5-音视频时长、白板时长消息，6-音视频白板大小、下载地址消息，7-单聊消息撤回，8-群聊消息撤回，9-汇报主播、管理员进出聊天室事件消息，10-汇报专线电话通话结束回调抄送的消息，11-汇报短信回执抄送的消息，12-汇报短信上行消息，13-汇报用户进出音视频/白板房间的消息，14-汇报聊天室队列操作的事件消息，20-易盾异步反垃圾结果信息',
   `remind_type` tinyint(4) DEFAULT '0' COMMENT '提醒类型：0-普通消息，1-客服进入，2-客户进入，3-客服进入欢迎提醒，4-敏感词命中提醒消息',

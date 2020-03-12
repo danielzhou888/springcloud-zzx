@@ -26,8 +26,12 @@
         <mybatis-spring-boot>2.0.1</mybatis-spring-boot>
         <druid>1.1.16</druid>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <shardingsphere.version>4.0.0-RC1</shardingsphere.version>
+<!--        <shardingsphere.version>4.0.0-RC1</shardingsphere.version>-->
+        <shardingsphere.version>4.0.1</shardingsphere.version>
+<!--        <shardingsphere.version>4.0.0-RC3</shardingsphere.version>-->
+<!--        <shardingsphere.version>4.0.0-RC2</shardingsphere.version>-->
         <fastjson.version>1.2.38</fastjson.version>
+        <mysql-connector-java.version>5.1.47</mysql-connector-java.version>
     </properties>
 
     <dependencies>
@@ -44,6 +48,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql-connector-java.version}</version>
         </dependency>
         <!--druid数据源-->
         <dependency>

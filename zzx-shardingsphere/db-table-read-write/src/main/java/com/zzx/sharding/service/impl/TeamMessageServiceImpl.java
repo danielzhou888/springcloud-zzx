@@ -7,9 +7,8 @@ import com.zzx.sharding.vo.ConversationMsgVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
@@ -17,8 +16,6 @@ import java.util.List;
  * @date: 2019-12-13
  * @company: 叮当快药科技集团有限公司
  **/
-@Component
-@Transactional
 @Service
 public class TeamMessageServiceImpl implements TeamMessageServiceApi {
 

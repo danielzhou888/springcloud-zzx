@@ -47,15 +47,12 @@ public class TeamMessageController {
 	}
 
 	@PostMapping("add")
-	public ServiceResponse add(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public ServiceResponse add(@RequestBody TeamMessage vo, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		ServiceResponse result = new ServiceResponse<>();
-		TeamMessage vo = new TeamMessage();
 		vo.setSendAt(new Date().getTime());
-		vo.setTeamId(1000);
+		vo.setTeamId(1000000);
 		vo.setTeamClientMsgId(UUID.randomUUID().toString());
-		//vo.setTeamMsgId(1234);
-		vo.setTeamMsgId(SnowIdUtils.uniqueLong());
-		//vo.setId(SnowIdUtils.uniqueLong());
+		vo.setTeamMsgId(Long.valueOf(UUID.randomUUID().toString()));
 		this.teamMessageServiceApi.insert(vo);
 		result.setCode(ResponseEnum.SUCCESS.getCode());
 		result.setMsg(ResponseEnum.SUCCESS.getName());
@@ -82,7 +79,7 @@ public class TeamMessageController {
 		for (int i = 0; i < 20; i++) {
 		    TeamMessage vo = new TeamMessage();
 			vo.setSendAt(new Date().getTime());
-			vo.setTeamId(1000);
+			vo.setTeamId(1001);
 			vo.setTeamClientMsgId(UUID.randomUUID().toString());
 			vo.setTeamMsgId(SnowIdUtils.uniqueLong());
 			vo.setId(SnowIdUtils.uniqueLong());

@@ -22,7 +22,7 @@ public class TeamMessage implements Serializable {
     /**
      * TeamMessage ID 主键, 自增
      */
-    private Long id;
+    private long id;
 
 
     /**
