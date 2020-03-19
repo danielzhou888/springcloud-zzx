@@ -68,6 +68,7 @@ public class SnowIdUtils {
             //localIp & MAX_MACHINE_ID最大不会超过1023,在左位移12位
             machineIdPart = (localIp & MAX_MACHINE_ID) << SEQUENCE_BIT;
         }
+
         /**
          * 获取雪花ID
          */
@@ -94,6 +95,7 @@ public class SnowIdUtils {
             //时间戳部分+机器标识部分+序列号部分
             return (currentStamp - START_TIMESTAMP) << TIMESTAMP_LEFT | machineIdPart | sequence;
         }
+
         /**
          * 阻塞到下一个毫秒，直到获得新的时间戳
          */
@@ -105,6 +107,7 @@ public class SnowIdUtils {
             }
             return mill;
         }
+
         /**
          * 返回以毫秒为单位的当前时间
          */
@@ -119,6 +122,7 @@ public class SnowIdUtils {
     public static long uniqueLong() {
         return SnowIdUtils.SnowFlake.SNOW_FLAKE.nextId();
     }
+
     /**
      * 获取String类型雪花ID
      */
@@ -141,7 +145,7 @@ public class SnowIdUtils {
             new Thread(() -> {
                 for (int s = 0; s < 2000; s++) {
                     long snowID = SnowIdUtils.uniqueLong();
-                    log.info("生成雪花ID={}",snowID);
+                    log.info("生成雪花ID={}", snowID);
                     Integer put = map.put(snowID, 1);
                     if (put != null) {
                         throw new RuntimeException("主键重复");

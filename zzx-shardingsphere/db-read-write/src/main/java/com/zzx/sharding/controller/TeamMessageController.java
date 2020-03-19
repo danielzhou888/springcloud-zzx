@@ -27,70 +27,70 @@ import java.util.UUID;
 @RequestMapping("teamMessage")
 public class TeamMessageController {
 
-	@Autowired
-	private TeamMessageServiceApi teamMessageServiceApi;
+    @Autowired
+    private TeamMessageServiceApi teamMessageServiceApi;
 
-	@GetMapping("list")
-	public PageResponse list(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		PageResponse<Page<TeamMessage>> result = new PageResponse<>();
-		Page<TeamMessage> page = new Page<>();
-		List<TeamMessage> promptLists = teamMessageServiceApi.selectAll();
-		result.setCode(ResponseEnum.SUCCESS.getCode());
-		result.setMsg(ResponseEnum.SUCCESS.getName());
-		page.setList(promptLists);
-		page.setTotalRow(promptLists.size());
-		page.setPageNumber(1);
-		page.setPageSize(1);
-		page.setTotalPage(1);
-		result.setData(page);
-		return result;
-	}
+    @GetMapping("list")
+    public PageResponse list(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        PageResponse<Page<TeamMessage>> result = new PageResponse<>();
+        Page<TeamMessage> page = new Page<>();
+        List<TeamMessage> promptLists = teamMessageServiceApi.selectAll();
+        result.setCode(ResponseEnum.SUCCESS.getCode());
+        result.setMsg(ResponseEnum.SUCCESS.getName());
+        page.setList(promptLists);
+        page.setTotalRow(promptLists.size());
+        page.setPageNumber(1);
+        page.setPageSize(1);
+        page.setTotalPage(1);
+        result.setData(page);
+        return result;
+    }
 
-	@PostMapping("add")
-	public ServiceResponse add(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		ServiceResponse result = new ServiceResponse<>();
-		TeamMessage vo = new TeamMessage();
-		vo.setSendAt(new Date().getTime());
-		vo.setTeamId(1000);
-		vo.setTeamClientMsgId(UUID.randomUUID().toString());
-		//vo.setTeamMsgId(1234);
-		vo.setTeamMsgId(SnowIdUtils.uniqueLong());
-		//vo.setId(SnowIdUtils.uniqueLong());
-		this.teamMessageServiceApi.insert(vo);
-		result.setCode(ResponseEnum.SUCCESS.getCode());
-		result.setMsg(ResponseEnum.SUCCESS.getName());
-		return result;
-	}
+    @PostMapping("add")
+    public ServiceResponse add(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ServiceResponse result = new ServiceResponse<>();
+        TeamMessage vo = new TeamMessage();
+        vo.setSendAt(new Date().getTime());
+        vo.setTeamId(1000);
+        vo.setTeamClientMsgId(UUID.randomUUID().toString());
+        //vo.setTeamMsgId(1234);
+        vo.setTeamMsgId(SnowIdUtils.uniqueLong());
+        //vo.setId(SnowIdUtils.uniqueLong());
+        this.teamMessageServiceApi.insert(vo);
+        result.setCode(ResponseEnum.SUCCESS.getCode());
+        result.setMsg(ResponseEnum.SUCCESS.getName());
+        return result;
+    }
 
-	@GetMapping("delete/{teamMsgId}")
-	public ServiceResponse delete(@PathVariable(value = "teamMsgId") long teamMsgId, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		ServiceResponse result = new ServiceResponse<>();
-		long success = teamMessageServiceApi.deleteById(teamMsgId);
-		if (success > 0) {
-			result.setCode(ResponseEnum.SUCCESS.getCode());
-			result.setMsg(ResponseEnum.SUCCESS.getName());
-		} else {
-			result.setCode(ResponseEnum.FAIL.getCode());
-			result.setMsg(ResponseEnum.FAIL.getName());
-		}
-		return result;
-	}
+    @GetMapping("delete/{teamMsgId}")
+    public ServiceResponse delete(@PathVariable(value = "teamMsgId") long teamMsgId, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ServiceResponse result = new ServiceResponse<>();
+        long success = teamMessageServiceApi.deleteById(teamMsgId);
+        if (success > 0) {
+            result.setCode(ResponseEnum.SUCCESS.getCode());
+            result.setMsg(ResponseEnum.SUCCESS.getName());
+        } else {
+            result.setCode(ResponseEnum.FAIL.getCode());
+            result.setMsg(ResponseEnum.FAIL.getName());
+        }
+        return result;
+    }
 
-	@PostMapping("batchAdd")
-	public ServiceResponse batchAdd(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		ServiceResponse result = new ServiceResponse<>();
-		for (int i = 0; i < 20; i++) {
-		    TeamMessage vo = new TeamMessage();
-			vo.setSendAt(new Date().getTime());
-			vo.setTeamId(1000);
-			vo.setTeamClientMsgId(UUID.randomUUID().toString());
-			vo.setTeamMsgId(SnowIdUtils.uniqueLong());
-			vo.setId(SnowIdUtils.uniqueLong());
-			vo.setText("消息内容-"+UUID.randomUUID());
-			this.teamMessageServiceApi.insert(vo);
-		}
-		result.setCode(ResponseEnum.SUCCESS.getCode());
-		result.setMsg(ResponseEnum.SUCCESS.getName());
-		return result;
-	}
+    @PostMapping("batchAdd")
+    public ServiceResponse batchAdd(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ServiceResponse result = new ServiceResponse<>();
+        for (int i = 0; i < 20; i++) {
+            TeamMessage vo = new TeamMessage();
+            vo.setSendAt(new Date().getTime());
+            vo.setTeamId(1000);
+            vo.setTeamClientMsgId(UUID.randomUUID().toString());
+            vo.setTeamMsgId(SnowIdUtils.uniqueLong());
+            vo.setId(SnowIdUtils.uniqueLong());
+            vo.setText("消息内容-" + UUID.randomUUID());
+            this.teamMessageServiceApi.insert(vo);
+        }
+        result.setCode(ResponseEnum.SUCCESS.getCode());
+        result.setMsg(ResponseEnum.SUCCESS.getName());
+        return result;
+    }
 }

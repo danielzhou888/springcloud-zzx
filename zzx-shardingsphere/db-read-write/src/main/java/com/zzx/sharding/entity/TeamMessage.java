@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
+ * @author zhouzhixiang
  * @desc：teammessage
  * @date：2019-12-13
- * @author zhouzhixiang
  */
 @Data
 @NoArgsConstructor
