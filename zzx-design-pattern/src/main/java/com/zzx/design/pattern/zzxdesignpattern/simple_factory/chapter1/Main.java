@@ -1,4 +1,4 @@
-package com.zzx.design.pattern.zzxdesignpattern.simple_factory;
+package com.zzx.design.pattern.zzxdesignpattern.simple_factory.chapter1;
 
 import org.junit.Test;
 
