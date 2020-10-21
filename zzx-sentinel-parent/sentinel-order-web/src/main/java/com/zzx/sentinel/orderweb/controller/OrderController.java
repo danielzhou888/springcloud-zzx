@@ -6,19 +6,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.zzx.sentinel.distribute.response.ServiceResponse;
 import com.zzx.sentinel.orderweb.utils.OrderUtils;
 import com.zzx.sentinel.wdc.api.WdcApi;
-import com.zzx.sentinel.wdc.exception.BusinessException;
 import com.zzx.sentinel.wdc.po.Distribute;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.math.BigDecimal;
-import java.util.Random;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -73,5 +67,80 @@ public class OrderController {
         return "testAToBOrToCOrToDFallbackLevel2 我是兜底逻辑";
     }
 
+    /**
+     * 流控测试
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/limitQpsTest")
+    @ResponseBody
+    public String limitQpsTest() throws Exception {
+        //log.info("limitQpsTest 流控测试正常逻辑");
+        //return "limitQpsTest 流控测试正常逻辑";
+        return wdcApi.limitQpsTest();
+    }
+
+    public String limitQpsTestBlockHandler(BlockException e) throws Exception {
+        log.info("limitQpsTest 流控测试流控逻辑 = e:"+e.getMessage());
+        return "limitQpsTest 流控测试流控逻辑 = e:"+e.getMessage();
+    }
+
+    /**
+     * 热点参数限流测试
+     * @return
+     * @throws Exception
+     */
+    @SentinelResource(value = "hotParameterLimitTestSentinel", blockHandler = "hotParameterLimitTestBlockHandler")
+    @RequestMapping("/hotParameterLimitTest")
+    @ResponseBody
+    public String hotParameterLimitTest(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("age") int age) throws Exception {
+        log.info("username: "+username+" password: "+password+" age: "+age);
+        return "username: "+username+" password: "+password+" age: "+age;
+    }
+
+    /**
+     * 热点参数降级回调函数
+     * @return
+     * @throws Exception
+     */
+    public String hotParameterLimitTestBlockHandler(String username, String password, int age, BlockException e) throws Exception {
+        log.info("username: "+username+" password: "+password+" age: "+age+" e: "+e.getClass().getSimpleName());
+        return "username: "+username+" password: "+password+" age: "+age+" e: "+e.getClass().getSimpleName();
+    }
+
+    /**
+     * 授权限流测试
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/authorizeBlockTest")
+    @ResponseBody
+    public String authorizeBlockTest() throws Exception {
+        return wdcApi.authorizeBlockTest();
+    }
+
+    /**
+     * 授权限流测试
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/authorizeBlockTest2")
+    @SentinelResource(value = "authorizeBlockTest2Sentinel", blockHandler = "authorizeBlockTest2BlockHandler")
+    @ResponseBody
+    public String authorizeBlockTest2() throws Exception {
+        String result = "authorizeBlockTest2 run";
+        log.info(result);
+        return result;
+    }
+
+    /**
+     * 授权限流回调函数
+     * @return
+     * @throws Exception
+     */
+    public String authorizeBlockTest2BlockHandler(BlockException e) throws Exception {
+        log.info("authorizeBlockTest2BlockHandler e: "+e.getClass().getSimpleName());
+        return "authorizeBlockTest2BlockHandler e: "+e.getClass().getSimpleName();
+    }
 
 }

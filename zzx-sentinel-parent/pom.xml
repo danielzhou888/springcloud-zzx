@@ -7,7 +7,8 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.1.5.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <!-- <relativePath/> lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>com.zzx.sentinel</groupId>
     <artifactId>zzx-sentinel-parent</artifactId>
@@ -18,9 +19,10 @@
 
     <modules>
         <module>sentinel-distribute-response-common</module>
+        <module>ddky-sentinel-boot-client</module>
         <module>sentinel-readproduct-all</module>
-        <module>sentinel-dcs-all</module>
         <module>sentinel-dfc-all</module>
+        <module>sentinel-dcs-all</module>
         <module>sentinel-dms-all</module>
         <module>sentinel-wdc-all</module>
         <module>sentinel-product-web</module>
@@ -42,6 +44,9 @@
         <guava.version>19.0</guava.version>
         <sentinel.version>1.8.0</sentinel.version>
         <spring-cloud-starter-alibaba-sentinel.version>2.1.0.RELEASE</spring-cloud-starter-alibaba-sentinel.version>
+        <fastjson.version>1.2.71</fastjson.version>
+
+        <ddky-sentinel-boot-client.version>0.0.1-SNAPSHOT</ddky-sentinel-boot-client.version>
     </properties>
 
     <dependencyManagement>
@@ -79,13 +84,29 @@
             </dependency>
 
             <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-parameter-flow-control</artifactId>
+                <version>${sentinel.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Sentinel Dashboard设置规则推送到统一的规则中心，此处客户端需实现监听规则中心实现实时获取变更 -->
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-datasource-apollo</artifactId>
+                <version>${sentinel.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
                 <version>${spring-cloud-starter-alibaba-sentinel.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
 
             <!--sentinel-->
 <!--            <dependency>-->
@@ -266,14 +287,13 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
+<!--            <resource>-->
+<!--                <directory>src/main/java</directory>·-->
+<!--                <includes>-->
+<!--                    <include>**/*.xml</include>-->
+<!--                </includes>-->
+<!--            </resource>-->
         </resources>
     </build>
-
 
 </project>

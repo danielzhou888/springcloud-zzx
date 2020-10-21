@@ -158,6 +158,35 @@ public class WdcServiceImpl implements WdcApi {
         return new ServiceResponse<>().success(distribute);
     }
 
+    @SentinelResource(value = "authorizeBlockTest", blockHandler = "authorizeBlockTestBlockHandler")
+    @Override
+    public String authorizeBlockTest() throws Exception {
+        logger.info("authorizeBlockTest run");
+        return "authorizeBlockTest run";
+    }
+
+    @SentinelResource(value = "limitQpsTest", blockHandler = "limitQpsTestBlockHandler")
+    @Override
+    public String limitQpsTest() throws Exception {
+        logger.info("Wdc limitQpsTest 正查逻辑");
+        return "Wdc limitQpsTest 正查逻辑";
+    }
+
+    public String limitQpsTestBlockHandler(BlockException e) throws Exception {
+        logger.info("wdc limitQpsTestBlockHandler 限流逻辑");
+        return "wdc limitQpsTestBlockHandler 限流逻辑";
+    }
+
+    /**
+     * 授权降级回调函数
+     * @return
+     * @throws Exception
+     */
+    public String authorizeBlockTestBlockHandler(BlockException e) throws Exception {
+        logger.info("authorizeBlockTestBlockHandler e: "+e.getClass().getSimpleName());
+        return "authorizeBlockTestBlockHandler run";
+    }
+
     private CalcuteRule localCalcuteDeliveryRule(String orderCode, Long userId) {
         logger.info("Wdc calcuteDeliveryRule 降级或异常了 执行 localCalcuteDeliveryRule 逻辑");
         return CalcuteRule.builder()
@@ -191,6 +220,7 @@ public class WdcServiceImpl implements WdcApi {
                 .receiverName("wdc降级了")
                 .id(new Random(1000).nextLong())
                 .build();
+        logger.info("Wdc distributeFallback 降级啦");
         return new ServiceResponse<>().downGrade(distribute);
     }
 }

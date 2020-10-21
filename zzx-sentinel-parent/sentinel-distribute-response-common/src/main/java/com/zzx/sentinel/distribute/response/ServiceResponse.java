@@ -71,4 +71,20 @@ public class ServiceResponse<T> implements Serializable {
         this.isSucces = false;
         return this;
     }
+
+    public static ServiceResponse fail(String msg) {
+        ServiceResponse result = new ServiceResponse();
+        result.setCode(1);
+        result.setMsg(msg);
+        result.setSucces(false);
+        return result;
+    }
+
+    public static ServiceResponse fail(int code, String msg) {
+        ServiceResponse result = new ServiceResponse();
+        result.setCode(1);
+        result.setMsg(msg);
+        result.setSucces(false);
+        return result;
+    }
 }

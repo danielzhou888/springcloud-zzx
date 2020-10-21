@@ -25,4 +25,8 @@ public interface WdcApi {
 	String testToCThrowsException() throws Exception;
 
     ServiceResponse<Distribute> distribute(String orderCode, Long userId) throws Exception, BusinessException;
+
+    String authorizeBlockTest() throws Exception;
+
+    String limitQpsTest() throws Exception;
 }

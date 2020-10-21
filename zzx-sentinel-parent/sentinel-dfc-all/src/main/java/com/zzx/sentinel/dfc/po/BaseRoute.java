@@ -1,6 +1,5 @@
 package com.zzx.sentinel.dfc.po;
 
-import com.sun.xml.internal.ws.developer.Serialization;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

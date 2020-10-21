@@ -6,12 +6,13 @@
         <groupId>com.zzx.sentinel</groupId>
         <artifactId>zzx-sentinel-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
+<!--        <relativePath>../</relativePath>-->
     </parent>
     <groupId>com.zzx.sentinel</groupId>
     <artifactId>sentinel-wdc-all</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>sentinel-wdc-all</name>
+    <packaging>jar</packaging>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -57,6 +58,12 @@
             <artifactId>sentinel-core</artifactId>
             <version>${sentinel.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-parameter-flow-control</artifactId>
+            <version>${sentinel.version}</version>
+        </dependency>
         <!-- dubbo 2.6.x以及以下版本用 -->
 <!--        <dependency>-->
 <!--            <groupId>com.alibaba.csp</groupId>-->
@@ -77,6 +84,12 @@
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-annotation-aspectj</artifactId>
+            <version>${sentinel.version}</version>
+        </dependency>
+        <!-- Sentinel Dashboard设置规则推送到统一的规则中心，此处客户端需实现监听规则中心实现实时获取变更 -->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-datasource-apollo</artifactId>
             <version>${sentinel.version}</version>
         </dependency>
         <!--sentinel end-->
@@ -198,12 +211,40 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+
+            <plugins>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.1</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+            <!--            <resource>-->
+            <!--                <directory>src/main/java</directory>·-->
+            <!--                <includes>-->
+            <!--                    <include>**/*.xml</include>-->
+            <!--                </includes>-->
+            <!--            </resource>-->
+        </resources>
     </build>
 
 </project>
