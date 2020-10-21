@@ -30,10 +30,10 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public final class SentinelApolloConfigLoader {
 
-    public static final String SENTINEL_CONFIG_ENV_KEY = "CSP_SENTINEL_CONFIG_FILE";
-    public static final String SENTINEL_CONFIG_PROPERTY_KEY = "csp.sentinel.config.file";
+    public static final String SENTINEL_CONFIG_ENV_KEY = "ZZX_SENTINEL_APOLLO_CONFIG_FILE";
+    public static final String SENTINEL_CONFIG_PROPERTY_KEY = "zzx.sentinel.apollo.config.file";
 
-    private static final String DEFAULT_SENTINEL_CONFIG_FILE = "classpath:application.properties";
+    private static final String DEFAULT_SENTINEL_CONFIG_FILE = "classpath:sentinel-apollo.properties";
 
     private static Properties properties = new Properties();
 
@@ -41,7 +41,7 @@ public final class SentinelApolloConfigLoader {
         try {
             load();
         } catch (Throwable t) {
-            RecordLog.warn("[SentinelConfigLoader] Failed to initialize configuration items", t);
+            RecordLog.warn("[SentinelApolloConfigLoader] Failed to initialize configuration items", t);
         }
     }
 

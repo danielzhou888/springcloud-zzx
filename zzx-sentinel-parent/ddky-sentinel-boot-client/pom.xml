@@ -17,6 +17,9 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <ddky-slf4j.version>1.7.24</ddky-slf4j.version>
+        <ddky-log4j.version>2.8.2</ddky-log4j.version>
+        <ddky-junit.version>4.10</ddky-junit.version>
     </properties>
 
     <dependencies>
@@ -78,6 +81,164 @@
             <artifactId>spring-boot</artifactId>
             <version>${springboot.version}</version>
         </dependency>
+
+
+
+        <!-- Log libs -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${ddky-slf4j.version}</version>
+            <!--  optional>true</optional -->
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-ext</artifactId>
+            <version>${ddky-slf4j.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+
+        </dependency>
+        <!-- log4j2门面包 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${ddky-log4j.version}</version>
+        </dependency>
+        <!-- 该包是 log4j 升级到 log4j2的必须包 使用该包 不需要修改以前的 Logger. getLogger()这种获取对象的方式
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-1.2-api</artifactId>
+            <version>${ddky-log4j.version}</version>
+        </dependency>
+         -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${ddky-log4j.version}</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>com.lmax</groupId>-->
+<!--            <artifactId>disruptor</artifactId>-->
+<!--            <version>3.3.6</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; Alternative implementation of BlockingQueue using Conversant Disruptor-->
+<!--            for AsyncAppender &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.conversantmedia</groupId>-->
+<!--            <artifactId>disruptor</artifactId>-->
+<!--            <version>1.2.10</version>-->
+<!--            <classifier>jdk7</classifier>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; Alternative implementation of BlockingQueue using JCTools for AsyncAppender &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.jctools</groupId>-->
+<!--            <artifactId>jctools-core</artifactId>-->
+<!--            <version>1.2.1</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; Required for JSON support &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
+<!--            <artifactId>jackson-core</artifactId>-->
+<!--            <version>2.8.7</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; Required for JSON support &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
+<!--            <artifactId>jackson-databind</artifactId>-->
+<!--            <version>2.8.7</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; Required for YAML support (including JSON requirements) &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.fasterxml.jackson.dataformat</groupId>-->
+<!--            <artifactId>jackson-dataformat-yaml</artifactId>-->
+<!--            <version>2.8.7</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; Required for XML layout and receiver support &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.fasterxml.jackson.dataformat</groupId>-->
+<!--            <artifactId>jackson-dataformat-xml</artifactId>-->
+<!--            <version>2.8.7</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; POM for jackson-dataformat-xml 2.8.3 depends on woodstox-core 5.0.2 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.fasterxml.woodstox</groupId>-->
+<!--            <artifactId>woodstox-core</artifactId>-->
+<!--            <version>5.0.2</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; Required for console color support in Windows &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.fusesource.jansi</groupId>-->
+<!--            <artifactId>jansi</artifactId>-->
+<!--            <version>1.14</version>-->
+
+<!--        </dependency>-->
+<!--        &lt;!&ndash; Required for SMTPAppender &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.sun.mail</groupId>-->
+<!--            <artifactId>javax.mail</artifactId>-->
+<!--            <version>1.5.5</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; Used for JPA appenders (needs an implementation of course) &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.persistence</groupId>-->
+<!--            <artifactId>javax.persistence</artifactId>-->
+<!--            <version>2.1.0</version>-->
+<!--            <scope>compile</scope>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; Used for Kafka appender &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.kafka</groupId>-->
+<!--            <artifactId>kafka-clients</artifactId>-->
+<!--            <version>0.10.1.1</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; Used for ZeroMQ JeroMQ appender &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.zeromq</groupId>-->
+<!--            <artifactId>jeromq</artifactId>-->
+<!--            <version>0.3.6</version>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; Used for compressing to formats other than zip and gz &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.commons</groupId>-->
+<!--            <artifactId>commons-compress</artifactId>-->
+<!--            <version>1.13</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; Used for the CSV layout &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.commons</groupId>-->
+<!--            <artifactId>commons-csv</artifactId>-->
+<!--            <version>1.4</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; Command line for TCP and UDP servers &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.beust</groupId>-->
+<!--            <artifactId>jcommander</artifactId>-->
+<!--            <version>1.48</version>-->
+<!--        </dependency>-->
+
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${ddky-junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
