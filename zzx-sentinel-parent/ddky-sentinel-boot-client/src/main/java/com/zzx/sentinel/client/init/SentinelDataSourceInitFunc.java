@@ -31,7 +31,6 @@ import java.util.List;
  */
 public class SentinelDataSourceInitFunc implements InitFunc {
 
-    //@Autowired
     private static DdkySentinelProperties ddkySentinelProperties;
 
     private static final String FLOW_DATA_ID_POSTFIX = ".flow-rules";

@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 日志工具类
  * @author zhouzhixiang
- * @date 2020-10-21
+ * @Date 2020-10-21
  */
 public class RecordLog {
     private static Logger logger = LoggerFactory.getLogger(RecordLog.class);

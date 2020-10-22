@@ -8,6 +8,7 @@ import com.zzx.sentinel.client.util.AssertUtil;
 /**
  * 叮当sentinel配置文件（对于SpringMvc项目：sentinel-apollo.properties，对于Springboot项目：application.properties）
  * @author zhouzhixiang
+ * @Date 2020-10-21
  */
 
 public class DdkySentinelProperties {

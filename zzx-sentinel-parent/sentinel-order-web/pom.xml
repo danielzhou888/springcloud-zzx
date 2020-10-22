@@ -65,12 +65,12 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<!--sentinel-->
-<!--		<dependency>-->
-<!--			<groupId>com.zzx.sentinel</groupId>-->
-<!--			<artifactId>ddky-sentinel-boot-client</artifactId>-->
-<!--			<version>${ddky-sentinel-boot-client.version}</version>-->
-<!--		</dependency>-->
+		<!--sentinel start-->
+		<dependency>
+			<groupId>com.zzx.sentinel</groupId>
+			<artifactId>ddky-sentinel-boot-client</artifactId>
+			<version>${ddky-sentinel-boot-client.version}</version>
+		</dependency>
         <!--sentinel end-->
 
 		<dependency>
