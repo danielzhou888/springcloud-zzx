@@ -46,6 +46,7 @@ public class OrderController {
             log.error("createOrder error = {}", e);
             // ....
         }
+
         return result;
     }
 
@@ -80,9 +81,23 @@ public class OrderController {
         return wdcApi.limitQpsTest();
     }
 
-    public String limitQpsTestBlockHandler(BlockException e) throws Exception {
-        log.info("limitQpsTest 流控测试流控逻辑 = e:"+e.getMessage());
-        return "limitQpsTest 流控测试流控逻辑 = e:"+e.getMessage();
+    /**
+     * 流控测试
+     * @return
+     * @throws Exception
+     */
+    @SentinelResource(value = "limitQpsTest2", blockHandler = "limitQpsTestBlockHandler2")
+    @RequestMapping("/limitQpsTest2")
+    @ResponseBody
+    public String limitQpsTest2() throws Exception {
+        log.info("limitQpsTest2 流控测试正常逻辑");
+        return "limitQpsTest2 流控测试正常逻辑";
+    }
+
+
+    public String limitQpsTestBlockHandler2(BlockException e) throws Exception {
+        log.info("limitQpsTest2 流控测试流控逻辑 = e:"+e.getMessage());
+        return "limitQpsTest2 流控测试流控逻辑 = e:"+e.getMessage();
     }
 
     /**

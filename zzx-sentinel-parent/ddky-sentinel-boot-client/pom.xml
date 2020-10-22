@@ -3,10 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.zzx.sentinel</groupId>
-        <artifactId>zzx-sentinel-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
-<!--        <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
+        <groupId>com.ddky</groupId>
+        <artifactId>ddky-base-boot-all</artifactId>
+        <version>3.0.0</version>
     </parent>
     <groupId>com.zzx.sentinel</groupId>
     <artifactId>ddky-sentinel-boot-client</artifactId>
@@ -19,7 +18,9 @@
         <java.version>1.8</java.version>
         <ddky-slf4j.version>1.7.24</ddky-slf4j.version>
         <ddky-log4j.version>2.8.2</ddky-log4j.version>
+        <ddky-commons-logging.version>1.1.1</ddky-commons-logging.version>
         <ddky-junit.version>4.10</ddky-junit.version>
+        <sentinel-boot.version>1.8.0</sentinel-boot.version>
     </properties>
 
     <dependencies>
@@ -33,56 +34,67 @@
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-core</artifactId>
-            <version>${sentinel.version}</version>
+            <version>${sentinel-boot.version}</version>
         </dependency>
         <!-- dubbo 2.7.x 使用此 -->
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-apache-dubbo-adapter</artifactId>
-            <version>${sentinel.version}</version>
+            <version>${sentinel-boot.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba.csp</groupId>
+                    <artifactId>sentinel-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-transport-simple-http</artifactId>
-            <version>${sentinel.version}</version>
+            <version>${sentinel-boot.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-annotation-aspectj</artifactId>
-            <version>${sentinel.version}</version>
+            <version>${sentinel-boot.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba.csp</groupId>
+                    <artifactId>sentinel-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-web-servlet</artifactId>
-            <version>${sentinel.version}</version>
+            <version>${sentinel-boot.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba.csp</groupId>
+                    <artifactId>sentinel-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- 热点参数限流 -->
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-parameter-flow-control</artifactId>
-            <version>${sentinel.version}</version>
+            <version>${sentinel-boot.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba.csp</groupId>
+                    <artifactId>sentinel-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Sentinel Dashboard设置规则推送到统一的规则中心，此处客户端需实现监听规则中心实现实时获取变更 -->
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-datasource-apollo</artifactId>
-            <version>${sentinel.version}</version>
+            <version>${sentinel-boot.version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework</groupId>-->
-<!--            <artifactId>spring-context</artifactId>-->
-<!--            <version>5.1.18.RELEASE</version>-->
-<!--            <scope>compile</scope>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot</artifactId>
-            <version>${springboot.version}</version>
-        </dependency>
-
-
 
         <!-- Log libs -->
         <dependency>
@@ -100,8 +112,7 @@
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-
+            <version>${ddky-commons-logging.version}</version>
         </dependency>
         <!-- log4j2门面包 -->
         <dependency>
@@ -122,116 +133,6 @@
             <version>${ddky-log4j.version}</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.lmax</groupId>-->
-<!--            <artifactId>disruptor</artifactId>-->
-<!--            <version>3.3.6</version>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; Alternative implementation of BlockingQueue using Conversant Disruptor-->
-<!--            for AsyncAppender &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.conversantmedia</groupId>-->
-<!--            <artifactId>disruptor</artifactId>-->
-<!--            <version>1.2.10</version>-->
-<!--            <classifier>jdk7</classifier>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; Alternative implementation of BlockingQueue using JCTools for AsyncAppender &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.jctools</groupId>-->
-<!--            <artifactId>jctools-core</artifactId>-->
-<!--            <version>1.2.1</version>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; Required for JSON support &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
-<!--            <artifactId>jackson-core</artifactId>-->
-<!--            <version>2.8.7</version>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; Required for JSON support &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
-<!--            <artifactId>jackson-databind</artifactId>-->
-<!--            <version>2.8.7</version>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; Required for YAML support (including JSON requirements) &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.fasterxml.jackson.dataformat</groupId>-->
-<!--            <artifactId>jackson-dataformat-yaml</artifactId>-->
-<!--            <version>2.8.7</version>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; Required for XML layout and receiver support &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.fasterxml.jackson.dataformat</groupId>-->
-<!--            <artifactId>jackson-dataformat-xml</artifactId>-->
-<!--            <version>2.8.7</version>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; POM for jackson-dataformat-xml 2.8.3 depends on woodstox-core 5.0.2 &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.fasterxml.woodstox</groupId>-->
-<!--            <artifactId>woodstox-core</artifactId>-->
-<!--            <version>5.0.2</version>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; Required for console color support in Windows &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.fusesource.jansi</groupId>-->
-<!--            <artifactId>jansi</artifactId>-->
-<!--            <version>1.14</version>-->
-
-<!--        </dependency>-->
-<!--        &lt;!&ndash; Required for SMTPAppender &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.sun.mail</groupId>-->
-<!--            <artifactId>javax.mail</artifactId>-->
-<!--            <version>1.5.5</version>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; Used for JPA appenders (needs an implementation of course) &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.eclipse.persistence</groupId>-->
-<!--            <artifactId>javax.persistence</artifactId>-->
-<!--            <version>2.1.0</version>-->
-<!--            <scope>compile</scope>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash; Used for Kafka appender &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.kafka</groupId>-->
-<!--            <artifactId>kafka-clients</artifactId>-->
-<!--            <version>0.10.1.1</version>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; Used for ZeroMQ JeroMQ appender &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.zeromq</groupId>-->
-<!--            <artifactId>jeromq</artifactId>-->
-<!--            <version>0.3.6</version>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; Used for compressing to formats other than zip and gz &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.commons</groupId>-->
-<!--            <artifactId>commons-compress</artifactId>-->
-<!--            <version>1.13</version>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; Used for the CSV layout &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.commons</groupId>-->
-<!--            <artifactId>commons-csv</artifactId>-->
-<!--            <version>1.4</version>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; Command line for TCP and UDP servers &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.beust</groupId>-->
-<!--            <artifactId>jcommander</artifactId>-->
-<!--            <version>1.48</version>-->
-<!--        </dependency>-->
-
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -240,42 +141,5 @@
         </dependency>
 
     </dependencies>
-
-    <build>
-        <pluginManagement>
-
-            <plugins>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
-                    <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                    </configuration>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
-
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-            <!--                <resource>-->
-            <!--                    <directory>src/main/java</directory>·-->
-            <!--                    <includes>-->
-            <!--                        <include>**/*.xml</include>-->
-            <!--                    </includes>-->
-            <!--                </resource>-->
-        </resources>
-    </build>
 
 </project>

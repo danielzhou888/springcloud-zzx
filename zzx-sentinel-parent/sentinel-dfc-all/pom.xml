@@ -49,49 +49,10 @@
         </dependency>
 
         <!--sentinel-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>-->
-<!--        </dependency>-->
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
-            <artifactId>sentinel-core</artifactId>
-            <version>${sentinel.version}</version>
-        </dependency>
-        <!-- 热点参数限流 -->
-        <dependency>
-            <groupId>com.alibaba.csp</groupId>
-            <artifactId>sentinel-parameter-flow-control</artifactId>
-            <version>${sentinel.version}</version>
-        </dependency>
-        <!-- dubbo 2.6.x以及以下版本用 -->
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba.csp</groupId>-->
-<!--            <artifactId>sentinel-dubbo-adapter</artifactId>-->
-<!--            <version>${sentinel.version}</version>-->
-<!--        </dependency>-->
-        <!-- dubbo 2.7.x以及以上版本用 -->
-        <dependency>
-            <groupId>com.alibaba.csp</groupId>
-            <artifactId>sentinel-apache-dubbo-adapter</artifactId>
-            <version>${sentinel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.csp</groupId>
-            <artifactId>sentinel-transport-simple-http</artifactId>
-            <version>${sentinel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.csp</groupId>
-            <artifactId>sentinel-annotation-aspectj</artifactId>
-            <version>${sentinel.version}</version>
-        </dependency>
-
-        <!-- Sentinel Dashboard设置规则推送到统一的规则中心，此处客户端需实现监听规则中心实现实时获取变更 -->
-        <dependency>
-            <groupId>com.alibaba.csp</groupId>
-            <artifactId>sentinel-datasource-apollo</artifactId>
-            <version>${sentinel.version}</version>
+            <groupId>com.zzx.sentinel</groupId>
+            <artifactId>ddky-sentinel-boot-client</artifactId>
+            <version>${ddky-sentinel-boot-client.version}</version>
         </dependency>
         <!--sentinel end-->
 

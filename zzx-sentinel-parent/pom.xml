@@ -19,7 +19,7 @@
 
     <modules>
         <module>sentinel-distribute-response-common</module>
-        <module>ddky-sentinel-boot-client</module>
+<!--        <module>ddky-sentinel-boot-client</module>-->
         <module>sentinel-readproduct-all</module>
         <module>sentinel-dfc-all</module>
         <module>sentinel-dcs-all</module>
@@ -31,9 +31,11 @@
     </modules>
 
     <properties>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
         <spring-cloud.version>Finchley.SR1</spring-cloud.version>
         <curator.version>4.2.0</curator.version>
         <springboot.version>2.1.5.RELEASE</springboot.version>
@@ -47,22 +49,36 @@
         <fastjson.version>1.2.71</fastjson.version>
 
         <ddky-sentinel-boot-client.version>0.0.1-SNAPSHOT</ddky-sentinel-boot-client.version>
+
+        <!-- plugins -->
+        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>2.20.1</maven-surefire-plugin.version>
+        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.cloud</groupId>-->
+<!--                <artifactId>spring-cloud-dependencies</artifactId>-->
+<!--                <version>${spring-cloud.version}</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
+<!--            </dependency>-->
 
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.cloud</groupId>-->
+<!--                <artifactId>spring-cloud-alibaba-dependencies</artifactId>-->
+<!--                <version>${cloud.alibaba.version}</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
+<!--            </dependency>-->
             <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>${cloud.alibaba.version}</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -100,13 +116,13 @@
                 <scope>import</scope>
             </dependency>
 
-            <dependency>
-                <groupId>com.alibaba.cloud</groupId>
-                <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
-                <version>${spring-cloud-starter-alibaba-sentinel.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.alibaba.cloud</groupId>-->
+<!--                <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>-->
+<!--                <version>${spring-cloud-starter-alibaba-sentinel.version}</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
+<!--            </dependency>-->
 
             <!--sentinel-->
 <!--            <dependency>-->
@@ -125,13 +141,13 @@
 <!--                <scope>import</scope>-->
 <!--            </dependency>-->
 
-<!--            <dependency>-->
-<!--                <groupId>com.alibaba.csp</groupId>-->
-<!--                <artifactId>sentinel-transport-simple-http</artifactId>-->
-<!--                <version>${sentinel.version}</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-transport-simple-http</artifactId>
+                <version>${sentinel.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <!--sentinel end-->
 
             <dependency>
@@ -250,20 +266,10 @@
         </dependencies>
     </dependencyManagement>
 
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
 
     <build>
         <pluginManagement>
-
             <plugins>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -281,19 +287,190 @@
             </plugins>
         </pluginManagement>
 
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
-<!--            <resource>-->
-<!--                <directory>src/main/java</directory>·-->
-<!--                <includes>-->
-<!--                    <include>**/*.xml</include>-->
-<!--                </includes>-->
-<!--            </resource>-->
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
         </resources>
     </build>
+
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <source>1.8</source>-->
+<!--                    <target>1.8</target>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>repackage</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            &lt;!&ndash; 资源文件拷贝插件 &ndash;&gt;-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-resources-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <encoding>UTF-8</encoding>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+<!--            &lt;!&ndash; java编译插件 &ndash;&gt;-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-compiler-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <source>1.8</source>-->
+<!--                    <target>1.8</target>-->
+<!--                    <encoding>UTF-8</encoding>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
+
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
+
+<!--    <build>-->
+<!--        <pluginManagement>-->
+
+<!--            <plugins>-->
+
+<!--                <plugin>-->
+<!--                    <groupId>org.apache.maven.plugins</groupId>-->
+<!--                    <artifactId>maven-compiler-plugin</artifactId>-->
+<!--                    <version>3.1</version>-->
+<!--                    <configuration>-->
+<!--                        <source>${java.version}</source>-->
+<!--                        <target>${java.version}</target>-->
+<!--                    </configuration>-->
+<!--                </plugin>-->
+
+<!--                <plugin>-->
+<!--                    <groupId>org.springframework.boot</groupId>-->
+<!--                    <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--                </plugin>-->
+<!--            </plugins>-->
+<!--        </pluginManagement>-->
+
+
+<!--        <resources>-->
+<!--            <resource>-->
+<!--                <directory>src/main/resources</directory>-->
+<!--                <filtering>true</filtering>-->
+<!--            </resource>-->
+<!--&lt;!&ndash;            <resource>&ndash;&gt;-->
+<!--&lt;!&ndash;                <directory>src/main/java</directory>·&ndash;&gt;-->
+<!--&lt;!&ndash;                <includes>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <include>**/*.xml</include>&ndash;&gt;-->
+<!--&lt;!&ndash;                </includes>&ndash;&gt;-->
+<!--&lt;!&ndash;            </resource>&ndash;&gt;-->
+<!--        </resources>-->
+<!--    </build>-->
+
+   <!-- <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <includes>
+                        <include>**/testcase/**/*.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
+            </plugin>
+&lt;!&ndash;            <plugin>&ndash;&gt;
+&lt;!&ndash;                <groupId>org.apache.maven.plugins</groupId>&ndash;&gt;
+&lt;!&ndash;                <artifactId>maven-javadoc-plugin</artifactId>&ndash;&gt;
+&lt;!&ndash;                <version>${maven-javadoc-plugin.version}</version>&ndash;&gt;
+&lt;!&ndash;                <executions>&ndash;&gt;
+&lt;!&ndash;                    <execution>&ndash;&gt;
+&lt;!&ndash;                        <id>attach-javadocs</id>&ndash;&gt;
+&lt;!&ndash;                        <goals>&ndash;&gt;
+&lt;!&ndash;                            <goal>jar</goal>&ndash;&gt;
+&lt;!&ndash;                        </goals>&ndash;&gt;
+&lt;!&ndash;                    </execution>&ndash;&gt;
+&lt;!&ndash;                </executions>&ndash;&gt;
+&lt;!&ndash;                <configuration>&ndash;&gt;
+&lt;!&ndash;                    <skip>false</skip>&ndash;&gt;
+&lt;!&ndash;                    <show>public</show>&ndash;&gt;
+&lt;!&ndash;                    <charset>${project.build.sourceEncoding}</charset>&ndash;&gt;
+&lt;!&ndash;                    <encoding>${project.build.sourceEncoding}</encoding>&ndash;&gt;
+&lt;!&ndash;                    <docencoding>${project.build.sourceEncoding}</docencoding>&ndash;&gt;
+&lt;!&ndash;                    <links>&ndash;&gt;
+&lt;!&ndash;                        <link>http://docs.oracle.com/javase/6/docs/api</link>&ndash;&gt;
+&lt;!&ndash;                    </links>&ndash;&gt;
+&lt;!&ndash;                </configuration>&ndash;&gt;
+&lt;!&ndash;            </plugin>&ndash;&gt;
+&lt;!&ndash;            <plugin>&ndash;&gt;
+&lt;!&ndash;                <artifactId>maven-gpg-plugin</artifactId>&ndash;&gt;
+&lt;!&ndash;                <version>${maven-gpg-plugin.version}</version>&ndash;&gt;
+&lt;!&ndash;                <configuration>&ndash;&gt;
+&lt;!&ndash;                    <skip>false</skip>&ndash;&gt;
+&lt;!&ndash;                </configuration>&ndash;&gt;
+&lt;!&ndash;                <executions>&ndash;&gt;
+&lt;!&ndash;                    <execution>&ndash;&gt;
+&lt;!&ndash;                        <id>sign-artifacts</id>&ndash;&gt;
+&lt;!&ndash;                        <phase>verify</phase>&ndash;&gt;
+&lt;!&ndash;                        <goals>&ndash;&gt;
+&lt;!&ndash;                            <goal>sign</goal>&ndash;&gt;
+&lt;!&ndash;                        </goals>&ndash;&gt;
+&lt;!&ndash;                    </execution>&ndash;&gt;
+&lt;!&ndash;                </executions>&ndash;&gt;
+&lt;!&ndash;            </plugin>&ndash;&gt;
+        </plugins>
+    </build>-->
 
 </project>

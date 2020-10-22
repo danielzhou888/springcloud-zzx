@@ -9,8 +9,6 @@ import org.slf4j.LoggerFactory;
  * @date 2020-10-21
  */
 public class RecordLog {
-    public static final String LOGGER_NAME = "sentinelRecordLogger";
-    public static final String DEFAULT_LOG_FILENAME = "sentinel-record.log";
     private static Logger logger = LoggerFactory.getLogger(RecordLog.class);
 
     public static void info(String format, Object... arguments) {
@@ -55,17 +53,5 @@ public class RecordLog {
 
     private RecordLog() {
     }
-    //
-    //static {
-    //    try {
-    //        logger = LoggerSpiProvider.getLogger("sentinelRecordLogger");
-    //        if (logger == null) {
-    //            logger = new JavaLoggingAdapter("sentinelRecordLogger", "sentinel-record.log");
-    //        }
-    //    } catch (Throwable var1) {
-    //        System.err.println("Error: failed to initialize Sentinel RecordLog");
-    //        var1.printStackTrace();
-    //    }
-    //
-    //}
+
 }
