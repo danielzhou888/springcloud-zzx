@@ -8,7 +8,7 @@ import com.zzx.sentinel.orderweb.utils.OrderUtils;
 import com.zzx.sentinel.wdc.api.WdcApi;
 import com.zzx.sentinel.wdc.po.Distribute;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.annotation.Reference;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/order")
 public class OrderController {
 
-    @Reference
+    //@Reference
+    //@DubboReference
     private WdcApi wdcApi;
 
     /**
@@ -95,7 +96,7 @@ public class OrderController {
     }
 
 
-    public String limitQpsTestBlockHandler2(BlockException e) throws Exception {
+    public static String limitQpsTestBlockHandler2(BlockException e) throws Exception {
         log.info("limitQpsTest2 流控测试流控逻辑 = e:"+e.getMessage());
         return "limitQpsTest2 流控测试流控逻辑 = e:"+e.getMessage();
     }

@@ -16,11 +16,12 @@ public class DdkySentinelProperties {
     public static final String ENV = "ddky.sentinel.apollo.env";
     public static final String CLUSTER_NAME = "ddky.sentinel.apollo.cluster.name";
     public static final String NAMESPACE_NAME = "ddky.sentinel.apollo.namespace.name";
+    public static final String TOKEN_SERVER_NAMESPACE_NAME = "ddky.sentinel.apollo.token.server.namespace.name";
     public static final String PORTAL_URL = "ddky.sentinel.apollo.portal.url";
     public static final String PROJECT_NAME = "ddky.sentinel.apollo.project.name";
 
     private final String FILE_NAME = "application.properties";
-    private final String FILE_NAME_SPRING_MVC = "sentinel-apollo.properties";
+    private final String FILE_NAME_SPRING_MVC = "sentinel.properties";
     private static volatile DdkySentinelProperties instances ;
 
     private final Properties properties  = new Properties();
@@ -29,6 +30,7 @@ public class DdkySentinelProperties {
     private String env;
     private String clusterName = "default";
     private String namespaceName;
+    private String tokenServerNamespaceName;
     private String portalUrl;
     private String projectName;
 
@@ -58,6 +60,10 @@ public class DdkySentinelProperties {
                 // springmvc项目
                 fileName = FILE_NAME_SPRING_MVC;
                 inputStream = loader.getResourceAsStream(fileName);
+                if (inputStream == null) {
+                    fileName = FILE_NAME;
+                    inputStream = loader.getResourceAsStream(fileName);
+                }
             }
         } else {
             try {
@@ -96,6 +102,9 @@ public class DdkySentinelProperties {
 
             AssertUtil.notEmpty(properties.getProperty(NAMESPACE_NAME), "sentinel apollo config field ddky.sentinel.apollo.namespace.name cannot be empty");
             namespaceName = properties.getProperty(NAMESPACE_NAME);
+
+            AssertUtil.notEmpty(properties.getProperty(TOKEN_SERVER_NAMESPACE_NAME), "sentinel apollo config field ddky.sentinel.apollo.token.server.namespace.name cannot be empty");
+            tokenServerNamespaceName = properties.getProperty(TOKEN_SERVER_NAMESPACE_NAME);
 
             AssertUtil.notEmpty(properties.getProperty(PORTAL_URL), "sentinel apollo config field ddky.sentinel.apollo.portal.url cannot be empty");
             portalUrl = properties.getProperty(PORTAL_URL);
@@ -144,5 +153,13 @@ public class DdkySentinelProperties {
 
     public String getProjectName() {
         return this.projectName;
+    }
+
+    public String getTokenServerNamespaceName() {
+        return this.tokenServerNamespaceName;
+    }
+
+    public void setTokenServerNamespaceName(final String tokenServerNamespaceName) {
+        this.tokenServerNamespaceName = tokenServerNamespaceName;
     }
 }

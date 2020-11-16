@@ -25,16 +25,15 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Component
-//@DubboService(interfaceClass = WdcApi.class, dynamic = true)
-@Service(interfaceClass = WdcApi.class, dynamic = true)
+@DubboService(interfaceClass = WdcApi.class, dynamic = true)
 public class WdcServiceImpl implements WdcApi {
 
 	private static final Logger logger = LoggerFactory.getLogger(WdcServiceImpl.class);
 
-	@Reference
+	@DubboReference
     private DcsApi dcsApi;
 
-	@Reference
+	@DubboReference
     private DmsApi dmsApi;
 
     @Override

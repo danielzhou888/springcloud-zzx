@@ -76,6 +76,30 @@
             </exclusions>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.csp</groupId>-->
+<!--            <artifactId>sentinel-cluster-common-default</artifactId>-->
+<!--            <version>${sentinel-boot.version}</version>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-cluster-server-default</artifactId>
+            <version>${sentinel-boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-cluster-client-default</artifactId>
+            <version>${sentinel-boot.version}</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.csp</groupId>-->
+<!--            <artifactId>ahas-sentinel-client</artifactId>-->
+<!--            <version>1.3.2</version>-->
+<!--        </dependency>-->
+
         <!-- 热点参数限流 -->
         <dependency>
             <groupId>com.alibaba.csp</groupId>

@@ -29,6 +29,9 @@ public class ApolloProperty {
     @Value("${apollo.third.token}")
     private String token;
 
+    @Value("${apollo.token.server.namespaceName}")
+    private String tokenServerNamespaceName;
+
 
     public String getAppId() {
         return appId;
@@ -76,5 +79,13 @@ public class ApolloProperty {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getTokenServerNamespaceName() {
+        return this.tokenServerNamespaceName;
+    }
+
+    public void setTokenServerNamespaceName(final String tokenServerNamespaceName) {
+        this.tokenServerNamespaceName = tokenServerNamespaceName;
     }
 }

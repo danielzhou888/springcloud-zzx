@@ -28,7 +28,7 @@
         <module>sentinel-product-web</module>
         <module>sentinel-dms-web</module>
         <module>sentinel-order-web</module>
-        <module>sentinel-client-module</module>
+<!--        <module>sentinel-client-module</module>-->
     </modules>
 
     <properties>

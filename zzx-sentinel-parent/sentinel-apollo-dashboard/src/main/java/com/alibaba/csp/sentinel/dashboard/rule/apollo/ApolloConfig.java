@@ -17,6 +17,7 @@ package com.alibaba.csp.sentinel.dashboard.rule.apollo;
 
 import com.alibaba.csp.sentinel.dashboard.config.ApolloProperty;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.*;
+import com.alibaba.csp.sentinel.dashboard.domain.cluster.ClusterGroupEntity;
 import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.fastjson.JSON;
 import com.ctrip.framework.apollo.openapi.client.ApolloOpenApiClient;
@@ -84,6 +85,16 @@ public class ApolloConfig {
     @Bean
     public Converter<String, List<SystemRuleEntity>> systemRuleEntityDecoder() {
         return s -> JSON.parseArray(s, SystemRuleEntity.class);
+    }
+
+    @Bean
+    public Converter<List<ClusterGroupEntity>, String> clusterGroupEntityEncoder() {
+        return JSON::toJSONString;
+    }
+
+    @Bean
+    public Converter<String, List<ClusterGroupEntity>> clusterGroupEntityDecoder() {
+        return s -> JSON.parseArray(s, ClusterGroupEntity.class);
     }
 
     @Bean

@@ -179,77 +179,22 @@
 		</dependency>
 		<!-- 业务系统 end -->
 
+
+<!--		<dependency>-->
+<!--			<groupId>com.alibaba.cloud</groupId>-->
+<!--			<artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>-->
+<!--			<version>${spring-cloud-starter-alibaba-sentinel.version}</version>-->
+<!--		</dependency>-->
+
 	</dependencies>
 
-<!--	<build>-->
-<!--		<pluginManagement>-->
-
-<!--			<plugins>-->
-
-<!--				<plugin>-->
-<!--					<groupId>org.apache.maven.plugins</groupId>-->
-<!--					<artifactId>maven-compiler-plugin</artifactId>-->
-<!--					<version>3.1</version>-->
-<!--					<configuration>-->
-<!--						<source>${java.version}</source>-->
-<!--						<target>${java.version}</target>-->
-<!--					</configuration>-->
-<!--				</plugin>-->
-
-<!--				<plugin>-->
-<!--					<groupId>org.springframework.boot</groupId>-->
-<!--					<artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--				</plugin>-->
-<!--			</plugins>-->
-<!--		</pluginManagement>-->
-
-
-<!--		<resources>-->
-<!--			<resource>-->
-<!--				<directory>src/main/resources</directory>-->
-<!--				<filtering>true</filtering>-->
-<!--			</resource>-->
-<!--			&lt;!&ndash;            <resource>&ndash;&gt;-->
-<!--			&lt;!&ndash;                <directory>src/main/java</directory>·&ndash;&gt;-->
-<!--			&lt;!&ndash;                <includes>&ndash;&gt;-->
-<!--			&lt;!&ndash;                    <include>**/*.xml</include>&ndash;&gt;-->
-<!--			&lt;!&ndash;                </includes>&ndash;&gt;-->
-<!--			&lt;!&ndash;            </resource>&ndash;&gt;-->
-<!--		</resources>-->
-<!--	</build>-->
-
-<!--	<build>-->
-<!--		<pluginManagement>-->
-<!--			<plugins>-->
-<!--				<plugin>-->
-<!--					<groupId>org.apache.maven.plugins</groupId>-->
-<!--					<artifactId>maven-compiler-plugin</artifactId>-->
-<!--					<version>3.1</version>-->
-<!--					<configuration>-->
-<!--						<source>${java.version}</source>-->
-<!--						<target>${java.version}</target>-->
-<!--					</configuration>-->
-<!--				</plugin>-->
-
-<!--				<plugin>-->
-<!--					<groupId>org.springframework.boot</groupId>-->
-<!--					<artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--				</plugin>-->
-<!--			</plugins>-->
-<!--		</pluginManagement>-->
-
-<!--		<resources>-->
-<!--			<resource>-->
-<!--				<directory>src/main/resources</directory>-->
-<!--				<filtering>true</filtering>-->
-<!--			</resource>-->
-<!--			<resource>-->
-<!--				<directory>src/main/java</directory>-->
-<!--				<includes>-->
-<!--					<include>**/*.xml</include>-->
-<!--				</includes>-->
-<!--			</resource>-->
-<!--		</resources>-->
-<!--	</build>-->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>

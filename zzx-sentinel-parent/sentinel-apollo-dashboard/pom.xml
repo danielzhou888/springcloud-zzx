@@ -49,6 +49,25 @@
             <version>${project.version}</version>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.csp</groupId>-->
+<!--            <artifactId>sentinel-cluster-server-default</artifactId>-->
+<!--            <version>1.8.0</version>-->
+<!--&lt;!&ndash;            <version>${project.version}</version>&ndash;&gt;-->
+<!--        </dependency>-->
+
+<!--                <dependency>-->
+<!--                    <groupId>com.alibaba.csp</groupId>-->
+<!--                    <artifactId>sentinel-cluster-common-default</artifactId>-->
+<!--                    <version>1.8.0</version>-->
+<!--                </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.csp</groupId>-->
+<!--            <artifactId>sentinel-cluster-client-default</artifactId>-->
+<!--&lt;!&ndash;            <version>${project.version}</version>&ndash;&gt;-->
+<!--            <version>1.8.0</version>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

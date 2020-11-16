@@ -15,18 +15,17 @@
  */
 package com.alibaba.csp.sentinel.dashboard.service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.alibaba.csp.sentinel.cluster.ClusterStateManager;
+import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.FlowRuleEntity;
 import com.alibaba.csp.sentinel.dashboard.domain.cluster.state.ClusterUniversalStatePairVO;
+import com.alibaba.csp.sentinel.dashboard.rule.DynamicRuleProvider;
+import com.alibaba.csp.sentinel.dashboard.rule.DynamicRulePublisher;
 import com.alibaba.csp.sentinel.util.AssertUtil;
 import com.alibaba.csp.sentinel.util.function.Tuple2;
 
@@ -41,6 +40,7 @@ import com.alibaba.csp.sentinel.dashboard.util.MachineUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -56,6 +56,10 @@ public class ClusterAssignServiceImpl implements ClusterAssignService {
     private SentinelApiClient sentinelApiClient;
     @Autowired
     private ClusterConfigService clusterConfigService;
+
+    @Autowired
+    @Qualifier("clusterMapDataApolloPublisher")
+    private DynamicRulePublisher<List<ClusterAppAssignMap>> rulePublisher;
 
     private boolean isMachineInApp(/*@NonEmpty*/ String machineId) {
         return machineId.contains(":");
@@ -137,6 +141,11 @@ public class ClusterAssignServiceImpl implements ClusterAssignService {
             result.getFailedClientSet().addAll(resultVO.getFailedClientSet());
             result.getFailedServerSet().addAll(resultVO.getFailedServerSet());
         }
+        try {
+            rulePublisher.publish(app, Collections.EMPTY_LIST);
+        } catch (Exception e) {
+            LOGGER.error("unbindClusterServers error {}", e);
+        }
         return result;
     }
 
@@ -168,6 +177,12 @@ public class ClusterAssignServiceImpl implements ClusterAssignService {
 
         // Unbind remaining (unassigned) machines.
         applyAllRemainingMachineSet(app, remainingSet, failedClientSet);
+
+        try {
+            rulePublisher.publish(app, clusterMap);
+        } catch (Exception e) {
+            LOGGER.error("applyAssignToApp error {}", e);
+        }
 
         return new ClusterAppAssignResultVO()
             .setFailedClientSet(failedClientSet)
