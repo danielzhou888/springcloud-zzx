@@ -23,6 +23,7 @@ public class ServiceResponse<T> implements Serializable {
     private List<T> dataList;
     boolean isSucces = true;
     boolean isDownGrade = false;
+    boolean isLocalDownGrade = false;
 
     public ServiceResponse (int code, String msg) {
         if (code != 0) {
@@ -30,6 +31,15 @@ public class ServiceResponse<T> implements Serializable {
         }
         this.code = code;
         this.msg = msg;
+    }
+
+    public ServiceResponse (int code, String msg, boolean isDownGrade) {
+        if (code != 0) {
+            isSucces = false;
+        }
+        this.code = code;
+        this.msg = msg;
+        this.isDownGrade = isDownGrade;
     }
 
     public ServiceResponse () {

@@ -1,19 +1,15 @@
-package com.zzx.sentinel.orderweb.config;
+package com.zzx.sentinel.voucher.config;
 
 import com.alibaba.csp.sentinel.annotation.aspectj.SentinelResourceAspect;
-
-import org.apache.dubbo.config.spring.context.annotation.DubboComponentScan;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author Eric Zhao
+ * @author zhouzhixiang
+ * @Date 2020-09-25
  */
 @Configuration
-@DubboComponentScan
-@ConfigurationProperties
-public class AopConfiguration {
+public class SentinelAspectConfiguration {
 
     @Bean
     public SentinelResourceAspect sentinelResourceAspect() {

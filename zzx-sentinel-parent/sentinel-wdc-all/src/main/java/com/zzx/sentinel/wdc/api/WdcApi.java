@@ -29,4 +29,11 @@ public interface WdcApi {
     String authorizeBlockTest() throws Exception;
 
     String limitQpsTest() throws Exception;
+
+    Double queryUserRankDiscountByUserId(Long userId);
+
+	boolean executePromotion();
+
+	Boolean cartCheck();
+
 }

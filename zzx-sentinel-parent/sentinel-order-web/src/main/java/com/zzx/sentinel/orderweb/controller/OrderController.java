@@ -1,18 +1,27 @@
 package com.zzx.sentinel.orderweb.controller;
 
+import com.alibaba.csp.sentinel.AsyncEntry;
+import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.Tracer;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.fastjson.JSONObject;
+import com.zzx.sentinel.distribute.enums.ResponseEnum;
 import com.zzx.sentinel.distribute.response.ServiceResponse;
+import com.zzx.sentinel.order.api.OrderApi;
+import com.zzx.sentinel.orderweb.sentinel.OrderControllerSentinell;
 import com.zzx.sentinel.orderweb.utils.OrderUtils;
+import com.zzx.sentinel.voucher.api.VoucherApi;
 import com.zzx.sentinel.wdc.api.WdcApi;
 import com.zzx.sentinel.wdc.po.Distribute;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RestController
@@ -20,15 +29,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
     //@Reference
-    //@DubboReference
+    @DubboReference
     private WdcApi wdcApi;
+
+    @DubboReference
+    private VoucherApi voucherApi;
+
+    @DubboReference
+    private OrderApi orderApi;
 
     /**
      * 模拟下订单调用配送系统限流
      * @return
      * @throws Exception
      */
-    //@SentinelResource(value = "createOrderSentinel", fallback = "testAToBOrToCOrToDFallbackLevel1")
+    @SentinelResource(value = "createOrderSentinel", fallback = "createOrderFallback")
     @RequestMapping("/createOrder")
     @ResponseBody
     public String createOrder(@RequestParam("userId") Long userId) throws Exception {
@@ -51,21 +66,118 @@ public class OrderController {
         return result;
     }
 
-    @SentinelResource(value = "aToBOrToCOrToDFallbackLevel1", fallback = "testAToBOrToCOrToDFallbackLevel2")
-    @RequestMapping("/testAToBOrToCOrToDFallbackLevel1")
+    @RequestMapping("/createOrder2")
     @ResponseBody
-    public String testAToBOrToCOrToDFallbackLevel1() throws Exception {
+    public String createOrder2(@RequestParam("userId") Long userId) throws Exception {
         String result = "";
+        String orderCode = OrderUtils.getOrderCode(userId);
+        ServiceResponse<Distribute> response = null;
+        try (Entry entry = SphU.entry("wdcApi-distribute-sentinel")) {
+            response = wdcApi.distribute(orderCode, userId);
+            result = JSONObject.toJSONString(response);
+        } catch (BlockException e) {
+            log.error("createOrder2 出现流控异常了", e);
+            result = this.createOrderFallback(userId);
+        }
+
+        return result;
+    }
+
+    @RequestMapping("/createOrder3")
+    @ResponseBody
+    public String createOrder3(@RequestParam("userId") Long userId) throws Exception {
+        String result = "";
+        String orderCode = OrderUtils.getOrderCode(userId);
+        ServiceResponse<Distribute> response = null;
+        Entry entry = null;
         try {
-            result = wdcApi.testToCThrowsException();
-        } catch (Exception e) {
-            log.error("testAToBOrToCOrToDFallbackLevel1 error {}", e);
-            result = testAToBOrToCOrToDFallbackLevel2();
+            entry = SphU.entry("wdcApi-distribute-sentinel3");
+            response = wdcApi.distribute(orderCode, userId);
+            result = JSONObject.toJSONString(response);
+        } catch (BlockException e) {
+            log.error("createOrder2 出现流控异常了", e);
+            result = this.createOrderFallback(userId);
+        } catch (Exception ex) {
+            log.error("createOrder3 occur exception {}", ex);
+            Tracer.traceEntry(ex, entry);
+        } finally {
+            if (entry != null) {
+                entry.exit();
+            }
         }
         return result;
     }
 
-    public String testAToBOrToCOrToDFallbackLevel2() {
+    /**
+     * 模拟提交订单异步调用链路的降级 -> 手动处理调用api降级逻辑
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    @SentinelResource(value = "orderController-createOrderAsync-sentinel", fallbackClass = OrderControllerSentinell.class, fallback = "createOrderAsyncSentinel")
+    @RequestMapping("/createOrderAsync")
+    @ResponseBody
+    public ServiceResponse createOrderAsync(@RequestParam("userId") Long userId) throws Exception {
+        ServiceResponse response;
+        try {
+            response = orderApi.createOrderAsync(userId);
+        } catch (Exception e) {
+            log.error("OrderController createOrderAsync exception {}", e);
+            response = new ServiceResponse(ResponseEnum.SUBMIT_ORDER_EXCEPTION.getCode(), ResponseEnum.SUBMIT_ORDER_EXCEPTION.getName());
+        }
+        return response;
+    }
+
+    /**
+     * 模拟提交订单同步调用链路的降级 -> 手动处理调用api降级逻辑
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    @SentinelResource(value = "orderWeb-orderController.createOrderSync-sentinel", fallbackClass = OrderControllerSentinell.class, fallback = "createOrderSyncSentinel")
+    @RequestMapping("/createOrderSync")
+    @ResponseBody
+    public ServiceResponse createOrderSync(@RequestParam("userId") Long userId) throws Exception {
+        ServiceResponse response;
+        try {
+            response = orderApi.createOrderSync(userId);
+        } catch (Exception e) {
+            log.error("OrderController createOrderAsync exception {}", e);
+            response = new ServiceResponse(ResponseEnum.SUBMIT_ORDER_EXCEPTION.getCode(), ResponseEnum.SUBMIT_ORDER_EXCEPTION.getName());
+        }
+        return response;
+    }
+
+
+    public String createOrderFallback(@RequestParam("userId") Long userId) {
+        log.info("createOrderFallback 执行降级");
+        return "createOrderFallback 执行降级";
+    }
+
+    @SentinelResource(value = "aToBOrToCOrToDFallbackLevel1", blockHandler = "testAToBOrToCOrToDBlockHandlerLevel2")
+    //@SentinelResource(value = "aToBOrToCOrToDFallbackLevel1", fallback = "testAToBOrToCOrToDFallbackLevel2")
+    @RequestMapping("/testAToBOrToCOrToDFallbackLevel1")
+    @ResponseBody
+    public String testAToBOrToCOrToDFallbackLevel1(HttpServletRequest request, HttpServletResponse response, @RequestParam("id") String id) {
+        String result = "";
+        try {
+            log.info("我是正常逻辑");
+            //result = wdcApi.testToCThrowsException();
+        } catch (Exception e) {
+            log.error("testAToBOrToCOrToDFallbackLevel1 error {}", e);
+            //result = testAToBOrToCOrToDFallbackLevel2();
+        }
+        //int i = 1/0;
+        return result;
+    }
+
+    public String testAToBOrToCOrToDFallbackLevel2(HttpServletRequest request, HttpServletResponse response, @RequestParam("id") String id) {
+        log.info("testAToBOrToCOrToDFallbackLevel2 我是兜底逻辑");
+        return "testAToBOrToCOrToDFallbackLevel2 我是兜底逻辑";
+    }
+
+    public static String testAToBOrToCOrToDBlockHandlerLevel2(HttpServletRequest request, HttpServletResponse response, @RequestParam("id") String id, BlockException e) {
+        log.info("testAToBOrToCOrToDBlockHandlerLevel2 我是兜底逻辑");
         return "testAToBOrToCOrToDFallbackLevel2 我是兜底逻辑";
     }
 
@@ -87,8 +199,8 @@ public class OrderController {
      * @return
      * @throws Exception
      */
-    @SentinelResource(value = "limitQpsTest2", blockHandler = "limitQpsTestBlockHandler2")
-    @RequestMapping("/limitQpsTest2")
+    @SentinelResource(value = "limitQpsTest2Sentinel", blockHandler = "limitQpsTestBlockHandler2")
+    @GetMapping("/limitQpsTest2")
     @ResponseBody
     public String limitQpsTest2() throws Exception {
         log.info("limitQpsTest2 流控测试正常逻辑");

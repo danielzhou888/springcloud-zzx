@@ -18,7 +18,8 @@ public class DdkySentinelProperties {
     public static final String NAMESPACE_NAME = "ddky.sentinel.apollo.namespace.name";
     public static final String TOKEN_SERVER_NAMESPACE_NAME = "ddky.sentinel.apollo.token.server.namespace.name";
     public static final String PORTAL_URL = "ddky.sentinel.apollo.portal.url";
-    public static final String PROJECT_NAME = "ddky.sentinel.apollo.project.name";
+    public static final String PROJECT_NAME = "project.name";
+    //public static final String PROJECT_NAME = "ddky.sentinel.apollo.project.name";
 
     private final String FILE_NAME = "application.properties";
     private final String FILE_NAME_SPRING_MVC = "sentinel.properties";

@@ -49,6 +49,13 @@
         </dependency>
 
         <!--sentinel start-->
+<!--        <dependency>-->
+<!--            <groupId>com.ddky.sentinel</groupId>-->
+<!--            <artifactId>ddky-sentinel-client</artifactId>-->
+<!--            <version>${ddky-sentinel-client.version}</version>-->
+<!--        </dependency>-->
+
+
         <dependency>
             <groupId>com.zzx.sentinel</groupId>
             <artifactId>ddky-sentinel-boot-client</artifactId>

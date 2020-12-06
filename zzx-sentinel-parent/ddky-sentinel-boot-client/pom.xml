@@ -120,6 +120,15 @@
             <version>${sentinel-boot.version}</version>
         </dependency>
 
+
+        <!--针对Spring MVC的适配器 Spring Webflux 可引入对应的适配器-->
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.csp</groupId>-->
+<!--            <artifactId>sentinel-spring-webmvc-adapter</artifactId>-->
+<!--            <version>${sentinel-boot.version}</version>-->
+<!--        </dependency>-->
+
+
         <!-- Log libs -->
         <dependency>
             <groupId>org.slf4j</groupId>

@@ -88,10 +88,12 @@ public class WdcServiceImpl implements WdcApi {
         throw new RuntimeException("我是testToBThrowsException异常");
     }
 
-    @SentinelResource(value = "toCThrowsExceptionApi", fallback = "testToCThrowsExceptionApi")
+    //@SentinelResource(value = "toCThrowsExceptionApi", fallback = "testToCThrowsExceptionApi")
     @Override
     public String testToCThrowsException() throws Exception {
-        throw new RuntimeException("我是testToCThrowsException异常");
+        int i = 1/0;
+        return "我异常了：1/0";
+        //throw new RuntimeException("我是testToCThrowsException异常");
     }
 
     public String testToCThrowsExceptionApi() {
@@ -108,7 +110,7 @@ public class WdcServiceImpl implements WdcApi {
         return "我是ReadPrduct服务异常之后触发执行的getNameWhileExpireTimeBlockHandler";
     }
 
-    @SentinelResource(value = "distributeSentinel", fallback = "distributeFallback")
+    //@SentinelResource(value = "distributeSentinel", fallback = "distributeFallback")
     @Override
     public ServiceResponse<Distribute> distribute(String orderCode, Long userId) throws Exception, BusinessException {
         if (StringUtils.isEmpty(orderCode)) {
@@ -169,6 +171,21 @@ public class WdcServiceImpl implements WdcApi {
     public String limitQpsTest() throws Exception {
         logger.info("Wdc limitQpsTest 正查逻辑");
         return "Wdc limitQpsTest 正查逻辑";
+    }
+
+    @Override
+    public Double queryUserRankDiscountByUserId(Long userId) {
+        return 0.8;
+    }
+
+    @Override
+    public boolean executePromotion() {
+        return true;
+    }
+
+    @Override
+    public Boolean cartCheck() {
+        return true;
     }
 
     public String limitQpsTestBlockHandler(BlockException e) throws Exception {

@@ -25,6 +25,8 @@
         <module>sentinel-dcs-all</module>
         <module>sentinel-dms-all</module>
         <module>sentinel-wdc-all</module>
+        <module>sentinel-voucher-all</module>
+        <module>sentinel-order-all</module>
         <module>sentinel-product-web</module>
         <module>sentinel-dms-web</module>
         <module>sentinel-order-web</module>
@@ -50,6 +52,7 @@
         <fastjson.version>1.2.71</fastjson.version>
 
         <ddky-sentinel-boot-client.version>0.0.1-SNAPSHOT</ddky-sentinel-boot-client.version>
+        <ddky-sentinel-client.version>1.0.0</ddky-sentinel-client.version>
 
         <!-- plugins -->
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
