@@ -32,4 +32,14 @@ public class OrderControllerSentinell {
         log.info("OrderControllerSentinell.createOrderSyncSentinel 执行限流降级逻辑");
         return new ServiceResponse(ResponseEnum.CURRENT_VISITOR_LIMIT.getCode(), ResponseEnum.CURRENT_VISITOR_LIMIT.getName());
     }
+
+    /**
+     * 自定义注解测试降级/限流
+     * @return
+     * @throws Exception
+     */
+    public static ServiceResponse testSentinelAnnotationSentinel() throws Exception {
+        log.info("OrderControllerSentinell.testSentinelAnnotationSentinel 执行限流降级逻辑");
+        return new ServiceResponse(ResponseEnum.CURRENT_VISITOR_LIMIT.getCode(), ResponseEnum.CURRENT_VISITOR_LIMIT.getName());
+    }
 }

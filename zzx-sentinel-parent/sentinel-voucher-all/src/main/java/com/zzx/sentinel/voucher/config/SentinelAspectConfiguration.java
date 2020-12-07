@@ -1,6 +1,6 @@
 package com.zzx.sentinel.voucher.config;
 
-import com.alibaba.csp.sentinel.annotation.aspectj.SentinelResourceAspect;
+import com.zzx.sentinel.client.annotation.aspectj.SentinelAnnotationAspect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,8 +11,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SentinelAspectConfiguration {
 
+    //@Bean
+    //public SentinelResourceAspect sentinelResourceAspect() {
+    //    return new SentinelResourceAspect();
+    //}
+
     @Bean
-    public SentinelResourceAspect sentinelResourceAspect() {
-        return new SentinelResourceAspect();
+    public SentinelAnnotationAspect sentinelAnnotationAspect() {
+        return new SentinelAnnotationAspect();
     }
 }

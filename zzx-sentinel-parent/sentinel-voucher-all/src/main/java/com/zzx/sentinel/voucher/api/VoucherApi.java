@@ -18,4 +18,10 @@ public interface VoucherApi {
 	ServiceResponse executePromotionReturnResp(Long userId, String orderCode) throws Exception;
 
 	ServiceResponse queryUserRankDiscountSentinel(Long userId) throws Exception;
+
+    ServiceResponse globalBlockMethod() throws Exception;
+
+	ServiceResponse testDefaultMachine();
+
+    ServiceResponse testUseSentinelResourceNamer();
 }

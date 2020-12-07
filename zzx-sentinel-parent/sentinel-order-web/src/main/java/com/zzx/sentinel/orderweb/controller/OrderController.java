@@ -1,12 +1,12 @@
 package com.zzx.sentinel.orderweb.controller;
 
-import com.alibaba.csp.sentinel.AsyncEntry;
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.Tracer;
-import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.fastjson.JSONObject;
+import com.zzx.sentinel.client.annotation.SentinelAnnotation;
+import com.zzx.sentinel.client.util.SentinelResoucesNamer;
 import com.zzx.sentinel.distribute.enums.ResponseEnum;
 import com.zzx.sentinel.distribute.response.ServiceResponse;
 import com.zzx.sentinel.order.api.OrderApi;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RestController
@@ -43,7 +42,7 @@ public class OrderController {
      * @return
      * @throws Exception
      */
-    @SentinelResource(value = "createOrderSentinel", fallback = "createOrderFallback")
+    @SentinelAnnotation(value = "createOrderSentinel", fallback = "createOrderFallback")
     @RequestMapping("/createOrder")
     @ResponseBody
     public String createOrder(@RequestParam("userId") Long userId) throws Exception {
@@ -114,7 +113,7 @@ public class OrderController {
      * @return
      * @throws Exception
      */
-    @SentinelResource(value = "orderController-createOrderAsync-sentinel", fallbackClass = OrderControllerSentinell.class, fallback = "createOrderAsyncSentinel")
+    @SentinelAnnotation(value = "orderController-createOrderAsync-sentinel", fallbackClass = OrderControllerSentinell.class, fallback = "createOrderAsyncSentinel")
     @RequestMapping("/createOrderAsync")
     @ResponseBody
     public ServiceResponse createOrderAsync(@RequestParam("userId") Long userId) throws Exception {
@@ -134,7 +133,7 @@ public class OrderController {
      * @return
      * @throws Exception
      */
-    @SentinelResource(value = "orderWeb-orderController.createOrderSync-sentinel", fallbackClass = OrderControllerSentinell.class, fallback = "createOrderSyncSentinel")
+    @SentinelAnnotation(value = "orderWeb-orderController.createOrderSync-sentinel", fallbackClass = OrderControllerSentinell.class, fallback = "createOrderSyncSentinel")
     @RequestMapping("/createOrderSync")
     @ResponseBody
     public ServiceResponse createOrderSync(@RequestParam("userId") Long userId) throws Exception {
@@ -148,14 +147,72 @@ public class OrderController {
         return response;
     }
 
+    @RequestMapping("/globalBlockTest")
+    @ResponseBody
+    public ServiceResponse globalBlockTest() throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        try {
+            response = orderApi.globalBlockMethod();
+        } catch (Exception e) {
+            log.error("OrderController createOrderAsync exception {}", e);
+            response.fail();
+        }
+        return response;
+    }
+
+    /**
+     * 测试@SentinelAnnotation注解
+     * 通过自定义注解实现资源名拼接 统一资源名格式
+     * 系统名 + 类名 + 方法名 + sentinel
+     * @return
+     * @throws Exception
+     */
+    @SentinelAnnotation(value = "testSentinelAnnotation", fallbackClass = OrderControllerSentinell.class, fallback = "testSentinelAnnotationSentinel")
+    @RequestMapping("/testSentinelAnnotation")
+    @ResponseBody
+    public ServiceResponse testSentinelAnnotation() throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        log.info("testSentinelAnnotation success");
+        return response;
+    }
+
+
+    /**
+     * 测试使用SentinelResoucesNamer.resourceName获取统一格式资源名
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/testUseSentinelResourceNamer")
+    @ResponseBody
+    public ServiceResponse testUseSentinelResourceNamer() throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        Entry entry = null;
+        try {
+            entry = SphU.entry(SentinelResoucesNamer.resourceName(VoucherApi.class, "testUseSentinelResourceNamer"));
+            response = voucherApi.testUseSentinelResourceNamer();
+        } catch (BlockException e) {
+            // 执行本地降级/限流逻辑
+            // TODO
+        } catch (Exception e) {
+            // 异常处理
+            log.error("....");
+            Tracer.traceEntry(e, entry);
+        } finally {
+            if (entry != null) {
+                entry.exit();
+            }
+        }
+        return response;
+    }
+
 
     public String createOrderFallback(@RequestParam("userId") Long userId) {
         log.info("createOrderFallback 执行降级");
         return "createOrderFallback 执行降级";
     }
 
-    @SentinelResource(value = "aToBOrToCOrToDFallbackLevel1", blockHandler = "testAToBOrToCOrToDBlockHandlerLevel2")
-    //@SentinelResource(value = "aToBOrToCOrToDFallbackLevel1", fallback = "testAToBOrToCOrToDFallbackLevel2")
+    @SentinelAnnotation(value = "aToBOrToCOrToDFallbackLevel1", blockHandler = "testAToBOrToCOrToDBlockHandlerLevel2")
+    //@SentinelAnnotation(value = "aToBOrToCOrToDFallbackLevel1", fallback = "testAToBOrToCOrToDFallbackLevel2")
     @RequestMapping("/testAToBOrToCOrToDFallbackLevel1")
     @ResponseBody
     public String testAToBOrToCOrToDFallbackLevel1(HttpServletRequest request, HttpServletResponse response, @RequestParam("id") String id) {
@@ -199,7 +256,7 @@ public class OrderController {
      * @return
      * @throws Exception
      */
-    @SentinelResource(value = "limitQpsTest2Sentinel", blockHandler = "limitQpsTestBlockHandler2")
+    @SentinelAnnotation(value = "limitQpsTest2Sentinel", blockHandler = "limitQpsTestBlockHandler2")
     @GetMapping("/limitQpsTest2")
     @ResponseBody
     public String limitQpsTest2() throws Exception {
@@ -218,7 +275,7 @@ public class OrderController {
      * @return
      * @throws Exception
      */
-    @SentinelResource(value = "hotParameterLimitTestSentinel", blockHandler = "hotParameterLimitTestBlockHandler")
+    @SentinelAnnotation(value = "hotParameterLimitTestSentinel", blockHandler = "hotParameterLimitTestBlockHandler")
     @RequestMapping("/hotParameterLimitTest")
     @ResponseBody
     public String hotParameterLimitTest(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("age") int age) throws Exception {
@@ -253,7 +310,7 @@ public class OrderController {
      * @throws Exception
      */
     @RequestMapping("/authorizeBlockTest2")
-    @SentinelResource(value = "authorizeBlockTest2Sentinel", blockHandler = "authorizeBlockTest2BlockHandler")
+    @SentinelAnnotation(value = "authorizeBlockTest2Sentinel", blockHandler = "authorizeBlockTest2BlockHandler")
     @ResponseBody
     public String authorizeBlockTest2() throws Exception {
         String result = "authorizeBlockTest2 run";
@@ -269,6 +326,18 @@ public class OrderController {
     public String authorizeBlockTest2BlockHandler(BlockException e) throws Exception {
         log.info("authorizeBlockTest2BlockHandler e: "+e.getClass().getSimpleName());
         return "authorizeBlockTest2BlockHandler e: "+e.getClass().getSimpleName();
+    }
+
+    @RequestMapping("/testDefaultMachine")
+    @ResponseBody
+    public ServiceResponse testDefaultMachine() {
+        return this.voucherApi.testDefaultMachine();
+    }
+
+    @RequestMapping("/testDefaultMachineFromOrderInvoke")
+    @ResponseBody
+    public ServiceResponse testDefaultMachineFromOrderInvoke() {
+        return this.orderApi.testDefaultMachine();
     }
 
 }

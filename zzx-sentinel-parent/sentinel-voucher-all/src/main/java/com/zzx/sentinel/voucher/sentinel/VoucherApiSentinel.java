@@ -37,4 +37,9 @@ public class VoucherApiSentinel {
         response.setDownGrade(true);
         return response;
     }
+
+    public static ServiceResponse testDefaultMachineSentinel() {
+        log.info("voucherAll voucherApi testDefaultMachineSentinel 限流/降级了");
+        return ServiceResponse.fail("限流/降级了");
+    }
 }

@@ -179,4 +179,15 @@ public class OrderServiceImpl implements OrderApi {
         }
         return response;
     }
+
+    @Override
+    public ServiceResponse globalBlockMethod() throws Exception {
+        log.info("orderApi globalBlockMethod start...");
+        return voucherApi.globalBlockMethod();
+    }
+
+    @Override
+    public ServiceResponse testDefaultMachine() {
+        return voucherApi.testDefaultMachine();
+    }
 }

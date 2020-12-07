@@ -113,4 +113,13 @@ public class VoucherWrapApi {
         }
         return response;
     }
+
+    public ServiceResponse globalBlockMethod() throws Exception {
+        log.info("voucherWrapApi.globalBlockMethod start...");
+        return voucherApi.globalBlockMethod();
+    }
+
+    public ServiceResponse testDefaultMachine() {
+        return voucherApi.testDefaultMachine();
+    }
 }

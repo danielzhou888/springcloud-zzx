@@ -1,11 +1,7 @@
 package com.zzx.sentinel.orderweb.config;
 
-import com.alibaba.csp.sentinel.adapter.servlet.CommonFilter;
-import com.alibaba.csp.sentinel.annotation.aspectj.SentinelResourceAspect;
-
+import com.zzx.sentinel.client.annotation.aspectj.SentinelAnnotationAspect;
 import org.apache.dubbo.config.spring.context.annotation.DubboComponentScan;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,9 +16,15 @@ import javax.servlet.Filter;
 //@ConfigurationProperties
 public class SentinelConfiguration {
 
+    //@Bean
+    //public SentinelResourceAspect sentinelResourceAspect() {
+    //    return new SentinelResourceAspect();
+    //}
+
+
     @Bean
-    public SentinelResourceAspect sentinelResourceAspect() {
-        return new SentinelResourceAspect();
+    public SentinelAnnotationAspect sentinelAnnotationAspect() {
+        return new SentinelAnnotationAspect();
     }
 
     //@Bean

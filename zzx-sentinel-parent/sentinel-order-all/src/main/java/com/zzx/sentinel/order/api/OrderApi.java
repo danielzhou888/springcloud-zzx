@@ -7,4 +7,8 @@ public interface OrderApi {
 	ServiceResponse createOrderAsync(Long userId) throws Exception;
 
 	ServiceResponse createOrderSync(Long userId) throws Exception;
+
+    ServiceResponse globalBlockMethod() throws Exception;
+
+    ServiceResponse testDefaultMachine();
 }
