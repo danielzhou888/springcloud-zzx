@@ -23,6 +23,7 @@
         <sentinel-boot.version>1.8.0</sentinel-boot.version>
         <aspectj.version>1.9.2</aspectj.version>
         <spring.test.version>5.1.5.RELEASE</spring.test.version>
+        <ddky-apollo-client.version>1.5.0</ddky-apollo-client.version>
     </properties>
 
     <dependencies>
@@ -120,6 +121,18 @@
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-datasource-apollo</artifactId>
             <version>${sentinel-boot.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.ctrip.framework.apollo</groupId>
+                    <artifactId>apollo-client</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ctrip.framework.apollo</groupId>
+            <artifactId>apollo-client</artifactId>
+            <version>${ddky-apollo-client.version}</version>
         </dependency>
 
 

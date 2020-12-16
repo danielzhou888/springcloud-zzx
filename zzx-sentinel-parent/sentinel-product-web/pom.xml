@@ -63,6 +63,12 @@
 			<groupId>com.zzx.sentinel</groupId>
 			<artifactId>ddky-sentinel-boot-client</artifactId>
 			<version>${ddky-sentinel-boot-client.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.ctrip.framework.apollo</groupId>
+					<artifactId>apollo-client</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!--sentinel end-->
 

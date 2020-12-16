@@ -25,14 +25,17 @@ import com.alibaba.csp.sentinel.dashboard.rule.DynamicRuleProvider;
 import com.alibaba.csp.sentinel.dashboard.rule.DynamicRulePublisher;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 授权规则apollo持久化
@@ -133,7 +136,7 @@ public class AuthorityRuleControllerV2 {
         entity.setGmtModified(date);
         try {
             entity = repository.save(entity);
-            publishRules(entity.getApp());
+            publishRules(entity.getApp(), entity.getResource());
         } catch (Throwable throwable) {
             logger.error("Failed to add authority rule", throwable);
             return Result.ofThrowable(-1, throwable);
@@ -163,7 +166,7 @@ public class AuthorityRuleControllerV2 {
             if (entity == null) {
                 return Result.ofFail(-1, "Failed to save authority rule");
             }
-            publishRules(entity.getApp());
+            publishRules(entity.getApp(), entity.getResource());
         } catch (Throwable throwable) {
             logger.error("Failed to save authority rule", throwable);
             return Result.ofThrowable(-1, throwable);
@@ -184,15 +187,18 @@ public class AuthorityRuleControllerV2 {
         }
         try {
             repository.delete(id);
-            publishRules(oldEntity.getApp());
+            publishRules(oldEntity.getApp(), oldEntity.getResource());
         } catch (Exception e) {
             return Result.ofFail(-1, e.getMessage());
         }
         return Result.ofSuccess(id);
     }
 
-    private void publishRules(/*@NonNull*/ String app) throws Exception {
+    private void publishRules(/*@NonNull*/ String app, String resource) throws Exception {
         List<AuthorityRuleEntity> rules = repository.findAllByApp(app);
-        rulePublisher.publish(app, rules);
+        if (!CollectionUtils.isEmpty(rules)) {
+            rules = rules.stream().filter(r -> StringUtils.isNotEmpty(r.getResource()) && r.getResource().equals(resource)).collect(Collectors.toList());
+        }
+        rulePublisher.publish(app, rules, resource);
     }
 }

@@ -26,14 +26,17 @@ import com.alibaba.csp.sentinel.dashboard.rule.DynamicRulePublisher;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.degrade.circuitbreaker.CircuitBreakerStrategy;
 import com.alibaba.csp.sentinel.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 降级规则apollo持久化 Controller
@@ -108,7 +111,7 @@ public class DegradeControllerV2 {
         entity.setResource(entity.getResource().trim());
         try {
             entity = repository.save(entity);
-            publishRules(entity.getApp());
+            publishRules(entity.getApp(), entity.getResource());
         } catch (Throwable throwable) {
             logger.error("Failed to add flow rule", throwable);
             return Result.ofThrowable(-1, throwable);
@@ -142,7 +145,7 @@ public class DegradeControllerV2 {
 
         try {
             repository.save(entity);
-            publishRules(oldEntity.getApp());
+            publishRules(oldEntity.getApp(), entity.getResource());
         } catch (Throwable t) {
             logger.error("Failed to save degrade rule or push rule to apollo, id={}, rule={}", id, entity, t);
             return Result.ofThrowable(-1, t);
@@ -163,7 +166,7 @@ public class DegradeControllerV2 {
 
         try {
             repository.delete(id);
-            publishRules(oldEntity.getApp());
+            publishRules(oldEntity.getApp(), oldEntity.getResource());
         } catch (Throwable e) {
             logger.error("Failed to delete degrade rule or push rule to apollo, id={}", id, e);
             return Result.ofFail(-1, e.getMessage());
@@ -177,9 +180,12 @@ public class DegradeControllerV2 {
     //
     //
     //}
-    private void publishRules(/*@NonNull*/ String app) throws Exception {
+    private void publishRules(/*@NonNull*/ String app, String resource) throws Exception {
         List<DegradeRuleEntity> rules = repository.findAllByApp(app);
-        rulePublisher.publish(app, rules);
+        if (!CollectionUtils.isEmpty(rules)) {
+            rules = rules.stream().filter(r -> StringUtils.isNotEmpty(r.getResource()) && r.getResource().equals(resource)).collect(Collectors.toList());
+        }
+        rulePublisher.publish(app, rules, resource);
     }
 
     private <R> Result<R> checkEntityInternal(DegradeRuleEntity entity) {

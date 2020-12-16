@@ -3,6 +3,7 @@ package com.zzx.sentinel.orderweb.controller;
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.Tracer;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.fastjson.JSONObject;
 import com.zzx.sentinel.client.annotation.SentinelAnnotation;
@@ -42,7 +43,7 @@ public class OrderController {
      * @return
      * @throws Exception
      */
-    @SentinelAnnotation(value = "createOrderSentinel", fallback = "createOrderFallback")
+    @SentinelResource(value = "createOrderSentinel", fallback = "createOrderFallback")
     @RequestMapping("/createOrder")
     @ResponseBody
     public String createOrder(@RequestParam("userId") Long userId) throws Exception {
@@ -113,7 +114,7 @@ public class OrderController {
      * @return
      * @throws Exception
      */
-    @SentinelAnnotation(value = "orderController-createOrderAsync-sentinel", fallbackClass = OrderControllerSentinell.class, fallback = "createOrderAsyncSentinel")
+    @SentinelResource(value = "orderController-createOrderAsync-sentinel", fallbackClass = OrderControllerSentinell.class, fallback = "createOrderAsyncSentinel")
     @RequestMapping("/createOrderAsync")
     @ResponseBody
     public ServiceResponse createOrderAsync(@RequestParam("userId") Long userId) throws Exception {
@@ -133,7 +134,7 @@ public class OrderController {
      * @return
      * @throws Exception
      */
-    @SentinelAnnotation(value = "orderWeb-orderController.createOrderSync-sentinel", fallbackClass = OrderControllerSentinell.class, fallback = "createOrderSyncSentinel")
+    @SentinelResource(value = "orderWeb-orderController.createOrderSync-sentinel", fallbackClass = OrderControllerSentinell.class, fallback = "createOrderSyncSentinel")
     @RequestMapping("/createOrderSync")
     @ResponseBody
     public ServiceResponse createOrderSync(@RequestParam("userId") Long userId) throws Exception {
@@ -167,12 +168,15 @@ public class OrderController {
      * @return
      * @throws Exception
      */
-    @SentinelAnnotation(value = "testSentinelAnnotation", fallbackClass = OrderControllerSentinell.class, fallback = "testSentinelAnnotationSentinel")
+    //@SentinelAnnotation(value = "testSentinelAnnotation", fallbackClass = OrderControllerSentinell.class, fallback = "testSentinelAnnotationSentinel")
+    @SentinelResource(value = "testSentinelAnnotation", blockHandlerClass = OrderControllerSentinell.class, blockHandler = "testSentinelAnnotationSentinel")
     @RequestMapping("/testSentinelAnnotation")
     @ResponseBody
     public ServiceResponse testSentinelAnnotation() throws Exception {
         ServiceResponse response = new ServiceResponse();
+        this.wdcApi.authorizeBlockTest();
         log.info("testSentinelAnnotation success");
+        //throw new RuntimeException("我异常了");
         return response;
     }
 
@@ -211,7 +215,7 @@ public class OrderController {
         return "createOrderFallback 执行降级";
     }
 
-    @SentinelAnnotation(value = "aToBOrToCOrToDFallbackLevel1", blockHandler = "testAToBOrToCOrToDBlockHandlerLevel2")
+    @SentinelResource(value = "aToBOrToCOrToDFallbackLevel1", blockHandler = "testAToBOrToCOrToDBlockHandlerLevel2")
     //@SentinelAnnotation(value = "aToBOrToCOrToDFallbackLevel1", fallback = "testAToBOrToCOrToDFallbackLevel2")
     @RequestMapping("/testAToBOrToCOrToDFallbackLevel1")
     @ResponseBody
@@ -275,7 +279,7 @@ public class OrderController {
      * @return
      * @throws Exception
      */
-    @SentinelAnnotation(value = "hotParameterLimitTestSentinel", blockHandler = "hotParameterLimitTestBlockHandler")
+    @SentinelResource(value = "hotParameterLimitTestSentinel", blockHandler = "hotParameterLimitTestBlockHandler")
     @RequestMapping("/hotParameterLimitTest")
     @ResponseBody
     public String hotParameterLimitTest(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("age") int age) throws Exception {
@@ -310,7 +314,7 @@ public class OrderController {
      * @throws Exception
      */
     @RequestMapping("/authorizeBlockTest2")
-    @SentinelAnnotation(value = "authorizeBlockTest2Sentinel", blockHandler = "authorizeBlockTest2BlockHandler")
+    @SentinelResource(value = "authorizeBlockTest2Sentinel", blockHandler = "authorizeBlockTest2BlockHandler")
     @ResponseBody
     public String authorizeBlockTest2() throws Exception {
         String result = "authorizeBlockTest2 run";

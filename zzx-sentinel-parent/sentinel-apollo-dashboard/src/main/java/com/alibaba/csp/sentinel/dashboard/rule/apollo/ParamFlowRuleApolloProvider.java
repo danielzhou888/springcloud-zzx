@@ -18,6 +18,7 @@ package com.alibaba.csp.sentinel.dashboard.rule.apollo;
 import com.alibaba.csp.sentinel.dashboard.config.ApolloProperty;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.ParamFlowRuleEntity;
 import com.alibaba.csp.sentinel.dashboard.rule.DynamicRuleProvider;
+import com.alibaba.csp.sentinel.dashboard.util.AppNameUtil;
 import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.csp.sentinel.util.StringUtil;
 import com.ctrip.framework.apollo.openapi.client.ApolloOpenApiClient;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 热点参数apollo持久化
@@ -47,19 +49,25 @@ public class ParamFlowRuleApolloProvider implements DynamicRuleProvider<List<Par
 
     @Override
     public List<ParamFlowRuleEntity> getRules(String appName) throws Exception {
-        String flowDataId = ApolloConfigUtil.getParamFlowDataId(appName);
-        OpenNamespaceDTO openNamespaceDTO = apolloOpenApiClient.getNamespace(apolloProperty.getAppId(), apolloProperty.getEnv(), apolloProperty.getClusterName(), apolloProperty.getNamespaceName());
-        String rules = openNamespaceDTO
-            .getItems()
-            .stream()
-            .filter(p -> p.getKey().equals(flowDataId))
-            .map(OpenItemDTO::getValue)
-            .findFirst()
-            .orElse("");
+        //String flowDataId = ApolloConfigUtil.getParamFlowDataId(appName);
+        String flowDataIdSuffix = ApolloConfigUtil.PARAM_FLOW_DATA_ID_POSTFIX;
+        OpenNamespaceDTO openNamespaceDTO = apolloOpenApiClient.getNamespace(apolloProperty.getAppId(), apolloProperty.getEnv(), apolloProperty.getClusterName(), AppNameUtil.getCurrentAppNameSpace(appName));
+        List<String> rules = openNamespaceDTO
+                .getItems()
+                .stream()
+                .filter(p -> p.getKey().startsWith(flowDataIdSuffix))
+                .map(OpenItemDTO::getValue)
+                .collect(Collectors.toList());
 
-        if (StringUtil.isEmpty(rules)) {
+        if (rules == null || rules.size() <= 0) {
             return new ArrayList<>();
         }
-        return converter.convert(rules);
+
+        List<ParamFlowRuleEntity> ruleList = new ArrayList<>();
+        for (String rule : rules) {
+            ruleList.addAll(converter.convert(rule));
+        }
+
+        return ruleList;
     }
 }

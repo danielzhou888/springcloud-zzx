@@ -17,16 +17,13 @@ package com.alibaba.csp.sentinel.dashboard.controller.v2;
 
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import com.alibaba.csp.sentinel.dashboard.auth.AuthAction;
 import com.alibaba.csp.sentinel.dashboard.auth.AuthService;
 import com.alibaba.csp.sentinel.dashboard.auth.AuthService.PrivilegeType;
 import com.alibaba.csp.sentinel.dashboard.client.SentinelApiClient;
-import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.DegradeRuleEntity;
-import com.alibaba.csp.sentinel.dashboard.discovery.MachineInfo;
 import com.alibaba.csp.sentinel.util.StringUtil;
 
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.FlowRuleEntity;
@@ -35,10 +32,12 @@ import com.alibaba.csp.sentinel.dashboard.rule.DynamicRuleProvider;
 import com.alibaba.csp.sentinel.dashboard.rule.DynamicRulePublisher;
 import com.alibaba.csp.sentinel.dashboard.domain.Result;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -159,7 +158,7 @@ public class FlowControllerV2 {
         //entity.setResource(entity.getResource().trim());
         try {
             entity = repository.save(entity);
-            publishRules(entity.getApp());
+            publishRules(entity.getApp(), entity.getResource());
         } catch (Throwable throwable) {
             logger.error("Failed to add flow rule", throwable);
             return Result.ofThrowable(-1, throwable);
@@ -200,7 +199,7 @@ public class FlowControllerV2 {
             if (entity == null) {
                 return Result.ofFail(-1, "save entity fail");
             }
-            publishRules(oldEntity.getApp());
+            publishRules(oldEntity.getApp(), entity.getResource());
         } catch (Throwable throwable) {
             logger.error("Failed to update flow rule", throwable);
             return Result.ofThrowable(-1, throwable);
@@ -221,7 +220,7 @@ public class FlowControllerV2 {
 
         try {
             repository.delete(id);
-            publishRules(oldEntity.getApp());
+            publishRules(oldEntity.getApp(), oldEntity.getResource());
         } catch (Exception e) {
             return Result.ofFail(-1, e.getMessage());
         }
@@ -298,7 +297,7 @@ public class FlowControllerV2 {
                 return Result.ofFail(-1, "save entity fail: null");
             }
 
-            publishRules(entity.getApp());
+            publishRules(entity.getApp(), entity.getResource());
             return Result.ofSuccess(entity);
         } catch (Throwable t) {
             Throwable e = t instanceof ExecutionException ? t.getCause() : t;
@@ -326,7 +325,7 @@ public class FlowControllerV2 {
             return Result.ofFail(-1, e.getMessage());
         }
         try {
-            publishRules(oldEntity.getApp());
+            publishRules(oldEntity.getApp(), oldEntity.getResource());
             return Result.ofSuccess(id);
         } catch (Throwable t) {
             Throwable e = t instanceof ExecutionException ? t.getCause() : t;
@@ -344,8 +343,11 @@ public class FlowControllerV2 {
     //    return sentinelApiClient.setFlowRuleOfMachineAsync(app, ip, port, rules);
     //}
 
-    private void publishRules(/*@NonNull*/ String app) throws Exception {
+    private void publishRules(/*@NonNull*/ String app, String resource) throws Exception {
         List<FlowRuleEntity> rules = repository.findAllByApp(app);
-        rulePublisher.publish(app, rules);
+        if (!CollectionUtils.isEmpty(rules)) {
+            rules = rules.stream().filter(r -> StringUtils.isNotEmpty(r.getResource()) && r.getResource().equals(resource)).collect(Collectors.toList());
+        }
+        rulePublisher.publish(app, rules, resource);
     }
 }

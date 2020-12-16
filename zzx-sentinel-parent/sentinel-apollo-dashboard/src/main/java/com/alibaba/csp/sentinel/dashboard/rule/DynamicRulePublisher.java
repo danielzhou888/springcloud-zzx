@@ -26,7 +26,8 @@ public interface DynamicRulePublisher<T> {
      *
      * @param app app name
      * @param rules list of rules to push
+     * @param resource
      * @throws Exception if some error occurs
      */
-    void publish(String app, T rules) throws Exception;
+    void publish(String app, T rules, String resource) throws Exception;
 }

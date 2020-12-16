@@ -18,6 +18,7 @@ package com.alibaba.csp.sentinel.dashboard.rule.apollo;
 import com.alibaba.csp.sentinel.dashboard.config.ApolloProperty;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.AuthorityRuleEntity;
 import com.alibaba.csp.sentinel.dashboard.rule.DynamicRulePublisher;
+import com.alibaba.csp.sentinel.dashboard.util.AppNameUtil;
 import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.csp.sentinel.util.AssertUtil;
 import com.ctrip.framework.apollo.openapi.client.ApolloOpenApiClient;
@@ -45,20 +46,20 @@ public class AuthorityRuleApolloPublisher implements DynamicRulePublisher<List<A
     private ApolloProperty apolloProperty;
 
     @Override
-    public void publish(String app, List<AuthorityRuleEntity> rules) throws Exception {
+    public void publish(String app, List<AuthorityRuleEntity> rules, String resource) throws Exception {
         AssertUtil.notEmpty(app, "app name cannot be empty");
         if (rules == null) {
             return;
         }
 
-        String flowDataId = ApolloConfigUtil.getAuthorityDataId(app);
+        String flowDataId = ApolloConfigUtil.getAuthorityDataId(resource);
         OpenItemDTO openItemDTO = new OpenItemDTO();
         openItemDTO.setKey(flowDataId);
         openItemDTO.setValue(converter.convert(rules));
         openItemDTO.setComment("Program auto-join");
         openItemDTO.setDataChangeCreatedBy("apollo");
         //openItemDTO.setDataChangeCreatedBy("some-operator");
-        apolloOpenApiClient.createOrUpdateItem(apolloProperty.getAppId(), apolloProperty.getEnv(), apolloProperty.getClusterName(), apolloProperty.getNamespaceName(), openItemDTO);
+        apolloOpenApiClient.createOrUpdateItem(apolloProperty.getAppId(), apolloProperty.getEnv(), apolloProperty.getClusterName(), AppNameUtil.getCurrentAppNameSpace(app), openItemDTO);
 
         // Release configuration
         NamespaceReleaseDTO namespaceReleaseDTO = new NamespaceReleaseDTO();
@@ -67,6 +68,6 @@ public class AuthorityRuleApolloPublisher implements DynamicRulePublisher<List<A
         namespaceReleaseDTO.setReleasedBy("apollo");
         //namespaceReleaseDTO.setReleasedBy("some-operator");
         namespaceReleaseDTO.setReleaseTitle("Modify or add configurations");
-        apolloOpenApiClient.publishNamespace(apolloProperty.getAppId(), apolloProperty.getEnv(), apolloProperty.getClusterName(), apolloProperty.getNamespaceName(), namespaceReleaseDTO);
+        apolloOpenApiClient.publishNamespace(apolloProperty.getAppId(), apolloProperty.getEnv(), apolloProperty.getClusterName(), AppNameUtil.getCurrentAppNameSpace(app), namespaceReleaseDTO);
     }
 }

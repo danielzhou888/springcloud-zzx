@@ -22,9 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.alibaba.csp.sentinel.cluster.ClusterStateManager;
-import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.FlowRuleEntity;
 import com.alibaba.csp.sentinel.dashboard.domain.cluster.state.ClusterUniversalStatePairVO;
-import com.alibaba.csp.sentinel.dashboard.rule.DynamicRuleProvider;
 import com.alibaba.csp.sentinel.dashboard.rule.DynamicRulePublisher;
 import com.alibaba.csp.sentinel.util.AssertUtil;
 import com.alibaba.csp.sentinel.util.function.Tuple2;
@@ -142,7 +140,7 @@ public class ClusterAssignServiceImpl implements ClusterAssignService {
             result.getFailedServerSet().addAll(resultVO.getFailedServerSet());
         }
         try {
-            rulePublisher.publish(app, Collections.EMPTY_LIST);
+            rulePublisher.publish(app, Collections.EMPTY_LIST, "");
         } catch (Exception e) {
             LOGGER.error("unbindClusterServers error {}", e);
         }
@@ -179,7 +177,7 @@ public class ClusterAssignServiceImpl implements ClusterAssignService {
         applyAllRemainingMachineSet(app, remainingSet, failedClientSet);
 
         try {
-            rulePublisher.publish(app, clusterMap);
+            rulePublisher.publish(app, clusterMap, "");
         } catch (Exception e) {
             LOGGER.error("applyAssignToApp error {}", e);
         }

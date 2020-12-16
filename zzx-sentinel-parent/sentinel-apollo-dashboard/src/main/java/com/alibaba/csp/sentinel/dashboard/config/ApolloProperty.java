@@ -20,9 +20,6 @@ public class ApolloProperty {
     @Value("${apollo.cluster.name}")
     private String clusterName;
 
-    @Value("${apollo.namespaceName}")
-    private String namespaceName;
-
     @Value("${apollo.portal.url}")
     private String portalUrl;
 
@@ -55,14 +52,6 @@ public class ApolloProperty {
 
     public void setClusterName(String clusterName) {
         this.clusterName = clusterName;
-    }
-
-    public String getNamespaceName() {
-        return namespaceName;
-    }
-
-    public void setNamespaceName(String namespaceName) {
-        this.namespaceName = namespaceName;
     }
 
     public String getPortalUrl() {

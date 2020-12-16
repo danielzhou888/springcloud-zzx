@@ -20,12 +20,13 @@ package com.zzx.sentinel.client.config;
  */
 public final class ApolloConfigUtil {
 
-    public static final String FLOW_DATA_ID_POSTFIX = ".flow-rules";
-    public static final String DEGRADE_DATA_ID_POSTFIX = ".degrade-rules";
-    public static final String PARAM_FLOW_DATA_ID_POSTFIX = ".param-flow-rules";
-    public static final String AUTHORITY_DATA_ID_POSTFIX = ".authority-rules";
-    public static final String SYSTEM_DATA_ID_POSTFIX = ".system-rules";
-    public static final String CLUSTER_MAP_DATA_ID_POSTFIX = ".cluster-map-data-rules";
+    public static final String FLOW_DATA_ID_SUFFIX = "flow-rules.";
+    public static final String DEGRADE_DATA_ID_SUFFIX = "degrade-rules.";
+    public static final String PARAM_FLOW_DATA_ID_SUFFIX = "param-flow-rules.";
+    public static final String AUTHORITY_DATA_ID_SUFFIX = "authority-rules.";
+    public static final String SYSTEM_DATA_ID_SUFFIX = "system-rules.";
+    public static final String CLUSTER_MAP_DATA_ID_SUFFIX = "cluster-map-data-rules.";
+
     public static final String TOKEN_SERVER_CLUSTER_MAP_DATA_ID = "token-server-cluster-map";
     public static final String TOKEN_SERVER_NAMESPACE_NAME = "token-server";
     public static final String TOKEN_CLIENT_CONFIG_DATA_ID = "token-client-config-data-id";
@@ -35,31 +36,31 @@ public final class ApolloConfigUtil {
     }
 
     public static String getFlowDataId(String appName) {
-        return String.format("%s%s", appName, FLOW_DATA_ID_POSTFIX);
+        return String.format("%s%s", appName, FLOW_DATA_ID_SUFFIX);
     }
 
     public static String getDegradeDataId(String appName) {
-        return String.format("%s%s", appName, DEGRADE_DATA_ID_POSTFIX);
+        return String.format("%s%s", appName, DEGRADE_DATA_ID_SUFFIX);
     }
 
     public static String getParamFlowDataId(String appName) {
-        return String.format("%s%s", appName, PARAM_FLOW_DATA_ID_POSTFIX);
+        return String.format("%s%s", appName, PARAM_FLOW_DATA_ID_SUFFIX);
     }
 
     public static String getAuthorityDataId(String appName) {
-        return String.format("%s%s", appName, AUTHORITY_DATA_ID_POSTFIX);
+        return String.format("%s%s", appName, AUTHORITY_DATA_ID_SUFFIX);
     }
 
     public static String getSystemDataId(String appName) {
-        return String.format("%s%s", appName, SYSTEM_DATA_ID_POSTFIX);
+        return String.format("%s%s", appName, SYSTEM_DATA_ID_SUFFIX);
     }
 
     public static String getClusterMapDataId(String appName) {
-        return String.format("%s%s", appName, CLUSTER_MAP_DATA_ID_POSTFIX);
+        return String.format("%s%s", appName, CLUSTER_MAP_DATA_ID_SUFFIX);
     }
 
     public static String getTokenServerClusterMapDataId(String appName) {
-        return String.format("%s%s", appName, CLUSTER_MAP_DATA_ID_POSTFIX);
+        return String.format("%s%s", CLUSTER_MAP_DATA_ID_SUFFIX, appName);
     }
 
     public static String getTokenServerNamespaceName() {

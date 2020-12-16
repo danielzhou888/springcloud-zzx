@@ -29,16 +29,19 @@ import com.alibaba.csp.sentinel.dashboard.rule.DynamicRulePublisher;
 import com.alibaba.csp.sentinel.dashboard.util.VersionUtils;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 /**
  * 热点参数持久化版本V2 Controller
@@ -144,7 +147,7 @@ public class ParamFlowRuleControllerV2 {
         entity.setGmtModified(date);
         try {
             entity = repository.save(entity);
-            publishRules(entity.getApp());
+            publishRules(entity.getApp(), entity.getResource());
             return Result.ofSuccess(entity);
         } catch (ExecutionException ex) {
             logger.error("Error when adding new parameter flow rules", ex.getCause());
@@ -223,7 +226,7 @@ public class ParamFlowRuleControllerV2 {
         entity.setGmtModified(date);
         try {
             entity = repository.save(entity);
-            publishRules(entity.getApp());
+            publishRules(entity.getApp(), entity.getResource());
             return Result.ofSuccess(entity);
         } catch (ExecutionException ex) {
             logger.error("Error when updating parameter flow rules, id=" + id, ex.getCause());
@@ -252,7 +255,7 @@ public class ParamFlowRuleControllerV2 {
 
         try {
             repository.delete(id);
-            publishRules(oldEntity.getApp());
+            publishRules(oldEntity.getApp(), oldEntity.getResource());
             return Result.ofSuccess(id);
         } catch (ExecutionException ex) {
             logger.error("Error when deleting parameter flow rules", ex.getCause());
@@ -272,9 +275,12 @@ public class ParamFlowRuleControllerV2 {
     //    return sentinelApiClient.setParamFlowRuleOfMachine(app, ip, port, rules);
     //}
 
-    private void publishRules(/*@NonNull*/ String app) throws Exception {
+    private void publishRules(/*@NonNull*/ String app, String resource) throws Exception {
         List<ParamFlowRuleEntity> rules = repository.findAllByApp(app);
-        rulePublisher.publish(app, rules);
+        if (!CollectionUtils.isEmpty(rules)) {
+            rules = rules.stream().filter(r -> StringUtils.isNotEmpty(r.getResource()) && r.getResource().equals(resource)).collect(Collectors.toList());
+        }
+        rulePublisher.publish(app, rules, resource);
     }
 
     private <R> Result<R> unsupportedVersion() {

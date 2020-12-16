@@ -40,7 +40,7 @@ public class FlowRuleApiPublisher implements DynamicRulePublisher<List<FlowRuleE
     private AppManagement appManagement;
 
     @Override
-    public void publish(String app, List<FlowRuleEntity> rules) throws Exception {
+    public void publish(String app, List<FlowRuleEntity> rules, String resource) throws Exception {
         if (StringUtil.isBlank(app)) {
             return;
         }

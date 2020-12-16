@@ -37,6 +37,9 @@ public abstract class InMemoryRuleRepositoryAdapter<T extends RuleEntity> implem
 
     private Map<String, Map<Long, T>> appRules = new ConcurrentHashMap<>(16);
 
+    // TODO
+    private Map<String, Map<Long, T>> resourceRules = new ConcurrentHashMap<>(16);
+
     private static final int MAX_RULES_SIZE = 10000;
 
     @Override

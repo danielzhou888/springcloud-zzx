@@ -16,7 +16,6 @@
 package com.alibaba.csp.sentinel.dashboard.rule.apollo;
 
 import com.alibaba.csp.sentinel.dashboard.config.ApolloProperty;
-import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.FlowRuleEntity;
 import com.alibaba.csp.sentinel.dashboard.domain.cluster.ClusterGroupEntity;
 import com.alibaba.csp.sentinel.dashboard.domain.cluster.request.ClusterAppAssignMap;
 import com.alibaba.csp.sentinel.dashboard.rule.DynamicRulePublisher;
@@ -48,7 +47,7 @@ public class ClusterMapDataApolloPublisher implements DynamicRulePublisher<List<
     private ApolloProperty apolloProperty;
 
     @Override
-    public void publish(String app, List<ClusterAppAssignMap> rules) throws Exception {
+    public void publish(String app, List<ClusterAppAssignMap> rules, String resource) throws Exception {
         AssertUtil.notEmpty(app, "app name cannot be empty");
         if (rules == null) {
             return;

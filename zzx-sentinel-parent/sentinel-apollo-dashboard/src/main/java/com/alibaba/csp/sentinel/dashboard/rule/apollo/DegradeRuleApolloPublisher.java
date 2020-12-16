@@ -18,6 +18,7 @@ package com.alibaba.csp.sentinel.dashboard.rule.apollo;
 import com.alibaba.csp.sentinel.dashboard.config.ApolloProperty;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.DegradeRuleEntity;
 import com.alibaba.csp.sentinel.dashboard.rule.DynamicRulePublisher;
+import com.alibaba.csp.sentinel.dashboard.util.AppNameUtil;
 import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.csp.sentinel.util.AssertUtil;
 import com.ctrip.framework.apollo.openapi.client.ApolloOpenApiClient;
@@ -45,19 +46,19 @@ public class DegradeRuleApolloPublisher implements DynamicRulePublisher<List<Deg
     private ApolloProperty apolloProperty;
 
     @Override
-    public void publish(String app, List<DegradeRuleEntity> rules) throws Exception {
+    public void publish(String app, List<DegradeRuleEntity> rules, String resource) throws Exception {
         AssertUtil.notEmpty(app, "app name cannot be empty");
         if (rules == null) {
             return;
         }
 
-        String degradeDataId = ApolloConfigUtil.getDegradeDataId(app);
+        String degradeDataId = ApolloConfigUtil.getDegradeDataId(resource);
         OpenItemDTO openItemDTO = new OpenItemDTO();
         openItemDTO.setKey(degradeDataId);
         openItemDTO.setValue(converter.convert(rules));
         openItemDTO.setComment("Program auto-join");
         openItemDTO.setDataChangeCreatedBy("apollo");
-        apolloOpenApiClient.createOrUpdateItem(apolloProperty.getAppId(), apolloProperty.getEnv(), apolloProperty.getClusterName(), apolloProperty.getNamespaceName(), openItemDTO);
+        apolloOpenApiClient.createOrUpdateItem(apolloProperty.getAppId(), apolloProperty.getEnv(), apolloProperty.getClusterName(), AppNameUtil.getCurrentAppNameSpace(app), openItemDTO);
 
         // Release configuration
         NamespaceReleaseDTO namespaceReleaseDTO = new NamespaceReleaseDTO();
@@ -66,6 +67,6 @@ public class DegradeRuleApolloPublisher implements DynamicRulePublisher<List<Deg
         namespaceReleaseDTO.setReleasedBy("apollo");
         //namespaceReleaseDTO.setReleasedBy("some-operator");
         namespaceReleaseDTO.setReleaseTitle("Modify or add configurations");
-        apolloOpenApiClient.publishNamespace(apolloProperty.getAppId(), apolloProperty.getEnv(), apolloProperty.getClusterName(), apolloProperty.getNamespaceName(), namespaceReleaseDTO);
+        apolloOpenApiClient.publishNamespace(apolloProperty.getAppId(), apolloProperty.getEnv(), apolloProperty.getClusterName(), AppNameUtil.getCurrentAppNameSpace(app), namespaceReleaseDTO);
     }
 }

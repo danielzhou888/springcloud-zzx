@@ -15,11 +15,9 @@ public class DdkySentinelProperties {
     public static final String APPID = "ddky.sentinel.apollo.appid";
     public static final String ENV = "ddky.sentinel.apollo.env";
     public static final String CLUSTER_NAME = "ddky.sentinel.apollo.cluster.name";
-    public static final String NAMESPACE_NAME = "ddky.sentinel.apollo.namespace.name";
     public static final String TOKEN_SERVER_NAMESPACE_NAME = "ddky.sentinel.apollo.token.server.namespace.name";
     public static final String PORTAL_URL = "ddky.sentinel.apollo.portal.url";
     public static final String PROJECT_NAME = "project.name";
-    //public static final String PROJECT_NAME = "ddky.sentinel.apollo.project.name";
 
     private final String FILE_NAME = "application.properties";
     private final String FILE_NAME_SPRING_MVC = "sentinel.properties";
@@ -30,7 +28,6 @@ public class DdkySentinelProperties {
     private String appid;
     private String env;
     private String clusterName = "default";
-    private String namespaceName;
     private String tokenServerNamespaceName;
     private String portalUrl;
     private String projectName;
@@ -101,9 +98,6 @@ public class DdkySentinelProperties {
             AssertUtil.notEmpty(properties.getProperty(CLUSTER_NAME), "sentinel apollo config field ddky.sentinel.apollo.cluster.name cannot be empty");
             clusterName = properties.getProperty(CLUSTER_NAME);
 
-            AssertUtil.notEmpty(properties.getProperty(NAMESPACE_NAME), "sentinel apollo config field ddky.sentinel.apollo.namespace.name cannot be empty");
-            namespaceName = properties.getProperty(NAMESPACE_NAME);
-
             AssertUtil.notEmpty(properties.getProperty(TOKEN_SERVER_NAMESPACE_NAME), "sentinel apollo config field ddky.sentinel.apollo.token.server.namespace.name cannot be empty");
             tokenServerNamespaceName = properties.getProperty(TOKEN_SERVER_NAMESPACE_NAME);
 
@@ -144,10 +138,6 @@ public class DdkySentinelProperties {
         return this.clusterName;
     }
 
-    public String getNamespaceName() {
-        return this.namespaceName;
-    }
-
     public String getPortalUrl() {
         return this.portalUrl;
     }
@@ -158,9 +148,5 @@ public class DdkySentinelProperties {
 
     public String getTokenServerNamespaceName() {
         return this.tokenServerNamespaceName;
-    }
-
-    public void setTokenServerNamespaceName(final String tokenServerNamespaceName) {
-        this.tokenServerNamespaceName = tokenServerNamespaceName;
     }
 }

@@ -1,5 +1,6 @@
 package com.zzx.sentinel.orderweb.sentinel;
 
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.zzx.sentinel.distribute.enums.ResponseEnum;
 import com.zzx.sentinel.distribute.response.ServiceResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class OrderControllerSentinell {
      * @return
      * @throws Exception
      */
-    public static ServiceResponse testSentinelAnnotationSentinel() throws Exception {
+    public static ServiceResponse testSentinelAnnotationSentinel(BlockException e) throws Exception {
         log.info("OrderControllerSentinell.testSentinelAnnotationSentinel 执行限流降级逻辑");
         return new ServiceResponse(ResponseEnum.CURRENT_VISITOR_LIMIT.getCode(), ResponseEnum.CURRENT_VISITOR_LIMIT.getName());
     }

@@ -21,7 +21,7 @@ public class SentinelConfiguration {
     //    return new SentinelResourceAspect();
     //}
 
-
+    //
     @Bean
     public SentinelAnnotationAspect sentinelAnnotationAspect() {
         return new SentinelAnnotationAspect();

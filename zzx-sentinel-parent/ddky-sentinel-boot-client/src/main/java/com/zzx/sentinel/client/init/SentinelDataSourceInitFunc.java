@@ -10,7 +10,6 @@ import com.alibaba.csp.sentinel.cluster.server.config.ClusterServerConfigManager
 import com.alibaba.csp.sentinel.cluster.server.config.ServerFlowConfig;
 import com.alibaba.csp.sentinel.cluster.server.config.ServerTransportConfig;
 import com.alibaba.csp.sentinel.datasource.ReadableDataSource;
-import com.alibaba.csp.sentinel.datasource.apollo.ApolloDataSource;
 import com.alibaba.csp.sentinel.init.InitFunc;
 import com.alibaba.csp.sentinel.slots.block.authority.AuthorityRule;
 import com.alibaba.csp.sentinel.slots.block.authority.AuthorityRuleManager;
@@ -31,8 +30,9 @@ import com.zzx.sentinel.client.cluster.parser.ClusterServerFlowConfigParser;
 import com.zzx.sentinel.client.cluster.parser.ClusterTransportConfigParser;
 import com.zzx.sentinel.client.config.ApolloConfigUtil;
 import com.zzx.sentinel.client.config.DdkySentinelProperties;
+import com.zzx.sentinel.client.datasource.ApolloDataSource;
 import com.zzx.sentinel.client.log.RecordLog;
-import com.zzx.sentinel.client.util.AssertUtil;
+import com.zzx.sentinel.client.util.AppNameUtil;
 
 import java.util.List;
 
@@ -48,11 +48,11 @@ public class SentinelDataSourceInitFunc implements InitFunc {
 
     private static DdkySentinelProperties ddkySentinelProperties;
 
-    private static final String FLOW_DATA_ID_POSTFIX = ".flow-rules";
-    private static final String DEGRADE_DATA_ID_POSTFIX = ".degrade-rules";
-    private static final String PARAM_FLOW_DATA_ID_POSTFIX = ".param-flow-rules";
-    private static final String AUTHORITY_DATA_ID_POSTFIX = ".authority-rules";
-    private static final String SYSTEM_DATA_ID_POSTFIX = ".system-rules";
+    private static final String FLOW_DATA_ID_SUFFIX = "flow-rules.";
+    private static final String DEGRADE_DATA_ID_SUFFIX = "degrade-rules.";
+    private static final String PARAM_FLOW_DATA_ID_SUFFIX = "param-flow-rules.";
+    private static final String AUTHORITY_DATA_ID_SUFFIX = "authority-rules.";
+    private static final String SYSTEM_DATA_ID_SUFFIX = "system-rules.";
 
     private static final String APP_ID = "app.id";
     private static final String APOLLO_META = "apollo.meta";
@@ -62,11 +62,6 @@ public class SentinelDataSourceInitFunc implements InitFunc {
     private String nameSpaceName;
     private String tokenServerNamespaceName;
 
-    //private final String defaultFlowRules = "[]";
-    //private final String defaultDegradeRules = "[]";
-    //private final String defaultSystemRules = "[]";
-    //private final String defaultAuthorityRules = "[]";
-    //private final String defaultParamFlowRules = "[]";
     private final String defaultRules = "[]";
 
     static {
@@ -78,11 +73,9 @@ public class SentinelDataSourceInitFunc implements InitFunc {
         final String appId = ddkySentinelProperties.getAppid();
         final String portalUrl = ddkySentinelProperties.getPortalUrl();
         final String env = ddkySentinelProperties.getEnv();
-        //final String nameSpaceName = ddkySentinelProperties.getNamespaceName();
-        //final String projectName = ddkySentinelProperties.getProjectName();
 
         projectName = ddkySentinelProperties.getProjectName();
-        nameSpaceName = ddkySentinelProperties.getNamespaceName();
+        nameSpaceName = AppNameUtil.getCurrentAppNameSpace(projectName);
         tokenServerNamespaceName = ddkySentinelProperties.getTokenServerNamespaceName();
 
         System.setProperty(APP_ID, appId);
@@ -91,7 +84,6 @@ public class SentinelDataSourceInitFunc implements InitFunc {
 
         RecordLog.info("SentinelDataSourceInitFunc init run : appid = {}, portalUrl = {}, env = {}, nameSpaceName = {}, tokenServerNamespaceName = {}, projectName = {}", appId, portalUrl, env, nameSpaceName, tokenServerNamespaceName, projectName);
 
-
         initFlowRuleConfig();
         initDegradeRuleConfig();
         initParamFlowRuleConfig();
@@ -99,11 +91,7 @@ public class SentinelDataSourceInitFunc implements InitFunc {
         initSystemRuleConfig();
         initClusterConfig();
 
-
-
         RecordLog.info("SentinelDataSourceInitFunc init execute success");
-
-
     }
 
     //private void initClusterConfig() {
@@ -111,33 +99,33 @@ public class SentinelDataSourceInitFunc implements InitFunc {
     //}
 
     private void initSystemRuleConfig() {
-        final String systemRuleKey = String.format("%s%s", projectName, SYSTEM_DATA_ID_POSTFIX);
-        ReadableDataSource<String, List<SystemRule>> systemRuleDataSource = new ApolloDataSource<>(nameSpaceName, systemRuleKey, defaultRules, source -> JSON.parseObject(source, new TypeReference<List<SystemRule>>() {}));
+        //final String systemRuleKey = String.format("%s%s", projectName, SYSTEM_DATA_ID_SUFFIX);
+        ReadableDataSource<String, List<SystemRule>> systemRuleDataSource = new ApolloDataSource<>(nameSpaceName, SYSTEM_DATA_ID_SUFFIX, defaultRules, source -> JSON.parseObject(source, new TypeReference<List<SystemRule>>() {}));
         SystemRuleManager.register2Property(systemRuleDataSource.getProperty());
     }
 
     private void initAuthorityRuleConfig() {
-        final String authorityRuleKey = String.format("%s%s", projectName, AUTHORITY_DATA_ID_POSTFIX);
-        ReadableDataSource<String, List<AuthorityRule>> authorityRuleDataSource = new ApolloDataSource<>(nameSpaceName, authorityRuleKey, defaultRules, source -> JSON.parseObject(source, new TypeReference<List<AuthorityRule>>() {}));
+        //final String authorityRuleKey = String.format("%s%s", projectName, AUTHORITY_DATA_ID_SUFFIX);
+        ReadableDataSource<String, List<AuthorityRule>> authorityRuleDataSource = new ApolloDataSource<>(nameSpaceName, AUTHORITY_DATA_ID_SUFFIX, defaultRules, source -> JSON.parseObject(source, new TypeReference<List<AuthorityRule>>() {}));
         AuthorityRuleManager.register2Property(authorityRuleDataSource.getProperty());
 
     }
 
     private void initFlowRuleConfig() {
-        final String flowRuleKey = String.format("%s%s", projectName, FLOW_DATA_ID_POSTFIX);
-        ReadableDataSource<String, List<FlowRule>> flowRuleDataSource = new ApolloDataSource<>(nameSpaceName, flowRuleKey, defaultRules, source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {}));
+        //final String flowRuleKey = String.format("%s%s", projectName, FLOW_DATA_ID_SUFFIX);
+        ReadableDataSource<String, List<FlowRule>> flowRuleDataSource = new ApolloDataSource<>(nameSpaceName, FLOW_DATA_ID_SUFFIX, defaultRules, source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {}));
         FlowRuleManager.register2Property(flowRuleDataSource.getProperty());
     }
 
     private void initDegradeRuleConfig() {
-        final String degradeRuleKey = String.format("%s%s", projectName, DEGRADE_DATA_ID_POSTFIX);
-        ReadableDataSource<String, List<DegradeRule>> degradeRuleDataSource = new ApolloDataSource<>(nameSpaceName, degradeRuleKey, defaultRules, source -> JSON.parseObject(source, new TypeReference<List<DegradeRule>>() {}));
+        //final String degradeRuleKey = String.format("%s%s", projectName, DEGRADE_DATA_ID_SUFFIX);
+        ReadableDataSource<String, List<DegradeRule>> degradeRuleDataSource = new ApolloDataSource<>(nameSpaceName, DEGRADE_DATA_ID_SUFFIX, defaultRules, source -> JSON.parseObject(source, new TypeReference<List<DegradeRule>>() {}));
         DegradeRuleManager.register2Property(degradeRuleDataSource.getProperty());
     }
 
     private void initParamFlowRuleConfig() {
-        final String paramFlowRuleKey = String.format("%s%s", projectName, PARAM_FLOW_DATA_ID_POSTFIX);
-        ReadableDataSource<String, List<ParamFlowRule>> paramFlowRuleDataSource = new ApolloDataSource<>(nameSpaceName, paramFlowRuleKey, defaultRules, source -> JSON.parseObject(source, new TypeReference<List<ParamFlowRule>>() {}));
+        //final String paramFlowRuleKey = String.format("%s%s", projectName, PARAM_FLOW_DATA_ID_SUFFIX);
+        ReadableDataSource<String, List<ParamFlowRule>> paramFlowRuleDataSource = new ApolloDataSource<>(nameSpaceName, PARAM_FLOW_DATA_ID_SUFFIX, defaultRules, source -> JSON.parseObject(source, new TypeReference<List<ParamFlowRule>>() {}));
         ParamFlowRuleManager.register2Property(paramFlowRuleDataSource.getProperty());
     }
 
@@ -216,7 +204,7 @@ public class SentinelDataSourceInitFunc implements InitFunc {
         // Register cluster flow rule property supplier which creates data source by namespace.
         ClusterFlowRuleManager.setPropertySupplier(namespace -> {
             ReadableDataSource<String, List<FlowRule>> ds = new ApolloDataSource<>(nameSpaceName,
-                    ApolloConfigUtil.getFlowDataId(projectName), defaultRules, source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {
+                    FLOW_DATA_ID_SUFFIX, defaultRules, source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {
                     //ApolloConfigUtil.getFlowDataId(projectName), defaultRules, source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {
             }));
             return ds.getProperty();
@@ -225,7 +213,8 @@ public class SentinelDataSourceInitFunc implements InitFunc {
         // Register cluster parameter flow rule property supplier.
         ClusterParamFlowRuleManager.setPropertySupplier(namespace -> {
             ReadableDataSource<String, List<ParamFlowRule>> ds = new ApolloDataSource<>(nameSpaceName,
-                    ApolloConfigUtil.getParamFlowDataId(projectName), defaultRules, source -> JSON.parseObject(source, new TypeReference<List<ParamFlowRule>>() {
+                    PARAM_FLOW_DATA_ID_SUFFIX, defaultRules, source -> JSON.parseObject(source, new TypeReference<List<ParamFlowRule>>() {
+                    //ApolloConfigUtil.getParamFlowDataId(projectName), defaultRules, source -> JSON.parseObject(source, new TypeReference<List<ParamFlowRule>>() {
             }));
 
             return ds.getProperty();

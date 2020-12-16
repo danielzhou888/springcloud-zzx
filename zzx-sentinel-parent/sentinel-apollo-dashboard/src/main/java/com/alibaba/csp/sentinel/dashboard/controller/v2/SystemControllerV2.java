@@ -260,6 +260,6 @@ public class SystemControllerV2 {
 
     private void publishRules(/*@NonNull*/ String app) throws Exception {
         List<SystemRuleEntity> rules = repository.findAllByApp(app);
-        rulePublisher.publish(app, rules);
+        rulePublisher.publish(app, rules, "");
     }
 }
