@@ -5,8 +5,6 @@ import org.apache.dubbo.config.spring.context.annotation.DubboComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.servlet.Filter;
-
 /**
  * Sentinel 配置
  * @author zhouzhixiang

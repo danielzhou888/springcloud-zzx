@@ -19,7 +19,7 @@
 
     <modules>
         <module>sentinel-distribute-response-common</module>
-<!--        <module>ddky-sentinel-boot-client</module>-->
+        <module>ddky-sentinel-boot-client</module>
         <module>sentinel-readproduct-all</module>
         <module>sentinel-dfc-all</module>
         <module>sentinel-dcs-all</module>
