@@ -24,6 +24,7 @@
         <aspectj.version>1.9.2</aspectj.version>
         <spring.test.version>5.1.5.RELEASE</spring.test.version>
         <ddky-apollo-client.version>1.5.0</ddky-apollo-client.version>
+        <dubbo.version>2.7.7</dubbo.version>
     </properties>
 
     <dependencies>
@@ -231,6 +232,24 @@
             <artifactId>spring-test</artifactId>
             <version>${spring.test.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>${dubbo.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.3.2</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

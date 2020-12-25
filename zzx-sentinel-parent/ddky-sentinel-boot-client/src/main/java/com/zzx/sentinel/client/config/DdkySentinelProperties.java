@@ -20,7 +20,7 @@ public class DdkySentinelProperties {
     public static final String PROJECT_NAME = "project.name";
 
     private final String FILE_NAME = "application.properties";
-    private final String FILE_NAME_SPRING_MVC = "sentinel.properties";
+    private final String FILE_NAME_SENTINEL = "sentinel.properties";
     private static volatile DdkySentinelProperties instances ;
 
     private final Properties properties  = new Properties();
@@ -48,19 +48,18 @@ public class DdkySentinelProperties {
     }
     
     private void init() {
-        File f = new File(FILE_NAME);
+        // 优先读取sentinel.properties文件
+        File f = new File(FILE_NAME_SENTINEL);
         InputStream inputStream = null;
-        String fileName = FILE_NAME;
+        String fileName = FILE_NAME_SENTINEL;
         if (!f.exists()) {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             inputStream = loader.getResourceAsStream(fileName);
             if (inputStream == null) {
-                // springmvc项目
-                fileName = FILE_NAME_SPRING_MVC;
+                fileName = FILE_NAME;
                 inputStream = loader.getResourceAsStream(fileName);
                 if (inputStream == null) {
-                    fileName = FILE_NAME;
-                    inputStream = loader.getResourceAsStream(fileName);
+                    throw new RuntimeException("缺少Sentinel配置文件");
                 }
             }
         } else {
