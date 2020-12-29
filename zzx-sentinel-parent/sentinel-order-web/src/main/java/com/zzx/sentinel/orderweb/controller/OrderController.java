@@ -340,4 +340,9 @@ public class OrderController {
         return this.orderApi.testDefaultMachine();
     }
 
+    @RequestMapping("/testGlobalFallbackHandler")
+    @ResponseBody
+    public ServiceResponse testGlobalFallbackHandler() {
+        return this.orderApi.testGlobalFallbackHandler();
+    }
 }

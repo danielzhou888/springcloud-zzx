@@ -1,11 +1,10 @@
-package com.zzx.sentinel.client.handler;
+package com.zzx.sentinel.client.fallback.handler;
 
 import com.alibaba.csp.sentinel.adapter.dubbo.fallback.DubboFallback;
 import com.alibaba.csp.sentinel.adapter.dubbo.fallback.DubboFallbackRegistry;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.zzx.sentinel.client.core.FallbackProxy;
-import com.zzx.sentinel.client.core.SentinelFallbackBeanFactory;
-import com.zzx.sentinel.client.util.FallbackResultUtil;
+import com.zzx.sentinel.client.fallback.proxy.FallbackProxy;
+import com.zzx.sentinel.client.fallback.register.SentinelFallbackBeanRegister;
 import com.zzx.sentinel.client.util.FallbackServiceNameUtil;
 import org.apache.dubbo.common.utils.ArrayUtils;
 import org.apache.dubbo.rpc.*;
@@ -14,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 限流降级统一处理类
@@ -24,7 +24,7 @@ public class GlobalDubboFallbackHandler {
 
     private static final Logger logger= LoggerFactory.getLogger(GlobalDubboFallbackHandler.class);
 
-    static {
+    public static void init() {
         DubboFallbackRegistry.setProviderFallback(new DubboFallback() {
             @Override
             public Result handle(Invoker<?> invoker, Invocation invocation, BlockException e) {
@@ -43,41 +43,39 @@ public class GlobalDubboFallbackHandler {
     private static Result doHandle(Invoker<?> invoker, Invocation invocation, BlockException e) {
         Result result = doFallbackProcess(invoker, invocation, e);
         if (result == null) {
-            RpcInvocation rpcInvocation = (RpcInvocation) invocation;
-            Class<?> returnType = rpcInvocation.getReturnType();
-            result = FallbackResultUtil.getEmptyResult(returnType, invocation);
+            return AsyncRpcResult.newDefaultAsyncResult(invocation);
         }
         return result;
     }
 
     private static Result doFallbackProcess(Invoker<?> invoker, Invocation invocation, BlockException e) {
         String serviceName = invoker.getInterface().getSimpleName();
+        String interfaceName = invoker.getInterface().getName();
         String methodName = invocation.getMethodName();
         Class<?>[] parameterTypes = invocation.getParameterTypes();
-
-        FallbackProxy fallbackProxy = SentinelFallbackBeanFactory.fallbackBeanMap.get(FallbackServiceNameUtil.getFallbackServiceName(serviceName));
+        // 类:方法(参数)  -》 key，从容器取key对应的FallbackProxy
+        ConcurrentHashMap<String, FallbackProxy> fallbackBeanMap = SentinelFallbackBeanRegister.fallbackBeanMap;
+        FallbackProxy fallbackProxy = fallbackBeanMap.get(interfaceName);
         if (fallbackProxy != null) {
-            Class<?> targetServiceClz = fallbackProxy.getClass();
-            try {
-                Method method = targetServiceClz.getMethod(methodName, parameterTypes);
-                if (method != null) {
-                    int modifiers = method.getModifiers();
-
+            String fallbackBeanMethodkey = FallbackServiceNameUtil.getFallbackBeanMethodkey(fallbackProxy.getClass(), methodName, parameterTypes);
+            Method proxyMethod = SentinelFallbackBeanRegister.fallbackMethodMap.get(fallbackBeanMethodkey);
+            if (proxyMethod != null) {
+                try {
+                    int modifiers = proxyMethod.getModifiers();
                     if (Modifier.isStatic(modifiers)) {
-                        return AsyncRpcResult.newDefaultAsyncResult(method.invoke(null, ArrayUtils.isNotEmpty(invocation.getArguments())), invocation);
+                        return AsyncRpcResult.newDefaultAsyncResult(proxyMethod.invoke(null, ArrayUtils.isNotEmpty(invocation.getArguments())), invocation);
                     } else {
-                        return AsyncRpcResult.newDefaultAsyncResult(method.invoke(fallbackProxy, invocation.getArguments()), invocation);
+                        return AsyncRpcResult.newDefaultAsyncResult(proxyMethod.invoke(fallbackProxy, invocation.getArguments()), invocation);
                     }
+                } catch (IllegalAccessException ex) {
+                    logger.error("doFallbackProcess exception {}", ex);
+                } catch (InvocationTargetException ex) {
+                    logger.error("doFallbackProcess exception {}", ex);
                 }
-            } catch (NoSuchMethodException ex) {
-                logger.error("doFallbackProcess exception {}", ex);
-            } catch (IllegalAccessException ex) {
-                logger.error("doFallbackProcess exception {}", ex);
-            } catch (InvocationTargetException ex) {
-                logger.error("doFallbackProcess exception {}", ex);
             }
         }
         return null;
     }
 
 }
+

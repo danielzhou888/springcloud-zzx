@@ -6,12 +6,10 @@
 package com.zzx.sentinel.client.util;
 
 import com.alibaba.csp.sentinel.util.StringUtil;
-import com.zzx.sentinel.client.cluster.entity.ClusterGroupEntity;
+import com.zzx.sentinel.client.apollo.cluster.entity.ClusterGroupEntity;
 import com.zzx.sentinel.client.log.RecordLog;
 
-import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 
 public final class MachineUtils {
 

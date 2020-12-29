@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 @DubboService(interfaceClass = VoucherApi.class, dynamic = true)
 @Slf4j
@@ -95,5 +98,23 @@ public class VoucherServiceImpl implements VoucherApi {
     @Override
     public ServiceResponse testUseSentinelResourceNamer() {
         return new ServiceResponse();
+    }
+
+    @Override
+    public List testGlobalFallbackHandler(int type, String name) {
+        List list = new ArrayList();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+        list.add(5);
+        return list;
+    }
+
+    @Override
+    public ServiceResponse testGlobalFallbackReturnResponse(int type, String name) {
+        ServiceResponse response = new ServiceResponse();
+        response.setMsg("我是voucher 成功");
+        return response;
     }
 }

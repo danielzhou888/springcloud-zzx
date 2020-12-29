@@ -1,4 +1,4 @@
-package com.zzx.sentinel.client.core;
+package com.zzx.sentinel.client.fallback.proxy;
 
 /**
  * Sentinel Fallback 代理父类

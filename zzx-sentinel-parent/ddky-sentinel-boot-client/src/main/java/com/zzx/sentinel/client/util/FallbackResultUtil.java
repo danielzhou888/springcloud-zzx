@@ -3,7 +3,6 @@
  */
 package com.zzx.sentinel.client.util;
 
-import com.zzx.sentinel.client.handler.GlobalDubboFallbackHandler;
 import org.apache.dubbo.rpc.AsyncRpcResult;
 import org.apache.dubbo.rpc.Invocation;
 import org.apache.dubbo.rpc.Result;
@@ -11,10 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author zhumz
@@ -33,6 +29,8 @@ public class FallbackResultUtil {
             return AsyncRpcResult.newDefaultAsyncResult(Array.newInstance(returnType, 0), invocation);
         } else if (List.class.isAssignableFrom(returnType)) {
             return AsyncRpcResult.newDefaultAsyncResult(new ArrayList<>(), invocation);
+        } else if (Set.class.isAssignableFrom(returnType)) {
+            return AsyncRpcResult.newDefaultAsyncResult(new HashSet<>(), invocation);
         } else if (Map.class.isAssignableFrom(returnType)) {
             return AsyncRpcResult.newDefaultAsyncResult(new HashMap<>(), invocation);
         } else {

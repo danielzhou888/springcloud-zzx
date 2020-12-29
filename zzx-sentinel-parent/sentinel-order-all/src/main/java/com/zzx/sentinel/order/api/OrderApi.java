@@ -11,4 +11,7 @@ public interface OrderApi {
     ServiceResponse globalBlockMethod() throws Exception;
 
     ServiceResponse testDefaultMachine();
+
+    ServiceResponse testGlobalFallbackHandler();
+
 }

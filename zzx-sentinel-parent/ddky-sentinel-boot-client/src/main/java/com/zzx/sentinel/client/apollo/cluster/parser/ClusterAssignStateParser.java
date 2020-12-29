@@ -1,19 +1,14 @@
-package com.zzx.sentinel.client.cluster.parser;
+package com.zzx.sentinel.client.apollo.cluster.parser;
 
 import com.alibaba.csp.sentinel.cluster.ClusterStateManager;
 import com.alibaba.csp.sentinel.datasource.Converter;
-import com.alibaba.csp.sentinel.util.AppNameUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.ctrip.framework.apollo.core.utils.StringUtils;
-import com.zzx.sentinel.client.cluster.entity.ClusterGroupEntity;
+import com.zzx.sentinel.client.apollo.cluster.entity.ClusterGroupEntity;
 import com.zzx.sentinel.client.log.RecordLog;
-import com.zzx.sentinel.client.util.AddressUtils;
 import com.zzx.sentinel.client.util.MachineUtils;
 
-import java.net.SocketException;
-import java.util.Collections;
 import java.util.Set;
 
 /**

@@ -214,10 +214,12 @@
 					<groupId>com.zzx.sentinel</groupId>
 					<artifactId>ddky-sentinel-boot-client</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>com.ddky.sentinel</groupId>
+					<artifactId>ddky-sentinel-client</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
-
-
         <!-- 业务系统 end -->
 
 

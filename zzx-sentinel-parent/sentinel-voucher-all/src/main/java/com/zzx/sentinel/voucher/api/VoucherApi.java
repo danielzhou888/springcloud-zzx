@@ -4,6 +4,7 @@ package com.zzx.sentinel.voucher.api;
 import com.zzx.sentinel.distribute.response.ServiceResponse;
 
 import javax.xml.ws.Service;
+import java.util.List;
 
 public interface VoucherApi {
 
@@ -24,4 +25,8 @@ public interface VoucherApi {
 	ServiceResponse testDefaultMachine();
 
     ServiceResponse testUseSentinelResourceNamer();
+
+	List testGlobalFallbackHandler(int type, String name);
+
+    ServiceResponse testGlobalFallbackReturnResponse(int type, String name);
 }

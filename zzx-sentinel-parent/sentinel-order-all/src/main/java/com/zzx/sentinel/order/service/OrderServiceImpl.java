@@ -11,13 +11,16 @@ import com.zzx.sentinel.order.mq.MQClient;
 import com.zzx.sentinel.order.resp.OrderResult;
 import com.zzx.sentinel.order.sentinel.VoucherApiSentinel;
 import com.zzx.sentinel.order.utils.OrderUtils;
+import com.zzx.sentinel.voucher.api.VoucherApi;
 import com.zzx.sentinel.voucher.po.Promotion;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import sun.nio.ch.ThreadPool;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -30,6 +33,9 @@ public class OrderServiceImpl implements OrderApi {
 
 	@Autowired
     private VoucherWrapApi voucherApi;
+
+	@Autowired
+    private VoucherApi voucherOriginApi;
 
 	private static ThreadPoolExecutor createOrderPool = new ThreadPoolExecutor(10, 20, 6, TimeUnit.SECONDS, new LinkedBlockingDeque<>(40), new ThreadPoolExecutor.CallerRunsPolicy());
 
@@ -189,5 +195,18 @@ public class OrderServiceImpl implements OrderApi {
     @Override
     public ServiceResponse testDefaultMachine() {
         return voucherApi.testDefaultMachine();
+    }
+
+    @Override
+    public ServiceResponse testGlobalFallbackHandler() {
+        List list = voucherOriginApi.testGlobalFallbackHandler(1,"zzx");
+        ServiceResponse response = new ServiceResponse();
+        response = voucherOriginApi.testGlobalFallbackReturnResponse(1, "zzx");
+        if (CollectionUtils.isEmpty(list)) {
+            log.info("降级了");
+        }
+        log.info("testGlobalFallbackHandler success");
+        response.setData(list);
+        return response;
     }
 }

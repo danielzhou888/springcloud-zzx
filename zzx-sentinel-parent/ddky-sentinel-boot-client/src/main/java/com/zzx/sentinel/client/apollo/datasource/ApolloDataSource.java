@@ -1,8 +1,7 @@
-package com.zzx.sentinel.client.datasource;
+package com.zzx.sentinel.client.apollo.datasource;
 
 import com.alibaba.csp.sentinel.datasource.AbstractDataSource;
 import com.alibaba.csp.sentinel.datasource.Converter;
-import com.alibaba.csp.sentinel.property.SentinelProperty;
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigChangeListener;
 import com.ctrip.framework.apollo.ConfigService;
@@ -12,9 +11,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.zzx.sentinel.client.log.RecordLog;
+import org.springframework.util.CollectionUtils;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ApolloDataSource<T> extends AbstractDataSource<String, T> {
@@ -45,12 +44,31 @@ public class ApolloDataSource<T> extends AbstractDataSource<String, T> {
 
     private void initialize() {
         this.initializeConfigChangeListener();
+        this.loadAndUpdateRulesFirst();
+        //try {
+        //    for (String s : ruleKeyList) {
+        //        this.loadAndUpdateRules(s);
+        //    }
+        //} catch (Exception e) {
+        //    RecordLog.error("[ApolloDataSource] Error when initialize rule config {}", e);
+        //}
+    }
+
+    private void loadAndUpdateRulesFirst() {
         try {
-            for (String s : ruleKeyList) {
-                this.loadAndUpdateRules(s);
+            List<T> currentList = new ArrayList<>();
+            T newValue = null;
+            for (String key : ruleKeyList) {
+                String value = this.config.getProperty(key, this.defaultRuleValue);
+                newValue = this.loadConfig(value);
+                if (newValue != null && newValue instanceof List) {
+                    currentList.addAll((Collection<? extends T>) newValue);
+                }
             }
+            boolean b = CollectionUtils.isEmpty(currentList) ? this.getProperty().updateValue(newValue) : this.getProperty().updateValue((T) currentList);
+            RecordLog.info(String.format("loadAndUpdateRulesFirst key = %s, updateValue %s", ruleKeyList.toString(), b));
         } catch (Exception e) {
-            RecordLog.error("[ApolloDataSource] Error when initialize rule config {}", e);
+            RecordLog.warn("[ApolloDataSource] Error when loadAndUpdateRulesFirst rule config", e);
         }
     }
 
@@ -59,10 +77,10 @@ public class ApolloDataSource<T> extends AbstractDataSource<String, T> {
             String value = this.config.getProperty(key, this.defaultRuleValue);
             T newValue = this.loadConfig(value);
             if (newValue == null) {
-                RecordLog.warn("[ApolloDataSource] WARN: rule config is null, you may have to check your data source", new Object[0]);
+                RecordLog.info("[ApolloDataSource] WARN: rule config is null, you may have to check your data source", new Object[0]);
             }
-            SentinelProperty<T> property = this.getProperty();
-            property.updateValue(newValue);
+            boolean b = this.getProperty().updateValue(newValue);
+            RecordLog.info(String.format("loadAndUpdateRules key = %s, updateValue %s", key, b));
         } catch (Exception e) {
             RecordLog.warn("[ApolloDataSource] Error when loading rule config", e);
         }
@@ -72,7 +90,7 @@ public class ApolloDataSource<T> extends AbstractDataSource<String, T> {
         try {
             T newValue = this.loadConfig();
             if (newValue == null) {
-                RecordLog.warn("[ApolloDataSource] WARN: rule config is null, you may have to check your data source", new Object[0]);
+                RecordLog.info("[ApolloDataSource] WARN: rule config is null, you may have to check your data source", new Object[0]);
             }
 
             this.getProperty().updateValue(newValue);
@@ -92,6 +110,7 @@ public class ApolloDataSource<T> extends AbstractDataSource<String, T> {
             @Override
             public void onChange(ConfigChangeEvent changeEvent) {
                 Set<String> changedKeys = changeEvent.changedKeys();
+                // TODO 只匹配本listener的prefix的key，不能所有改变的key 让每个listener都load update，重复load了
                 RecordLog.info("[ApolloDataSource] Received config changes key：{}", StringUtils.join(changedKeys, ","));
                 ApolloDataSource.this.loadAndUpdateRulesRuleKeySuffix(changedKeys);
             }
