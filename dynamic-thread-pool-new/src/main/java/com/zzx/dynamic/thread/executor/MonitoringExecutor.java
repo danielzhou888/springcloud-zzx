@@ -101,4 +101,10 @@ public interface MonitoringExecutor extends Executor {
      */
     long getRejectedTaskCount();
 
+    /**
+     * 阻塞队列当前大小
+     * @return
+     */
+    int getWorkQueueSize();
+
 }

@@ -1,7 +1,13 @@
 package com.zzx.dynamic.thread.config;
 
 import com.ctrip.framework.apollo.Config;
+import com.ctrip.framework.apollo.ConfigChangeListener;
 import com.ctrip.framework.apollo.ConfigService;
+import com.ctrip.framework.apollo.model.ConfigChange;
+import com.ctrip.framework.apollo.model.ConfigChangeEvent;
+import com.zzx.dynamic.thread.executor.DdkyExecutor;
+import com.zzx.dynamic.thread.factory.DefaultDdkyExecutorFactory;
+import com.zzx.dynamic.thread.queue.ResizableLinkedBlockingQueue;
 import com.zzx.dynamic.thread.selector.DefaultExecutorSelector;
 import com.zzx.dynamic.thread.util.Strings;
 import org.slf4j.Logger;
@@ -9,7 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -23,6 +30,8 @@ public class DdkyExecutorsProperty {
     private static final String DEFAULT_PROPRETIES_FILE_NAME = "ddky-executors.properties";
 
     private static final String DEFAULT_NAME_SPACE = "application";
+
+    private static String NAME_SPACE_VALUE = DEFAULT_NAME_SPACE;
 
     private static final String PROPERTY_PREFIX = "ddky.executors.";;
     private static final String SELECTOR = PROPERTY_PREFIX + "selector";
@@ -46,21 +55,24 @@ public class DdkyExecutorsProperty {
     private static final String SELECTOR_EXPRESSION = "expression";
     private static final String NAME_SPACE = PROPERTY_PREFIX + "nameSpace";
 
-    public DdkyExecutorsProperty() {
-        try {
-            initialize();
-            loadProps();
-        } catch (Throwable ex) {
-            if (LOGGER.isWarnEnabled()) {
-                LOGGER.warn("[DdkyExecutorsProperty] 解析失败", ex);
-            }
-        }
-    }
+    private static Config config;
+
+    //public DdkyExecutorsProperty() {
+    //    try {
+    //        initialize();
+    //        loadProps();
+    //    } catch (Throwable ex) {
+    //        if (LOGGER.isWarnEnabled()) {
+    //            LOGGER.warn("[DdkyExecutorsProperty] 解析失败", ex);
+    //        }
+    //    }
+    //}
 
     static {
         try {
             initialize();
             loadProps();
+            listenApollo();
         } catch (Throwable ex) {
             LOGGER.warn("[DdkyExecutorsProperty] 解析失败", ex);
         }
@@ -89,7 +101,138 @@ public class DdkyExecutorsProperty {
     //    }
     //}
 
+    /**
+     * 监听apollo配置变化
+     */
+    public static void listenApollo() {
+
+        config.addChangeListener(new ConfigChangeListener() {
+            @Override
+            public void onChange(ConfigChangeEvent configChangeEvent) {
+
+                for (String key : configChangeEvent.changedKeys()) {
+
+                    if (!key.startsWith(PROPERTY_PREFIX)) {
+                        if (LOGGER.isInfoEnabled()) {
+                            LOGGER.info("当前配置修改项目不是叮当线程池配置参数，跳过，key = {}", key);
+                        }
+                        continue;
+                    }
+
+                    if (LOGGER.isInfoEnabled()) {
+                        LOGGER.info("叮当动态线程池配置发生了变化, 命名空间名 = {}, changedKey = {}", configChangeEvent.getNamespace(), key);
+                    }
+
+                    ConfigChange change = configChangeEvent.getChange(key);
+
+                    String newValue = change.getNewValue();
+                    refreshThreadPool(key, newValue);
+                    if (LOGGER.isInfoEnabled()) {
+                        LOGGER.info("叮当动态线程池配置发生了变化 key = {}, oldValue = {}, newValue = {}, changeType = {}", change.getPropertyName(), change.getOldValue(), change.getNewValue(), change.getChangeType());
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 刷新线程池参数
+     * @param key
+     * @param newValue
+     */
+    private static void refreshThreadPool(String key, String newValue) {
+
+        try {
+            int index = matchIndex(key);
+
+            String poolName = config.getProperty(EXECUTOR + "[" + index + "]" + "." + POOL_NAME, DdkyExecutorProperty.DEFAULT_POOL_NAME);
+
+            DdkyExecutorProperty ddkyExecutorProperty = getDdkyExecutorProperty(poolName);
+
+            if (ddkyExecutorProperty == null) {
+                if (LOGGER.isWarnEnabled()) {
+                    LOGGER.warn("[DdkyExecutorsProperty] refreshThreadPool 没有获取到线程池poolName = {}的线程配置", poolName);
+                }
+                return;
+            }
+
+            DdkyExecutor executor = DefaultDdkyExecutorFactory.executorsCached.get(poolName);
+
+            if (executor == null) {
+                if (LOGGER.isWarnEnabled()) {
+                    LOGGER.warn("[DdkyExecutorsProperty] refreshThreadPool 线程池执行对象为空，请注意, poolName name = {}", poolName);
+                }
+                return;
+            }
+            String corePoolSize = EXECUTOR + "[" + index + "]" + "." + CORE_POOL_SIZE;
+            if (corePoolSize.equals(key)) {
+                Integer coreSizeTemp = Integer.valueOf(newValue);
+                if (coreSizeTemp > ddkyExecutorProperty.getMaximumPoolSize()) {
+                    throw new IllegalArgumentException(String.format("核心线程数不能大于最大线程数 nameSpace = {}, coreSizeTemp = {}, maxPoolSize = {}", NAME_SPACE_VALUE, coreSizeTemp, ddkyExecutorProperty.getMaximumPoolSize()));
+                }
+                executor.setCorePoolSize(Integer.valueOf(newValue));
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("修改核心线程数 nameSpace = {}, key = {}, value = {}", NAME_SPACE_VALUE, key, newValue);
+                }
+            }
+            String maximumPoolSize = EXECUTOR + "[" + index + "]" + "." + MAXIMUM_POOL_SIZE;
+            if (maximumPoolSize.equals(key)) {
+                executor.setMaximumPoolSize(Integer.valueOf(newValue));
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("修改最大线程数 nameSpace = {}, key = {}, value = {}", NAME_SPACE_VALUE, key, newValue);
+                }
+            }
+            String keepAliveTime = EXECUTOR + "[" + index + "]" + "." + KEEP_ALIVE_TIME;
+            if (keepAliveTime.equals(key)) {
+                executor.setKeepAliveTime(Integer.valueOf(newValue), TimeUnit.SECONDS);
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("修改活跃时间 nameSpace = {}, key = {}, value = {}", NAME_SPACE_VALUE, key, newValue);
+                }
+            }
+            String queueCapacity = EXECUTOR + "[" + index + "]" + "." + QUEUE_CAPACITY;
+            if (queueCapacity.equals(key)) {
+                if (executor.getWorkQueue() instanceof ResizableLinkedBlockingQueue) {
+                    if (LOGGER.isInfoEnabled()) {
+                        LOGGER.info("当前队列是弹性队列，可被修改，nameSpace = {}, 修改前的队列长度：{}，修改后的队列长度：{}", NAME_SPACE_VALUE, executor.getWorkQueueCapacity(), newValue);
+                    }
+                    ((ResizableLinkedBlockingQueue<Runnable>) executor.getWorkQueue()).setCapacity(Integer.parseInt(newValue));
+                }
+            }
+        } catch (Exception e) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("[DdkyExecutorsProperty] refreshThreadPool 发生了异常 {}", e);
+            }
+        }
+
+    }
+
+    private static int matchIndex(String key) {
+        Pattern p = Pattern.compile("\\[\\d+\\]");
+        Matcher matcher = p.matcher(key);
+        boolean b = matcher.find();
+        int result;
+        if (b) {
+            result = Integer.parseInt(key.substring(key.lastIndexOf("[") + 1, key.lastIndexOf("]")));
+        } else {
+            throw new IllegalArgumentException(String.format("[DdkyExecutorsProperty] matchIndex key = %s, 未匹配到合法的配置参数", key));
+        }
+        return result;
+    }
+
     public static void initialize() {
+        try {
+            Properties properties = new Properties();
+            String nameSpace = properties.getProperty(NAME_SPACE);
+            nameSpace = Strings.isNotBlank(nameSpace) ? nameSpace : DEFAULT_NAME_SPACE;
+            NAME_SPACE_VALUE = nameSpace;
+            config = ConfigService.getConfig(props.getOrDefault(nameSpace, DEFAULT_NAME_SPACE));
+        } catch (Exception e) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("[DdkyExecutorsProperty] 获取apollo配置异常, apollo配置名：{}", NAME_SPACE);
+            }
+            throw new RuntimeException("获取叮当动态线程池配置失败", e);
+        }
+
         props.put(SELECTOR, DEFAULT_SELECTOR);
         props.put(METRICS_ENABLE, DEFAULT_METRICS_ENABLE);
         props.put(NAME_SPACE, DEFAULT_NAME_SPACE);
@@ -138,14 +281,14 @@ public class DdkyExecutorsProperty {
         if (counts.size() > 0) {
             for (String index : counts) {
                 DdkyExecutorProperty property = new DdkyExecutorProperty();
-                property.addProperty(POOL_NAME, config.getProperty(EXECUTOR + "[" + index + "]" + "," + POOL_NAME, DdkyExecutorProperty.DEFAULT_POOL_NAME));
-                property.addProperty(CORE_POOL_SIZE, config.getProperty(EXECUTOR + "[" + index + "]" + "," + CORE_POOL_SIZE, DdkyExecutorProperty.DEFAULT_POOL_NAME));
-                property.addProperty(MAXIMUM_POOL_SIZE, config.getProperty(EXECUTOR + "[" + index + "]" + "," + MAXIMUM_POOL_SIZE, String.valueOf(DdkyExecutorProperty.DEFAULT_MAXIMUM_POOL_SIZE)));
-                property.addProperty(KEEP_ALIVE_TIME, config.getProperty(EXECUTOR + "[" + index + "]" + "," + KEEP_ALIVE_TIME, String.valueOf(DdkyExecutorProperty.DEFAULT_KEEP_ALIVE_TIME)));
-                property.addProperty(QUEUE_CAPACITY, config.getProperty(EXECUTOR + "[" + index + "]" + "," + QUEUE_CAPACITY, String.valueOf(DdkyExecutorProperty.DEFAULT_QUEUE_CAPACITY)));
-                property.addProperty(WORK_QUEUE_TYPE, config.getProperty(EXECUTOR + "[" + index + "]" + "," + WORK_QUEUE_TYPE, DdkyExecutorProperty.DEFAULT_WORK_QUEUE_TYPE));
-                property.addProperty(REJECTED_HANDLER_TYPE, config.getProperty(EXECUTOR + "[" + index + "]" + "," + REJECTED_HANDLER_TYPE, DdkyExecutorProperty.DEFAULT_REJECTED_HANDLER_TYPE));
-                property.addProperty(SELECTOR_EXPRESSION, config.getProperty(EXECUTOR + "[" + index + "]" + "," + REJECTED_HANDLER_TYPE, DdkyExecutorProperty.DEFAULT_SELECTOR_EXPRESSION));
+                property.addProperty(POOL_NAME, config.getProperty(EXECUTOR + "[" + index + "]" + "." + POOL_NAME, DdkyExecutorProperty.DEFAULT_POOL_NAME));
+                property.addProperty(CORE_POOL_SIZE, config.getProperty(EXECUTOR + "[" + index + "]" + "." + CORE_POOL_SIZE, String.valueOf(DdkyExecutorProperty.DEFAULT_CORE_POOL_SIZE)));
+                property.addProperty(MAXIMUM_POOL_SIZE, config.getProperty(EXECUTOR + "[" + index + "]" + "." + MAXIMUM_POOL_SIZE, String.valueOf(DdkyExecutorProperty.DEFAULT_MAXIMUM_POOL_SIZE)));
+                property.addProperty(KEEP_ALIVE_TIME, config.getProperty(EXECUTOR + "[" + index + "]" + "." + KEEP_ALIVE_TIME, String.valueOf(DdkyExecutorProperty.DEFAULT_KEEP_ALIVE_TIME)));
+                property.addProperty(QUEUE_CAPACITY, config.getProperty(EXECUTOR + "[" + index + "]" + "." + QUEUE_CAPACITY, String.valueOf(DdkyExecutorProperty.DEFAULT_QUEUE_CAPACITY)));
+                property.addProperty(WORK_QUEUE_TYPE, config.getProperty(EXECUTOR + "[" + index + "]" + "." + WORK_QUEUE_TYPE, DdkyExecutorProperty.DEFAULT_WORK_QUEUE_TYPE));
+                property.addProperty(REJECTED_HANDLER_TYPE, config.getProperty(EXECUTOR + "[" + index + "]" + "." + REJECTED_HANDLER_TYPE, DdkyExecutorProperty.DEFAULT_REJECTED_HANDLER_TYPE));
+                property.addProperty(SELECTOR_EXPRESSION, config.getProperty(EXECUTOR + "[" + index + "]" + "." + SELECTOR_EXPRESSION, DdkyExecutorProperty.DEFAULT_SELECTOR_EXPRESSION));
                 EXECUTOR_PROPERTY_LIST.add(Integer.parseInt(index), property);
             }
         }

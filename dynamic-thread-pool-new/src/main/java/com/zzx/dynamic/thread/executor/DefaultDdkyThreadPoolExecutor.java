@@ -12,6 +12,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.LongAdder;
 
 /**
+ * 叮当默认线程池执行器
  * @author zhouzhixiang
  * @Date 2021-04-10
  */
@@ -316,6 +317,11 @@ public class DefaultDdkyThreadPoolExecutor extends ThreadPoolExecutor implements
     @Override
     public int getWorkQueueCapacity() {
         return this.workQueueCapacity;
+    }
+
+    @Override
+    public int getWorkQueueSize() {
+        return getQueue().size();
     }
 
     @Override

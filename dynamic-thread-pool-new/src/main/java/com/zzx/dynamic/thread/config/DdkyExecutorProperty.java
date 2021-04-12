@@ -101,7 +101,8 @@ public class DdkyExecutorProperty {
     }
 
     public BlockingQueue<Runnable> getWorkQueue() {
-        return BLOCKING_QUEUES.get(getWorkQueueType());
+        BlockingQueue<Runnable> blockingQueue = BLOCKING_QUEUES.get(getWorkQueueType());
+        return blockingQueue == null ? new LinkedBlockingQueue<>() : blockingQueue;
     }
 
     public String getRejectedHandlerType() {

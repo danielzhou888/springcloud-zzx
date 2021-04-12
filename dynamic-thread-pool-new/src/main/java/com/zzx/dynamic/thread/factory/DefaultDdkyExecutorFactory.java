@@ -7,6 +7,9 @@ import com.zzx.dynamic.thread.executor.DefaultDdkyThreadPoolExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 /**
  * 默认线程池工厂
  * @author zhouzhixiang
@@ -15,6 +18,8 @@ import org.slf4j.LoggerFactory;
 public class DefaultDdkyExecutorFactory extends AbstractDdkyExecutorFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDdkyExecutorFactory.class);
+
+    public static final ConcurrentMap<String, DdkyExecutor> executorsCached = new ConcurrentHashMap<>();
 
     @Override
     protected DdkyExecutor createExecutor(String poolName) {
