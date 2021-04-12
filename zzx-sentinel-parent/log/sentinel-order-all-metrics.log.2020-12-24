@@ -1,0 +1,13 @@
+1608801481000|2020-12-24 17:18:01|com.zzx.sentinel.order.api.OrderApi:testGlobalFallbackHandler()|30|0|0|0|0|0|0|2
+1608801481000|2020-12-24 17:18:01|com.zzx.sentinel.order.api.OrderApi|30|0|0|0|0|0|0|2
+1608801481000|2020-12-24 17:18:01|__total_inbound_traffic__|60|0|0|0|0|0|0|0
+1608801487000|2020-12-24 17:18:07|com.zzx.sentinel.voucher.api.VoucherApi:testGlobalFallbackHandler(int,java.lang.String)|40|0|0|0|0|0|0|2
+1608801487000|2020-12-24 17:18:07|com.zzx.sentinel.voucher.api.VoucherApi|40|0|0|0|0|0|0|2
+1608801487000|2020-12-24 17:18:07|com.zzx.sentinel.order.api.OrderApi:testGlobalFallbackHandler()|10|0|0|0|0|0|0|2
+1608801487000|2020-12-24 17:18:07|com.zzx.sentinel.order.api.OrderApi|10|0|0|0|0|0|0|2
+1608801487000|2020-12-24 17:18:07|__total_inbound_traffic__|20|0|0|0|0|0|0|0
+1608801490000|2020-12-24 17:18:10|com.zzx.sentinel.voucher.api.VoucherApi:testGlobalFallbackHandler(int,java.lang.String)|40|0|80|0|1583|0|0|2
+1608801490000|2020-12-24 17:18:10|com.zzx.sentinel.voucher.api.VoucherApi|40|0|80|0|1584|0|0|2
+1608801490000|2020-12-24 17:18:10|com.zzx.sentinel.order.api.OrderApi:testGlobalFallbackHandler()|40|0|80|0|3812|0|0|2
+1608801490000|2020-12-24 17:18:10|com.zzx.sentinel.order.api.OrderApi|40|0|80|0|3821|0|0|2
+1608801490000|2020-12-24 17:18:10|__total_inbound_traffic__|80|0|160|0|3817|0|0|0

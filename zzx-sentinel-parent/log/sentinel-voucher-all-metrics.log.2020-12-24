@@ -1,0 +1,6 @@
+1608801487000|2020-12-24 17:18:07|com.zzx.sentinel.voucher.api.VoucherApi:testGlobalFallbackHandler(int,java.lang.String)|40|0|40|0|168|0|0|2
+1608801487000|2020-12-24 17:18:07|com.zzx.sentinel.voucher.api.VoucherApi|40|0|40|0|187|0|0|2
+1608801487000|2020-12-24 17:18:07|__total_inbound_traffic__|80|0|80|0|178|0|0|0
+1608801490000|2020-12-24 17:18:10|com.zzx.sentinel.voucher.api.VoucherApi:testGlobalFallbackHandler(int,java.lang.String)|40|0|40|0|0|0|0|2
+1608801490000|2020-12-24 17:18:10|com.zzx.sentinel.voucher.api.VoucherApi|40|0|40|0|0|0|0|2
+1608801490000|2020-12-24 17:18:10|__total_inbound_traffic__|80|0|80|0|0|0|0|0

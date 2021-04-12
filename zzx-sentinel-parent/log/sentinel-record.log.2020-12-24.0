@@ -1,0 +1,79 @@
+2020-12-24 10:32:01.358 INFO Sentinel Apache Dubbo provider filter initialized
+2020-12-24 10:38:48.329 INFO Sentinel Apache Dubbo provider filter initialized
+2020-12-24 17:15:42.341 INFO Sentinel Apache Dubbo provider filter initialized
+2020-12-24 17:18:07.484 INFO [SentinelConfigLoader] Loading Sentinel config from classpath:sentinel.properties
+2020-12-24 17:18:07.484 INFO [SentinelConfigLoader] JVM parameter overrides csp.sentinel.api.port: 8110 -> 8110
+2020-12-24 17:18:07.484 INFO [SentinelConfigLoader] JVM parameter overrides csp.sentinel.dashboard.server: 192.168.85.105:8080 -> 192.168.85.105:8080
+2020-12-24 17:18:07.484 INFO [SentinelConfigLoader] JVM parameter overrides project.name: sentinel-voucher-all -> sentinel-voucher-all
+2020-12-24 17:18:07.485 INFO App name resolved from property project.name: sentinel-voucher-all
+2020-12-24 17:18:07.485 INFO [SentinelConfig] Application type resolved: 0
+2020-12-24 17:18:07.502 INFO Add child <sentinel_default_context> to node <machine-root>
+2020-12-24 17:18:07.502 INFO Add child <com.zzx.sentinel.voucher.api.VoucherApi:testGlobalFallbackHandler(int,java.lang.String)> to node <machine-root>
+2020-12-24 17:18:07.517 INFO [InitExecutor] Found init func: com.zzx.sentinel.client.init.SentinelDataSourceInitFunc
+2020-12-24 17:18:07.519 INFO [InitExecutor] Found init func: com.alibaba.csp.sentinel.metric.extension.MetricCallbackInit
+2020-12-24 17:18:07.520 INFO [InitExecutor] Found init func: com.alibaba.csp.sentinel.transport.init.CommandCenterInitFunc
+2020-12-24 17:18:07.522 INFO [InitExecutor] Found init func: com.alibaba.csp.sentinel.transport.init.HeartbeatSenderInitFunc
+2020-12-24 17:18:07.523 INFO [InitExecutor] Found init func: com.alibaba.csp.sentinel.cluster.server.init.DefaultClusterServerInitFunc
+2020-12-24 17:18:07.523 INFO [InitExecutor] Found init func: com.alibaba.csp.sentinel.cluster.client.init.DefaultClusterClientInitFunc
+2020-12-24 17:18:07.524 INFO [InitExecutor] Found init func: com.alibaba.csp.sentinel.init.ParamFlowStatisticSlotCallbackInit
+2020-12-24 17:18:07.528 INFO [SpiLoader] Found CommandCenter SPI: com.alibaba.csp.sentinel.transport.command.SimpleHttpCommandCenter with order 2147483647
+2020-12-24 17:18:07.528 INFO [CommandCenterProvider] CommandCenter resolved: com.alibaba.csp.sentinel.transport.command.SimpleHttpCommandCenter
+2020-12-24 17:18:07.549 INFO [CommandCenterInit] Starting command center: com.alibaba.csp.sentinel.transport.command.SimpleHttpCommandCenter
+2020-12-24 17:18:07.549 INFO [InitExecutor] Executing com.alibaba.csp.sentinel.transport.init.CommandCenterInitFunc with order -1
+2020-12-24 17:18:07.554 INFO [SimpleHttpHeartbeatSender] Default console address list retrieved: [Tuple2{r1=192.168.85.105, r2=8080}]
+2020-12-24 17:18:07.555 INFO [SpiLoader] Found HeartbeatSender SPI: com.alibaba.csp.sentinel.transport.heartbeat.SimpleHttpHeartbeatSender with order 2147483647
+2020-12-24 17:18:07.555 INFO [HeartbeatSenderProvider] HeartbeatSender activated: com.alibaba.csp.sentinel.transport.heartbeat.SimpleHttpHeartbeatSender
+2020-12-24 17:18:07.555 INFO [HeartbeatSenderInit] Heartbeat interval not configured in config property or invalid, using sender default: 10000
+2020-12-24 17:18:07.556 INFO [HeartbeatSenderInit] HeartbeatSender started: com.alibaba.csp.sentinel.transport.heartbeat.SimpleHttpHeartbeatSender
+2020-12-24 17:18:07.556 INFO [InitExecutor] Executing com.alibaba.csp.sentinel.transport.init.HeartbeatSenderInitFunc with order -1
+2020-12-24 17:18:07.560 INFO [InitExecutor] Executing com.alibaba.csp.sentinel.cluster.client.init.DefaultClusterClientInitFunc with order 0
+2020-12-24 17:18:07.578 WARNING [InitExecutor] ERROR: Initialization failed with fatal error
+java.lang.NoClassDefFoundError: com/ctrip/framework/apollo/ConfigService
+	at com.zzx.sentinel.client.apollo.datasource.ApolloDataSource.<init>(ApolloDataSource.java:34)
+	at com.zzx.sentinel.client.init.SentinelDataSourceInitFunc.initFlowRuleConfig(SentinelDataSourceInitFunc.java:116)
+	at com.zzx.sentinel.client.init.SentinelDataSourceInitFunc.init(SentinelDataSourceInitFunc.java:87)
+	at com.alibaba.csp.sentinel.init.InitExecutor.doInit(InitExecutor.java:53)
+	at com.alibaba.csp.sentinel.Env.<clinit>(Env.java:36)
+	at com.alibaba.csp.sentinel.SphU.entry(SphU.java:294)
+	at com.alibaba.csp.sentinel.adapter.dubbo.SentinelDubboProviderFilter.invoke(SentinelDubboProviderFilter.java:77)
+	at org.apache.dubbo.rpc.protocol.ProtocolFilterWrapper$1.invoke(ProtocolFilterWrapper.java:81)
+	at org.apache.dubbo.monitor.support.MonitorFilter.invoke(MonitorFilter.java:89)
+	at org.apache.dubbo.rpc.protocol.ProtocolFilterWrapper$1.invoke(ProtocolFilterWrapper.java:81)
+	at org.apache.dubbo.rpc.filter.TimeoutFilter.invoke(TimeoutFilter.java:46)
+	at org.apache.dubbo.rpc.protocol.ProtocolFilterWrapper$1.invoke(ProtocolFilterWrapper.java:81)
+	at org.apache.dubbo.rpc.protocol.dubbo.filter.TraceFilter.invoke(TraceFilter.java:77)
+	at org.apache.dubbo.rpc.protocol.ProtocolFilterWrapper$1.invoke(ProtocolFilterWrapper.java:81)
+	at org.apache.dubbo.rpc.filter.ContextFilter.invoke(ContextFilter.java:129)
+	at org.apache.dubbo.rpc.protocol.ProtocolFilterWrapper$1.invoke(ProtocolFilterWrapper.java:81)
+	at org.apache.dubbo.rpc.filter.GenericFilter.invoke(GenericFilter.java:152)
+	at org.apache.dubbo.rpc.protocol.ProtocolFilterWrapper$1.invoke(ProtocolFilterWrapper.java:81)
+	at org.apache.dubbo.rpc.filter.ClassLoaderFilter.invoke(ClassLoaderFilter.java:38)
+	at org.apache.dubbo.rpc.protocol.ProtocolFilterWrapper$1.invoke(ProtocolFilterWrapper.java:81)
+	at org.apache.dubbo.rpc.filter.EchoFilter.invoke(EchoFilter.java:41)
+	at org.apache.dubbo.rpc.protocol.ProtocolFilterWrapper$1.invoke(ProtocolFilterWrapper.java:81)
+	at org.apache.dubbo.rpc.protocol.dubbo.DubboProtocol$1.reply(DubboProtocol.java:145)
+	at org.apache.dubbo.remoting.exchange.support.header.HeaderExchangeHandler.handleRequest(HeaderExchangeHandler.java:100)
+	at org.apache.dubbo.remoting.exchange.support.header.HeaderExchangeHandler.received(HeaderExchangeHandler.java:175)
+	at org.apache.dubbo.remoting.transport.DecodeHandler.received(DecodeHandler.java:51)
+	at org.apache.dubbo.remoting.transport.dispatcher.ChannelEventRunnable.run(ChannelEventRunnable.java:57)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: java.lang.ClassNotFoundException: com.ctrip.framework.apollo.ConfigService
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:382)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:349)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	... 30 more
+2020-12-24 17:18:07.584 INFO [SlotChainProvider] Global slot chain builder resolved: com.alibaba.csp.sentinel.slots.DefaultSlotChainBuilder
+2020-12-24 17:18:07.597 INFO Add child <com.zzx.sentinel.voucher.api.VoucherApi> to node <com.zzx.sentinel.voucher.api.VoucherApi:testGlobalFallbackHandler(int,java.lang.String)>
+2020-12-24 17:18:07.599 INFO [AuthorityRuleManager] Load authority rules: {}
+2020-12-24 17:18:07.603 INFO [SystemRuleManager] Current system check status: false, highestSystemLoad: 1.797693e+308, highestCpuUsage: 1.797693e+308, maxRt: 9223372036854775807, maxThread: 9223372036854775807, maxQps: 1.797693e+308
+2020-12-24 17:18:07.606 INFO [ParamFlowRuleManager] No parameter flow rules, clearing all parameter metrics
+2020-12-24 17:18:07.607 INFO [ParamFlowRuleManager] Parameter flow rules received: {}
+2020-12-24 17:18:07.609 INFO [FlowRuleManager] Flow rules loaded: {}
+2020-12-24 17:18:07.612 INFO [MetricWriter] Creating new MetricWriter, singleFileSize=52428800, totalFileCount=6
+2020-12-24 17:18:07.614 INFO [DegradeRuleManager] Degrade rules loaded: {}
+2020-12-24 17:18:07.616 INFO Add child <com.zzx.sentinel.voucher.api.VoucherApi:testGlobalFallbackHandler(int,java.lang.String)> to node <com.zzx.sentinel.voucher.api.VoucherApi>
+2020-12-24 17:18:08.616 INFO [MetricWriter] New metric file created: ./log/sentinel-voucher-all-metrics.log.2020-12-24
+2020-12-24 17:18:08.617 INFO [MetricWriter] New metric index file created: ./log/sentinel-voucher-all-metrics.log.2020-12-24.idx

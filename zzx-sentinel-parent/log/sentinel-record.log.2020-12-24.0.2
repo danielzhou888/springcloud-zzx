@@ -1,0 +1,75 @@
+2020-12-24 10:32:54.221 INFO Sentinel Apache Dubbo provider filter initialized
+2020-12-24 10:44:22.411 INFO Sentinel Apache Dubbo consumer filter initialized
+2020-12-24 10:44:23.016 INFO Sentinel Apache Dubbo provider filter initialized
+2020-12-24 17:16:10.511 INFO Sentinel Apache Dubbo consumer filter initialized
+2020-12-24 17:17:50.709 INFO Add child <sentinel_default_context> to node <machine-root>
+2020-12-24 17:17:50.709 INFO Add child <sentinel_web_servlet_context> to node <machine-root>
+2020-12-24 17:17:50.716 INFO [SentinelConfigLoader] Loading Sentinel config from classpath:sentinel.properties
+2020-12-24 17:17:50.716 INFO [SentinelConfigLoader] JVM parameter overrides csp.sentinel.api.port: 8110 -> 8080
+2020-12-24 17:17:50.716 INFO [SentinelConfigLoader] JVM parameter overrides csp.sentinel.dashboard.server: 192.168.85.105:8080 -> 192.168.85.105:8080
+2020-12-24 17:17:50.716 INFO [SentinelConfigLoader] JVM parameter overrides project.name: sentinel-voucher-all -> sentinel-order-web
+2020-12-24 17:17:50.716 INFO App name resolved from property project.name: sentinel-order-web
+2020-12-24 17:17:50.716 INFO [SentinelConfig] Application type resolved: 0
+2020-12-24 17:17:50.728 INFO [InitExecutor] Found init func: com.zzx.sentinel.client.init.SentinelDataSourceInitFunc
+2020-12-24 17:17:50.730 INFO [InitExecutor] Found init func: com.alibaba.csp.sentinel.metric.extension.MetricCallbackInit
+2020-12-24 17:17:50.730 INFO [InitExecutor] Found init func: com.alibaba.csp.sentinel.transport.init.CommandCenterInitFunc
+2020-12-24 17:17:50.732 INFO [InitExecutor] Found init func: com.alibaba.csp.sentinel.transport.init.HeartbeatSenderInitFunc
+2020-12-24 17:17:50.733 INFO [InitExecutor] Found init func: com.alibaba.csp.sentinel.cluster.server.init.DefaultClusterServerInitFunc
+2020-12-24 17:17:50.734 INFO [InitExecutor] Found init func: com.alibaba.csp.sentinel.cluster.client.init.DefaultClusterClientInitFunc
+2020-12-24 17:17:50.734 INFO [InitExecutor] Found init func: com.alibaba.csp.sentinel.init.ParamFlowStatisticSlotCallbackInit
+2020-12-24 17:17:50.740 INFO [SpiLoader] Found CommandCenter SPI: com.alibaba.csp.sentinel.transport.command.SimpleHttpCommandCenter with order 2147483647
+2020-12-24 17:17:50.740 INFO [CommandCenterProvider] CommandCenter resolved: com.alibaba.csp.sentinel.transport.command.SimpleHttpCommandCenter
+2020-12-24 17:17:50.763 INFO [CommandCenterInit] Starting command center: com.alibaba.csp.sentinel.transport.command.SimpleHttpCommandCenter
+2020-12-24 17:17:50.763 INFO [InitExecutor] Executing com.alibaba.csp.sentinel.transport.init.CommandCenterInitFunc with order -1
+2020-12-24 17:17:50.769 INFO [SimpleHttpHeartbeatSender] Default console address list retrieved: [Tuple2{r1=192.168.85.105, r2=8080}]
+2020-12-24 17:17:50.769 INFO [SpiLoader] Found HeartbeatSender SPI: com.alibaba.csp.sentinel.transport.heartbeat.SimpleHttpHeartbeatSender with order 2147483647
+2020-12-24 17:17:50.769 INFO [HeartbeatSenderProvider] HeartbeatSender activated: com.alibaba.csp.sentinel.transport.heartbeat.SimpleHttpHeartbeatSender
+2020-12-24 17:17:50.770 INFO [HeartbeatSenderInit] Heartbeat interval not configured in config property or invalid, using sender default: 10000
+2020-12-24 17:17:50.770 INFO [HeartbeatSenderInit] HeartbeatSender started: com.alibaba.csp.sentinel.transport.heartbeat.SimpleHttpHeartbeatSender
+2020-12-24 17:17:50.770 INFO [InitExecutor] Executing com.alibaba.csp.sentinel.transport.init.HeartbeatSenderInitFunc with order -1
+2020-12-24 17:17:50.774 INFO [InitExecutor] Executing com.alibaba.csp.sentinel.cluster.client.init.DefaultClusterClientInitFunc with order 0
+2020-12-24 17:17:50.958 INFO [FlowRuleManager] Flow rules loaded: {}
+2020-12-24 17:17:50.961 INFO [MetricWriter] Creating new MetricWriter, singleFileSize=52428800, totalFileCount=6
+2020-12-24 17:17:50.961 INFO [FlowRuleManager] Registering new property to flow rule manager
+2020-12-24 17:17:50.962 INFO [FlowRuleManager] Flow rules loaded: {}
+2020-12-24 17:17:50.964 INFO [DegradeRuleManager] Degrade rules loaded: {}
+2020-12-24 17:17:50.964 INFO [DegradeRuleManager] Registering new property to degrade rule manager
+2020-12-24 17:17:50.964 INFO [DegradeRuleManager] Degrade rules loaded: {}
+2020-12-24 17:17:50.968 INFO [ParamFlowRuleManager] No parameter flow rules, clearing all parameter metrics
+2020-12-24 17:17:50.968 INFO [ParamFlowRuleManager] Parameter flow rules received: {}
+2020-12-24 17:17:50.968 INFO [ParamFlowRuleManager] No parameter flow rules, clearing all parameter metrics
+2020-12-24 17:17:50.968 INFO [ParamFlowRuleManager] Parameter flow rules received: {}
+2020-12-24 17:17:50.968 INFO [ParamFlowRuleManager] New property has been registered to hot param rule manager
+2020-12-24 17:17:50.970 INFO [AuthorityRuleManager] Load authority rules: {}
+2020-12-24 17:17:50.970 INFO [AuthorityRuleManager] Load authority rules: {}
+2020-12-24 17:17:50.970 INFO [AuthorityRuleManager] Registering new property to authority rule manager
+2020-12-24 17:17:50.975 INFO [SystemRuleManager] Current system check status: false, highestSystemLoad: 1.797693e+308, highestCpuUsage: 1.797693e+308, maxRt: 9223372036854775807, maxThread: 9223372036854775807, maxQps: 1.797693e+308
+2020-12-24 17:17:50.975 INFO [SystemRuleManager] Registering new property to system rule manager
+2020-12-24 17:17:50.975 INFO [SystemRuleManager] Current system check status: false, highestSystemLoad: 1.797693e+308, highestCpuUsage: 1.797693e+308, maxRt: 9223372036854775807, maxThread: 9223372036854775807, maxQps: 1.797693e+308
+2020-12-24 17:17:50.991 WARNING [ClusterServerConfigManager] Empty initial server transport config
+2020-12-24 17:17:50.991 WARNING [ClusterServerConfigManager] Invalid cluster server global flow config, ignoring: null
+2020-12-24 17:17:50.991 WARNING [ClusterServerConfigManager] WARN: empty initial server namespace set
+2020-12-24 17:17:50.991 INFO [ClusterServerConfigManager] Registering new server transport dynamic property to Sentinel server config manager
+2020-12-24 17:17:50.991 WARNING [ClusterServerConfigManager] Empty initial server transport config
+2020-12-24 17:17:50.996 INFO [ClusterFlowRuleManager] Cluster flow rules loaded for namespace <default>: {}
+2020-12-24 17:17:50.998 INFO [ClusterParamFlowRuleManager] Cluster parameter rules loaded for namespace <default>: {}
+2020-12-24 17:17:51.002 WARNING [ClusterClientConfigManager] Empty initial client assignment config
+2020-12-24 17:17:51.002 WARNING [ClusterClientConfigManager] Empty initial client config
+2020-12-24 17:17:51.002 INFO [ClusterClientConfigManager] Registering new server assignment property to cluster client config manager
+2020-12-24 17:17:51.002 WARNING [ClusterClientConfigManager] Empty initial client assignment config
+2020-12-24 17:17:51.003 INFO [ClusterClientConfigManager] Registering new global client config property to cluster client config manager
+2020-12-24 17:17:51.003 WARNING [ClusterClientConfigManager] Empty initial client config
+2020-12-24 17:17:51.005 INFO [ClusterStateManager] Registering new property to cluster state manager
+2020-12-24 17:17:51.006 INFO [InitExecutor] Executing com.zzx.sentinel.client.init.SentinelDataSourceInitFunc with order 2147483647
+2020-12-24 17:17:51.008 INFO [InitExecutor] Executing com.alibaba.csp.sentinel.metric.extension.MetricCallbackInit with order 2147483647
+2020-12-24 17:17:51.015 INFO [TokenServiceProvider] Global token service resolved: com.alibaba.csp.sentinel.cluster.flow.DefaultTokenService
+2020-12-24 17:17:51.015 INFO [DefaultClusterServerInitFunc] Default entity codec and processors registered
+2020-12-24 17:17:51.015 INFO [InitExecutor] Executing com.alibaba.csp.sentinel.cluster.server.init.DefaultClusterServerInitFunc with order 2147483647
+2020-12-24 17:17:51.016 INFO [InitExecutor] Executing com.alibaba.csp.sentinel.init.ParamFlowStatisticSlotCallbackInit with order 2147483647
+2020-12-24 17:17:51.018 INFO [SlotChainProvider] Global slot chain builder resolved: com.alibaba.csp.sentinel.slots.DefaultSlotChainBuilder
+2020-12-24 17:17:51.028 INFO Add child </order/testGlobalFallbackHandler> to node <sentinel_web_servlet_context>
+2020-12-24 17:17:51.029 INFO [MetricExtensionProvider] No existing MetricExtension found
+2020-12-24 17:17:51.078 INFO Add child <com.zzx.sentinel.order.api.OrderApi> to node </order/testGlobalFallbackHandler>
+2020-12-24 17:17:51.078 INFO Add child <com.zzx.sentinel.order.api.OrderApi:testGlobalFallbackHandler()> to node <com.zzx.sentinel.order.api.OrderApi>
+2020-12-24 17:17:52.967 INFO [MetricWriter] New metric file created: ./log/sentinel-order-web-metrics.log.2020-12-24.2
+2020-12-24 17:17:52.967 INFO [MetricWriter] New metric index file created: ./log/sentinel-order-web-metrics.log.2020-12-24.2.idx
