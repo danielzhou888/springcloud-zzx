@@ -307,6 +307,10 @@ public class DdkyExecutorsProperty {
         return index != -1 ? EXECUTOR_PROPERTY_LIST.get(index) : null;
     }
 
+    /**
+     * 是否允许监控
+     * @return
+     */
     public boolean isMetricsEnable() {
         return Boolean.parseBoolean(props.get(METRICS_ENABLE));
     }

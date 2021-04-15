@@ -4,6 +4,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 可配置的线程池
  * @author zhouzhixiang
  * @Date 2021-04-10
  */

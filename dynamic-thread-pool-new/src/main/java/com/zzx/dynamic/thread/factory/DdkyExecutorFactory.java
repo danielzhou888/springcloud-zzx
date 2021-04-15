@@ -19,6 +19,13 @@ public interface DdkyExecutorFactory {
     DdkyExecutor getExecutor(String poolName);
 
     /**
+     * 创建新的线程池
+     * @param poolName
+     * @return
+     */
+    DdkyExecutor createNewExecutor(String poolName);
+
+    /**
      * 关闭所有线程池
      * @param timeout
      * @param timeUnit

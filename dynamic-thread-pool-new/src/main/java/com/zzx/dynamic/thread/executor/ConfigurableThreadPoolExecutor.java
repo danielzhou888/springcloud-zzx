@@ -17,41 +17,54 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.LongAdder;
 
 /**
- * 叮当线程池执行器——从apollo读取配置
+ * 叮当动态线程池执行器——从apollo读取线程池配置
+ * <p>
+ *     1. 仅支持使用form构建线程池执行器，从apollo读取线程池配置，如果apollo未配置，读取叮当默认线程池执行器
+ * </p>
  * @author zhouzhixiang
  * @Date 2021-04-10
  */
-public class DdkyThreadPoolExecutor extends ThreadPoolExecutor implements DdkyExecutor {
+public class ConfigurableThreadPoolExecutor extends ThreadPoolExecutor implements DdkyExecutor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DdkyThreadPoolExecutor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurableThreadPoolExecutor.class);
 
     private final String poolName;
 
     private int workQueueCapacity;
 
-    private DdkyThreadPoolExecutor(String poolName, int corePoolSize, int maximumPoolSize, long keepAliveTime, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler) {
+    private ConfigurableThreadPoolExecutor(String poolName, int corePoolSize, int maximumPoolSize, long keepAliveTime, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.MILLISECONDS, workQueue, threadFactory, new RejectedExecutionHandlerWrapper(rejectedExecutionHandler));
         this.poolName = poolName;
         // 由于队列是刚创建，所以剩余容量=容量
         this.workQueueCapacity = workQueue.remainingCapacity();
     }
 
-
-    public static DdkyExecutor form(String poolName) {
+    /**
+     * 构建指定线程池名称的线程执行器(从apollo中获取配置）
+     * 1、如果已被构建，则从已构建的线程执行器缓存获取
+     * 2、如果没有被构建，缓存没有，读取apollo配置，构建线程池执行器，放入缓存并返回
+     * 3、如果apollo没有此线程池配置，返回叮当默认线程池执行器
+     *
+     * 注意：如果在方法内部使用，一定不要忘记shutdown()它
+     *
+     * @param poolName
+     * @return
+     */
+    public static DdkyExecutor createExecutor(String poolName) {
         Asserts.notEmpty(poolName, "poolName == null");
         DdkyExecutorProperty ddkyExecutorProperty = DdkyExecutorsProperty.getDdkyExecutorProperty(poolName);
         if (ddkyExecutorProperty == null) {
             if (LOGGER.isWarnEnabled()) {
-                LOGGER.warn("[DdkyThreadPoolExecutor] 此线程池{}没有对应的配置", poolName);
+                LOGGER.warn("[DdkyThreadPoolExecutor] 此线程池{}没有对应的配置，将采用默认配置构建默认线程池", poolName);
             }
-            return DefaultDdkyThreadPoolExecutor.form(poolName);
+            return DefaultDdkyThreadPoolExecutor.createExecutor(poolName);
         }
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("[DdkyThreadPoolExecutor] 线程池{}找到了配置, ddkyExecutorProperty = {}", poolName, ddkyExecutorProperty);
         }
-        DdkyThreadPoolExecutor ddkyThreadPoolExecutor = null;
+        ConfigurableThreadPoolExecutor ddkyThreadPoolExecutor = null;
 
-        synchronized (DdkyThreadPoolExecutor.class) {
+        synchronized (ConfigurableThreadPoolExecutor.class) {
             ConcurrentMap<String, DdkyExecutor> executorsCached = DefaultDdkyExecutorFactory.executorsCached;
 
             if (executorsCached.get(poolName) != null) {
@@ -67,12 +80,49 @@ public class DdkyThreadPoolExecutor extends ThreadPoolExecutor implements DdkyEx
                         .build();
             }
 
-            ddkyThreadPoolExecutor = new DdkyThreadPoolExecutor(poolName, ddkyExecutorProperty.getCorePoolSize(), ddkyExecutorProperty.getMaximumPoolSize(), ddkyExecutorProperty.getKeepAliveTime(),
+            ddkyThreadPoolExecutor = new ConfigurableThreadPoolExecutor(poolName, ddkyExecutorProperty.getCorePoolSize(), ddkyExecutorProperty.getMaximumPoolSize(), ddkyExecutorProperty.getKeepAliveTime(),
                     workQueue, ddkyExecutorProperty.getThreadFactory(), ddkyExecutorProperty.getRejectedHandler());
 
             DefaultDdkyExecutorFactory.executorsCached.putIfAbsent(poolName, ddkyThreadPoolExecutor);
         }
 
+        return ddkyThreadPoolExecutor;
+    }
+
+    /**
+     * 构建指定线程池名称的线程执行器(从apollo中获取配置）
+     * 1、读取apollo配置，构建线程池执行器，并返回
+     * 2、如果apollo没有此线程池配置，返回叮当默认线程池执行器
+     *
+     * 注意：如果在方法内部使用，一定不要忘记shutdown()它
+     *
+     * @param poolName
+     * @return
+     */
+    public static DdkyExecutor createNewExecutor(String poolName) {
+        Asserts.notEmpty(poolName, "poolName == null");
+        DdkyExecutorProperty ddkyExecutorProperty = DdkyExecutorsProperty.getDdkyExecutorProperty(poolName);
+        if (ddkyExecutorProperty == null) {
+            if (LOGGER.isWarnEnabled()) {
+                LOGGER.warn("[DdkyThreadPoolExecutor] 此线程池{}没有对应的配置，将采用默认配置构建默认线程池", poolName);
+            }
+            return DefaultDdkyThreadPoolExecutor.createExecutor(poolName);
+        }
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("[DdkyThreadPoolExecutor] 线程池{}找到了配置, ddkyExecutorProperty = {}", poolName, ddkyExecutorProperty);
+        }
+
+        BlockingQueue<Runnable> workQueue = ddkyExecutorProperty.getWorkQueue();
+        if (workQueue instanceof ResizableLinkedBlockingQueue) {
+            // 设置队列容量
+            workQueue = new BlockingQueueBuilder<Runnable>().
+                    fair(false).
+                    capacity(ddkyExecutorProperty.getQueueCapacity())
+                    .build();
+        }
+
+        ConfigurableThreadPoolExecutor ddkyThreadPoolExecutor = new ConfigurableThreadPoolExecutor(poolName, ddkyExecutorProperty.getCorePoolSize(), ddkyExecutorProperty.getMaximumPoolSize(), ddkyExecutorProperty.getKeepAliveTime(),
+                workQueue, ddkyExecutorProperty.getThreadFactory(), ddkyExecutorProperty.getRejectedHandler());
 
         return ddkyThreadPoolExecutor;
     }
@@ -160,85 +210,64 @@ public class DdkyThreadPoolExecutor extends ThreadPoolExecutor implements DdkyEx
                 }
             }
         } catch (InterruptedException ex) {
-            LOGGER.error("线程池{}关闭过程中f发生中断异常", poolName);
+            LOGGER.error("线程池{}关闭过程中发生中断异常", poolName);
         }
     }
 
-    //@Override
-    //public void setThreadFactory(ThreadFactory threadFactory) {
-    //    super.setThreadFactory(threadFactory);
-    //}
-    //
-    //@Override
-    //public void setRejectedExecutionHandler(RejectedExecutionHandler handler) {
-    //    super.setRejectedExecutionHandler(handler);
-    //}
-    //
-    //@Override
-    //public void setCorePoolSize(int corePoolSize) {
-    //    int oldCorePoolSize = getCorePoolSize();
-    //    if (corePoolSize == oldCorePoolSize) {
-    //        if (LOGGER.isInfoEnabled()) {
-    //            LOGGER.info("线程池{}：corePoolSize新值{}和旧值{}一样，不做修改更新操作", poolName, corePoolSize, oldCorePoolSize);
-    //        }
-    //    } else {
-    //        super.setCorePoolSize(corePoolSize);
-    //        if (LOGGER.isInfoEnabled()) {
-    //            LOGGER.info("线程池{}：corePoolSize修改已生效，新值：{}，旧值：{}", poolName, corePoolSize, oldCorePoolSize);
-    //        }
-    //    }
-    //}
-    //
-    //@Override
-    //public void setMaximumPoolSize(int maximumPoolSize) {
-    //    int oldMaximumPoolSize = getMaximumPoolSize();
-    //    if (oldMaximumPoolSize == maximumPoolSize) {
-    //        if (LOGGER.isInfoEnabled()) {
-    //            LOGGER.info("线程池{}：maximumPoolSize新值{}和旧值{}一样，不做修改更新操作", poolName, maximumPoolSize, oldMaximumPoolSize);
-    //        }
-    //    } else {
-    //        super.setMaximumPoolSize(maximumPoolSize);
-    //        if (LOGGER.isInfoEnabled()) {
-    //            LOGGER.info("线程池{}：maximumPoolSize修改已生效，新值：{}，旧值：{}", poolName, maximumPoolSize, oldMaximumPoolSize);
-    //        }
-    //    }
-    //}
-    //
-    //@Override
-    //public void setKeepAliveTime(long time, TimeUnit unit) {
-    //    long oldKeepAliveTime = getKeepAliveTime(unit);
-    //    if (oldKeepAliveTime == time) {
-    //        if (LOGGER.isInfoEnabled()) {
-    //            LOGGER.info("线程池{}：keepAliveTime新值{}和旧值{}一样，不做修改更新操作", poolName, time, oldKeepAliveTime);
-    //        }
-    //    } else {
-    //        super.setKeepAliveTime(time, unit);
-    //        if (LOGGER.isInfoEnabled()) {
-    //            LOGGER.info("线程池{}：keepAliveTime修改已生效，新值：{}，旧值：{}", poolName, time, oldKeepAliveTime);
-    //        }
-    //    }
-    //}
-    //
-    //@Override
-    //public void setWorkQueueCapacity(int newWorkQueueCapacity) {
-    //    BlockingQueue<Runnable> workQueue = this.getQueue();
-    //    if (newWorkQueueCapacity == workQueueCapacity) {
-    //        if (LOGGER.isInfoEnabled()) {
-    //            LOGGER.info("线程池{}：workQueueCapacity新值{}和旧值{}一样，不做修改更新操作", poolName, newWorkQueueCapacity, workQueueCapacity);
-    //        }
-    //    }
-    //    if (workQueue instanceof ResizableBlockingQueue) {
-    //        ((ResizableBlockingQueue<Runnable>) workQueue).setCapacity(newWorkQueueCapacity);
-    //        this.workQueueCapacity = newWorkQueueCapacity;
-    //        if (LOGGER.isInfoEnabled()) {
-    //            LOGGER.info("线程池{}，工作队列{}，容量workQueueCapacity 已被修改生效，新值：{}，旧值：{}", poolName, workQueue.getClass().getSimpleName(), newWorkQueueCapacity, workQueueCapacity);
-    //        }
-    //    } else {
-    //        if (LOGGER.isWarnEnabled()) {
-    //            LOGGER.warn("线程池{}：工作队列{}不支持修改容量", poolName, workQueue.getClass().getSimpleName());
-    //        }
-    //    }
-    //}
+    @Override
+    public void setThreadFactory(ThreadFactory threadFactory) {
+        super.setThreadFactory(threadFactory);
+    }
+
+    @Override
+    public void setRejectedExecutionHandler(RejectedExecutionHandler handler) {
+        super.setRejectedExecutionHandler(handler);
+    }
+
+    @Override
+    public void setCorePoolSize(int corePoolSize) {
+        int oldCorePoolSize = getCorePoolSize();
+        if (corePoolSize == oldCorePoolSize) {
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("线程池{}：corePoolSize新值{}和旧值{}一样，不做修改更新操作", poolName, corePoolSize, oldCorePoolSize);
+            }
+        } else {
+            super.setCorePoolSize(corePoolSize);
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("线程池{}：corePoolSize修改已生效，新值：{}，旧值：{}", poolName, corePoolSize, oldCorePoolSize);
+            }
+        }
+    }
+
+    @Override
+    public void setMaximumPoolSize(int maximumPoolSize) {
+        int oldMaximumPoolSize = getMaximumPoolSize();
+        if (oldMaximumPoolSize == maximumPoolSize) {
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("线程池{}：maximumPoolSize新值{}和旧值{}一样，不做修改更新操作", poolName, maximumPoolSize, oldMaximumPoolSize);
+            }
+        } else {
+            super.setMaximumPoolSize(maximumPoolSize);
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("线程池{}：maximumPoolSize修改已生效，新值：{}，旧值：{}", poolName, maximumPoolSize, oldMaximumPoolSize);
+            }
+        }
+    }
+
+    @Override
+    public void setKeepAliveTime(long time, TimeUnit unit) {
+        long oldKeepAliveTime = getKeepAliveTime(unit);
+        if (oldKeepAliveTime == time) {
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("线程池{}：keepAliveTime新值{}和旧值{}一样，不做修改更新操作", poolName, time, oldKeepAliveTime);
+            }
+        } else {
+            super.setKeepAliveTime(time, unit);
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("线程池{}：keepAliveTime修改已生效，新值：{}，旧值：{}", poolName, time, oldKeepAliveTime);
+            }
+        }
+    }
 
     @Override
     public String getPoolName() {

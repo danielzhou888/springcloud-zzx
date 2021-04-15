@@ -13,6 +13,10 @@ import java.util.concurrent.atomic.LongAdder;
 
 /**
  * 叮当默认线程池执行器
+ * <p>
+ *     1. 使用form，默认读取本地常量配置（coreSize = cpu_size，maximumPoolSize = 2 * cpu_size + 1，keepAliveTime = 6s， capacity = 200）
+ *     2. 如果使用DefaultDdkyThreadPoolExecutor.newBuilder()构建，和ThreadPoolExecutor一样构建，构造方法传入线程池配置参数
+ * </p>
  * @author zhouzhixiang
  * @Date 2021-04-10
  */
@@ -28,7 +32,12 @@ public class DefaultDdkyThreadPoolExecutor extends ThreadPoolExecutor implements
         return new Builder();
     }
 
-    public static DdkyExecutor form(String poolName) {
+    /**
+     * 创建默认线程池
+     * @param poolName
+     * @return
+     */
+    public static DdkyExecutor createExecutor(String poolName) {
         return Builder.fromName(poolName);
     }
 
@@ -174,7 +183,7 @@ public class DefaultDdkyThreadPoolExecutor extends ThreadPoolExecutor implements
                 }
             }
         } catch (InterruptedException ex) {
-            LOGGER.error("线程池{}关闭过程中f发生中断异常", poolName);
+            LOGGER.error("线程池{}关闭过程中发生了中断异常", poolName);
         }
     }
 

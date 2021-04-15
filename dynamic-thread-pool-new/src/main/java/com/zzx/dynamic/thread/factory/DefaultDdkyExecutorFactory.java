@@ -38,6 +38,11 @@ public class DefaultDdkyExecutorFactory extends AbstractDdkyExecutorFactory {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("没有找到线程池{}, 将使用默认线程池进行任务处理", poolName);
         }
-        return DefaultDdkyThreadPoolExecutor.form(poolName);
+        return DefaultDdkyThreadPoolExecutor.createExecutor(poolName);
+    }
+
+    @Override
+    public DdkyExecutor createNewExecutor(String poolName) {
+        return null;
     }
 }

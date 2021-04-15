@@ -29,7 +29,7 @@ public class DdkyExecutorProperty {
     // 阻塞队列容量
     protected static final int DEFAULT_QUEUE_CAPACITY = 200;
     // 阻塞队列类型
-    protected static final String DEFAULT_WORK_QUEUE_TYPE = LinkedBlockingDeque.class.getSimpleName();
+    protected static final String DEFAULT_WORK_QUEUE_TYPE = LinkedBlockingQueue.class.getSimpleName();
     // 拒绝策略类型
     protected static final String DEFAULT_REJECTED_HANDLER_TYPE = ThreadPoolExecutor.AbortPolicy.class.getSimpleName();
     // 默认选择器表达式

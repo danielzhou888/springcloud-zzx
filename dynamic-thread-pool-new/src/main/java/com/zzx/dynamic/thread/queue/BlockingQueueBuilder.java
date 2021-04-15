@@ -36,7 +36,7 @@ public class BlockingQueueBuilder<E> {
         BLOCKING_QUEUE_CLASS_CACHE.put(RESIZABLE_LINKED_NAME, ResizableLinkedBlockingQueue.class);
     }
 
-    /** 队列类型 **/
+    /** 队列类型：默认可变队列 **/
     private String type = RESIZABLE_LINKED_NAME;
 
     /**
@@ -59,6 +59,11 @@ public class BlockingQueueBuilder<E> {
         return this;
     }
 
+    /**
+     * 只针对ArrayBlockingQueue
+     * @param fair
+     * @return
+     */
     public BlockingQueueBuilder<E> fair(boolean fair) {
         this.fair = fair;
         return this;

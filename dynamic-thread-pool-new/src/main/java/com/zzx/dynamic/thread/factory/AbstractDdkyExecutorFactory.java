@@ -8,13 +8,21 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 叮当抽象线程工厂
  * @author zhouzhixiang
  * @Date 2021-04-12
  */
 public abstract class AbstractDdkyExecutorFactory implements DdkyExecutorFactory {
 
-    private final ConcurrentMap<String, DdkyExecutor> cachedExecutors = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<String, DdkyExecutor> cachedExecutors = new ConcurrentHashMap<>();
 
+    /**
+     * 获取线程池执行器
+     * 注意：1、当此线程池执行器已被创建时，直接从缓存取
+     *      2、当此线程池首次创建时，放入缓存中，并返回创建的线程池执行器对象
+     * @param poolName
+     * @return
+     */
     @Override
     public DdkyExecutor getExecutor(String poolName) {
         DdkyExecutor ddkyExecutor = cachedExecutors.get(poolName);
@@ -35,7 +43,15 @@ public abstract class AbstractDdkyExecutorFactory implements DdkyExecutorFactory
         for(Map.Entry<String, DdkyExecutor> entry : cachedExecutors.entrySet()) {
             DdkyExecutor executor = entry.getValue();
             executor.shutdown(timeout, timeUnit);
+            if (cachedExecutors.containsKey(entry.getKey())) {
+                cachedExecutors.remove(entry.getKey());
+            }
         }
+    }
+
+    @Override
+    public DdkyExecutor createNewExecutor(String poolName) {
+        return createExecutor(poolName);
     }
 
     /**
@@ -44,4 +60,5 @@ public abstract class AbstractDdkyExecutorFactory implements DdkyExecutorFactory
      * @return
      */
     protected abstract DdkyExecutor createExecutor(String poolName);
+
 }
