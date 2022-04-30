@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>叮当快药网易云信Demo-注册</title>
+	<link rel="stylesheet" href="css/base.css"/>
+	<link rel="stylesheet" href="css/animate.css"/>
+	<link rel="stylesheet" href="css/index.css?v=1"/>
+	<link rel="icon" href="images/icon.ico" type="image/x-icon"/>
+	<style type="text/css">
+		input[type="radio"] {
+    		width: 10px;
+    		opacity: 0;
+		}
+		input[type="radio"] + label::before {
+    		display: inline-block;
+    		width: 16px;
+    		height: 16px;
+    		border-radius: 50%;
+    		margin-right: 10px;
+    		vertical-align: text-bottom;
+    		border: 1px solid #d9d9d9;
+    		-webkit-box-sizing: border-box;
+    		box-sizing: border-box;
+    		content: "";
+		}
+		input[type="radio"]:checked + label::before {
+    		background-color: white;
+    		background-clip: content-box;
+			border-color: #79a0ff;
+    		border-width: 5px;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrapper radius10px">
+		<form action="" method="post" class="m-register">
+			<div class="row tc">
+				<span class="type">帐号：</span>
+				<input type="text" class="radius5px box-sizing" id="waiter_username" autofocus="autofocus" placeholder="5-20位字母或数字" />
+			</div>
+			<div class="row tc">
+				<span class="type">昵称：</span>
+				<input type="text" class="radius5px box-sizing" id="waiter_nickname" autofocus="autofocus" placeholder="2-12位字母、数字或中文"/>
+			</div>
+			<div class="row tc">
+				<span class="type">密码：</span>
+				<input type="password" class="radius5px box-sizing" id="waiter_password" placeholder="6~12位字母、数字或_"/>
+			</div>
+			<div class="row">
+				<input type="radio" id="waiter_man" name="waiter_gender" value="1" checked="checked"/>
+        		<label for="waiter_man">男</label>
+        		<input type="radio" id="waiter_woman" name="waiter_gender" value="2"/>
+        		<label for="waiter_woman">女</label>
+			</div>
+			<div class="row">
+				<input type="radio" id="waiter_customer_service" name="waiter_type" value="0" checked="checked"/>
+        		<label for="waiter_customer_service">客服</label>
+        		<input type="radio" id="waiter_pharmacist" name="waiter_type" value="1"/>
+        		<label for="waiter_pharmacist">药师</label>
+        		<input type="radio" id="waiter_doctor" name="waiter_type" value="2"/>
+        		<label for="waiter_doctor">医生</label>
+			</div>
+			<div class="row">
+				<div class="error-msg hide" id="errorMsg">此帐号已存在</div>
+			</div>
+			<div class="row tc">
+				<button type="button" class="btn btn-login" id="submit">注册</button>
+			</div>
+		</form>
+		<div class="u-redirect"><a href="./login.html">已有帐号？直接登录</a></div>
+	</div>
+	<div class="footer tc">
+		<p class="hide">为了更好地体验本Demo，建议您使用IE10、Chrome、FireFox、Safari、360等主流浏览器。</p>
+		<p>Copyright &copy; 2019 ddky.com，All Rights Reserved</p>
+	</div>
+	<script src="../3rd/jquery-1.11.3.min.js"></script>
+	<script src="js/constants.js"></script>
+	<script src="js/config.js"></script>
+	<script src="js/md5.js"></script>
+	<script src="js/register.js"></script>
+</body>
+</html>

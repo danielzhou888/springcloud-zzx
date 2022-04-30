@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.5.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+<!--	<parent>-->
+<!--		<artifactId>ddky-im-all</artifactId>-->
+<!--		<groupId>com.ddky</groupId>-->
+<!--		<version>3.0.0</version>-->
+<!--	</parent>-->
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>zzx-telegram-bot-server</artifactId>
+	<version>${top-version}</version>
+	<packaging>jar</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<!-- 打包跳过单元测试 -->
+		<skipTests>true</skipTests>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<!-- 打包跳过单元测试 -->
+		<skipTests>true</skipTests>
+		<spring-boot.version>2.1.5.RELEASE</spring-boot.version>
+		<spring-boot-quartz.version>2.1.5.RELEASE</spring-boot-quartz.version>
+		<java.version>1.8</java.version>
+		<mybatis.version>2.0.1</mybatis.version>
+		<mysql.vsersion>8.0.12</mysql.vsersion>
+		<druid.version>1.1.10</druid.version>
+		<dubbo.version>2.7.3</dubbo.version>
+		<fastjson.version>1.2.38</fastjson.version>
+		<dubbo-zookeeper.version>2.7.3</dubbo-zookeeper.version>
+		<top-version>3.0.0</top-version>
+		<superPOM.version>1.0.0</superPOM.version>
+		<ddky-o2o-commons.version>1.0.1</ddky-o2o-commons.version>
+		<spring-boot-devtools.version>2.0.0.RELEASE</spring-boot-devtools.version>
+		<persistence-api.version>1.0.2</persistence-api.version>
+		<lombok.version>1.16.20</lombok.version>
+		<maven-jar-plugin.version>3.1.2</maven-jar-plugin.version>
+		<commons-io.version>1.3.2</commons-io.version>
+		<jfinal.version>3.2</jfinal.version>
+		<jfinal-cos.version>2017.5</jfinal-cos.version>
+		<swagger.version>2.9.2</swagger.version>
+		<commons-lang.version>2.6</commons-lang.version>
+		<commons-lang3.version>3.8.1</commons-lang3.version>
+		<disruptor.version>3.4.2</disruptor.version>
+		<ddky-product-api.version>3.0.0</ddky-product-api.version>
+		<ddky-order-backend-api.version>3.0.0</ddky-order-backend-api.version>
+		<knife4j.version>2.0.4</knife4j.version>
+		<hutool.version>4.1.19</hutool.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Spring Boot -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring-boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+<!--			<dependency>-->
+<!--				<groupId>com.ddky</groupId>-->
+<!--				<artifactId>ddky-o2o-commons</artifactId>-->
+<!--				<version>${ddky-o2o-commons.version}</version>-->
+<!--				<exclusions>-->
+<!--					<exclusion>-->
+<!--						<artifactId>slf4j-log4j12</artifactId>-->
+<!--						<groupId>org.slf4j</groupId>-->
+<!--					</exclusion>-->
+<!--				</exclusions>-->
+<!--			</dependency>-->
+
+			<!-- Aapche Dubbo  -->
+<!--			<dependency>-->
+<!--				<groupId>org.apache.dubbo</groupId>-->
+<!--				<artifactId>dubbo-dependencies-bom</artifactId>-->
+<!--				<version>${dubbo.version}</version>-->
+<!--				<type>pom</type>-->
+<!--				<scope>import</scope>-->
+<!--			</dependency>-->
+
+<!--			<dependency>-->
+<!--				<groupId>org.apache.dubbo</groupId>-->
+<!--				<artifactId>dubbo</artifactId>-->
+<!--				<version>${dubbo.version}</version>-->
+<!--				<exclusions>-->
+<!--					<exclusion>-->
+<!--						<groupId>org.springframework</groupId>-->
+<!--						<artifactId>spring</artifactId>-->
+<!--					</exclusion>-->
+<!--					<exclusion>-->
+<!--						<groupId>javax.servlet</groupId>-->
+<!--						<artifactId>servlet-api</artifactId>-->
+<!--					</exclusion>-->
+<!--					<exclusion>-->
+<!--						<groupId>log4j</groupId>-->
+<!--						<artifactId>log4j</artifactId>-->
+<!--					</exclusion>-->
+<!--				</exclusions>-->
+<!--			</dependency>-->
+		</dependencies>
+	</dependencyManagement>
+
+
+	<dependencies>
+<!--		<dependency>-->
+<!--			<groupId>com.ddky</groupId>-->
+<!--			<artifactId>ddky-im-bis-api</artifactId>-->
+<!--			<version>${top-version}</version>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>com.ddky</groupId>-->
+<!--			<artifactId>ddky-order-backend-api</artifactId>-->
+<!--			<version>${ddky-order-backend-api.version}</version>-->
+<!--			<exclusions>-->
+<!--				<exclusion>-->
+<!--					<groupId>io.springfox</groupId>-->
+<!--					<artifactId>springfox-swagger2</artifactId>-->
+<!--				</exclusion>-->
+<!--				<exclusion>-->
+<!--					<groupId>io.springfox</groupId>-->
+<!--					<artifactId>springfox-swagger-ui</artifactId>-->
+<!--				</exclusion>-->
+<!--				<exclusion>-->
+<!--					<groupId>com.ddky</groupId>-->
+<!--					<artifactId>ddky-architect-dop</artifactId>-->
+<!--				</exclusion>-->
+<!--				<exclusion>-->
+<!--					<groupId>com.google.guava</groupId>-->
+<!--					<artifactId>guava</artifactId>-->
+<!--				</exclusion>-->
+<!--			</exclusions>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>com.ddky</groupId>-->
+<!--			<artifactId>ddky-o2o-commons</artifactId>-->
+<!--			<version>${ddky-o2o-commons.version}</version>-->
+<!--			<exclusions>-->
+<!--				<exclusion>-->
+<!--					<groupId>io.springfox</groupId>-->
+<!--					<artifactId>springfox-swagger2</artifactId>-->
+<!--				</exclusion>-->
+<!--				<exclusion>-->
+<!--					<groupId>io.springfox</groupId>-->
+<!--					<artifactId>springfox-swagger-ui</artifactId>-->
+<!--				</exclusion>-->
+<!--				<exclusion>-->
+<!--					<groupId>com.google.guava</groupId>-->
+<!--					<artifactId>guava</artifactId>-->
+<!--				</exclusion>-->
+<!--			</exclusions>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>com.ddky</groupId>-->
+<!--			<artifactId>ddky-readProduct-api</artifactId>-->
+<!--			<version>${ddky-product-api.version}</version>-->
+<!--		</dependency>-->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<!-- 移除嵌入式tomcat插件 -->
+<!--			<exclusions>-->
+<!--				<exclusion>-->
+<!--					<groupId>org.springframework.boot</groupId>-->
+<!--					<artifactId>spring-boot-starter-tomcat</artifactId>-->
+<!--				</exclusion>-->
+<!--				<exclusion>-->
+<!--					<groupId>org.springframework.boot</groupId>-->
+<!--					<artifactId>spring-boot-starter-logging</artifactId>-->
+<!--				</exclusion>-->
+<!--			</exclusions>-->
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+		</dependency>
+
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-thymeleaf</artifactId>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>com.alibaba</groupId>-->
+<!--			<artifactId>fastjson</artifactId>-->
+<!--		</dependency>-->
+
+		<!-- Dubbo -->
+<!--		<dependency>-->
+<!--			<groupId>org.apache.dubbo</groupId>-->
+<!--			<artifactId>dubbo-spring-boot-starter</artifactId>-->
+<!--			<version>${dubbo.version}</version>-->
+<!--			<exclusions>-->
+<!--				<exclusion>-->
+<!--					<groupId>org.springframework.boot</groupId>-->
+<!--					<artifactId>spring-boot-starter-logging</artifactId>-->
+<!--				</exclusion>-->
+<!--			</exclusions>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>org.apache.dubbo</groupId>-->
+<!--			<artifactId>dubbo</artifactId>-->
+<!--		</dependency>-->
+
+		<!-- Zookeeper dependencies -->
+<!--		<dependency>-->
+<!--			<groupId>org.apache.dubbo</groupId>-->
+<!--			<artifactId>dubbo-dependencies-zookeeper</artifactId>-->
+<!--			<version>${dubbo-zookeeper.version}</version>-->
+<!--			<exclusions>-->
+<!--				<exclusion>-->
+<!--					<groupId>org.slf4j</groupId>-->
+<!--					<artifactId>slf4j-log4j12</artifactId>-->
+<!--				</exclusion>-->
+<!--			</exclusions>-->
+<!--			<type>pom</type>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>redis.clients</groupId>-->
+<!--			<artifactId>jedis</artifactId>-->
+<!--		</dependency>-->
+
+		<!--rabbitmq依赖-->
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-amqp</artifactId>-->
+<!--		</dependency>-->
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+<!--		<dependency>-->
+<!--			<groupId>net.sf.ezmorph</groupId>-->
+<!--			<artifactId>ezmorph</artifactId>-->
+<!--			<version>1.0.6</version>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>net.sf.json-lib</groupId>-->
+<!--			<artifactId>json-lib</artifactId>-->
+<!--			<version>2.2.3</version>-->
+<!--			<classifier>jdk15</classifier>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>joda-time</groupId>-->
+<!--			<artifactId>joda-time</artifactId>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>com.jfinal</groupId>-->
+<!--			<artifactId>jfinal</artifactId>-->
+<!--			<version>3.2</version>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>com.jfinal</groupId>-->
+<!--			<artifactId>cos</artifactId>-->
+<!--			<version>2017.5</version>-->
+<!--		</dependency>-->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<!--<scope>provided</scope>-->
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+
+		<!-- log4j2. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+
+
+<!--		<dependency>-->
+<!--			<groupId>com.github.xiaoymin</groupId>-->
+<!--			<artifactId>knife4j-spring-boot-starter</artifactId>-->
+<!--&lt;!&ndash;			<version>1.9.6</version>&ndash;&gt;-->
+<!--			<version>${knife4j.version}</version>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>io.springfox</groupId>-->
+<!--			<artifactId>springfox-swagger-ui</artifactId>-->
+<!--			<version>${swagger.version}</version>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>com.github.danielzhou888</groupId>-->
+<!--			<artifactId>monk-encrypt</artifactId>-->
+<!--			<version>1.0.2.RELEASE</version>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>com.ddky</groupId>-->
+<!--			<artifactId>ddky-cc-read-api</artifactId>-->
+<!--			<version>3.0.0</version>-->
+<!--		</dependency>-->
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-all</artifactId>
+			<version>5.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-mock</artifactId>
+			<version>2.0.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.telegram</groupId>
+			<artifactId>telegramapi</artifactId>
+			<version>66.2</version>
+		</dependency>
+<!--		com.github.badoualy:kotlogram-->
+<!--		<dependency>-->
+<!--			<groupId>com.github.badoualy</groupId>-->
+<!--			<artifactId>kotlogram</artifactId>-->
+<!--		</dependency>-->
+	</dependencies>
+
+
+	<build>
+		<!-- 应与application.properties(或application.yml)中context-path保持一致 -->
+		<finalName>telegram-bot</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+
+		<!--<plugins>-->
+		<!--<plugin>-->
+		<!--<groupId>org.springframework.boot</groupId>-->
+		<!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+		<!--</plugin>-->
+		<!--<plugin>-->
+		<!--<groupId>org.apache.maven.plugins</groupId>-->
+		<!--<artifactId>maven-jar-plugin</artifactId>-->
+		<!--<version>3.1.0</version>-->
+		<!--</plugin>-->
+		<!--</plugins>-->
+	</build>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<env>dev</env>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>test</id>
+			<properties>
+				<env>test</env>
+			</properties>
+		</profile>
+		<profile>
+			<id>pre</id>
+			<properties>
+				<env>pre</env>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<env>prod</env>
+			</properties>
+		</profile>
+	</profiles>
+
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+
+</project>

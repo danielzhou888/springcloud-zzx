@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>在线客服后台管理系统</title>
+		<link rel="shortcut icon" type="image/png" href="static/i/favicon.png">
+		<link rel="stylesheet" href="static/css/admin.css">
+		<link rel="stylesheet" href="static/layui/css/layui.css">
+		<script src="static/layui/layui.js"></script>
+		<script src="static/js/date-common.js"></script>
+	</head>
+	<body>
+		<div class="header">
+			<h2 class="z cl"><a href="index.html"><img src="static/img/logo2.png" style="width: 200px;height: 40px;"></a></h2>
+			<div class="y cl">
+				<a target="_blank" href="http://www.cc.ddky.com">网站首页</a>
+				<a id="top-logout" href="javascript:">退出</a>
+			</div>
+		</div>
+		<div class="admin">
+			<div class="aleft" id="left-container"></div>
+			<div class="aright">
+				<!--<div class="arz cl">-->
+					<!--<a href="waiter-add.html"><i class="layui-icon">&#xe608;</i>添加类别</a>-->
+				<!--</div>-->
+				<form id="waiter-container" method="post" class="aform cl">
+				</form>
+				<div id="waiter-pager" class="qing-text-center"></div>
+			</div>
+		</div>
+		<script>
+			layui.config({base:'static/js/'}).use('waiter');
+		</script>
+
+		<script id="template" type="text/template">
+			<table width="100%">
+				<tr>
+					<th width="5%" align="center">ID</th>
+					<th width="5%" align="center">用户id</th>
+					<th width="5%" align="center">账号</th>
+					<th width="5%" align="center">用户名</th>
+<!--					<th width="5%" align="center">生日</th>-->
+					<th width="8%" align="center">电子邮箱</th>
+					<th width="5%" align="center">用户类型</th>
+					<th width="5%" align="center">性别</th>
+					<th width="5%" align="center">手机</th>
+					<th width="5%" align="center">昵称</th>
+					<th width="5%" align="center">所属节能组</th>
+					<th width="5%" align="center">最大接待量</th>
+					<th width="5%" align="center">创建时间</th>
+<!--					<th width="5%" align="center">创建人</th>-->
+<!--					<th width="5%" align="center">修改时间</th>-->
+<!--					<th width="5%" align="center">修改人</th>-->
+					<th width="5%" align="center">在线状态</th>
+					<th width="5%" align="center">状态</th>
+					<th width="20%" align="center">基本操作</th>
+				</tr>
+				{{#  layui.each(d.list, function(index, item){ }}
+					<tr>
+						<td align="center">{{item.id || ''}}</td>
+						<td align="center">{{item.userId || ''}}</td>
+						<td align="center">{{item.accid || ''}}</td>
+						<td align="center">{{item.username || ''}}</td>
+<!--						<td align="center">{{item.birthday || ''}}</td>-->
+						<td align="center">{{item.email || ''}}</td>
+						<td align="center">
+							{{# if(item.userType == 0) { }}
+							<span style="color: black;">客服</span>
+							{{# } else if(item.userType == 1) { }}
+							<span style="color: black;">药师</span>
+							{{# } else if(item.userType == 2) { }}
+							<span style="color: black;">医生</span>
+							{{# } }}
+						</td>
+						<td align="center">
+							{{# if(item.gender == 0) { }}
+							<span style="color: black;">男</span>
+							{{# } else { }}
+							<span style="color: black;">女</span>
+							{{# } }}
+						</td>
+						<td align="center">{{item.mobile || ''}}</td>
+						<td align="center">{{item.nickname || ''}}</td>
+						<td align="center">{{item.technicalGroupName || ''}}</td>
+						<td align="center">{{item.maxAcceptCount || ''}}</td>
+						<td align="center" id = "createdAt">{{createTime(item.createdAt) || ''}}</td>
+						<!--<td align="center" id = "createdAt">{{item.createdAt || ''}}</td>-->
+<!--						<td align="center">{{item.createdBy || ''}}</td>-->
+<!--						<td align="center">{{createTime(item.changedAt) || ''}}</td>-->
+<!--						<td align="center">{{item.changedBy || ''}}</td>-->
+						<td align="center">
+							{{# if(item.onlineStatus == 0) { }}
+							<span style="color: red;">离线</span>
+							{{# } else if(item.onlineStatus == 1) { }}
+							<span style="color: red;">在线</span>
+							{{# } else if(item.onlineStatus == 2) { }}
+							<span style="color: red;">忙碌</span>
+							{{# } }}
+						</td>
+						<td align="center">
+							{{# if(item.status == 0) { }}
+							<span style="color: red;">正常</span>
+							{{# } else if(item.status == 1) { }}
+							<span style="color: red;">禁用</span>
+							{{# } }}
+						</td>
+						<td align="center">
+							<a href="waiter-edit.html?id={{item.id}}">修改</a> | <a href="waiter-add-technical-group.html?id={{item.id}}&technicalGroupId={{item.technicalGroupId}}">绑定技能组</a> | <a href="javascript:;" class="row-del" data="{{item.id}}">删除</a>
+						</td>
+					</tr>
+				{{# }); }}
+			</table>
+		</script>
+	</body>
+
+</html>

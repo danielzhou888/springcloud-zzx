@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>订单详情</title>
+		<link rel="shortcut icon" type="image/png" href="static/i/favicon.png">
+		<link rel="stylesheet" href="static/css/admin.css">
+		<link rel="stylesheet" href="static/layui/css/layui.css">
+		<script src="static/layui/layui.js"></script>
+		<script type="text/css">
+			.layui-form-item {
+				float:left;border:1px   solid   red;   padding:10px;
+			}
+		</script>
+	</head>
+	<body>
+		<div class="header">
+			<h2 class="z cl"><a href="index.html"><img src="static/img/logo2.png" style="width: 200px;height: 40px;"></a></h2>
+			<div class="y cl">
+				<a target="_blank" href="http://www.cc.ddky.com">订单详情页</a>
+				<a id="top-logout" href="javascript:">退出</a>
+			</div>
+		</div>
+		<div class="admin">
+			<div class="aleft" id="left-container"></div>
+			<div class="aright">
+
+				<fieldset class="layui-elem-field layui-field-title" style="margin: 20px 30px 20px 20px;">
+					<legend>订单详情</legend>
+				</fieldset>
+
+				<form class="layui-form bform" id="content-cnt"></form>
+				<script>
+					layui.config({base:'static/js/'}).use('order-edit');
+				</script>
+				<script id ="template" type="text/template">
+
+
+					<div style="text-align:center">
+
+						<table  cellpadding="3" cellspacing="0" style="width: 60%;margin:auto">
+							<tr width="100%" >
+								<td align="center">订单Id：</td>
+								<td><input type="text" name="id" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.id || ''}}"></td>
+								<td align="center">订单号：</td>
+								<td><input type="text" name="id" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.id || ''}}"></td>
+								<td align="center">关联订单：</td>
+								<td><input type="text" name="oldOrderId" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.oldOrderId || ''}}"></td>
+								<td align="center">用户账号：</td>
+								<td><input type="text" name="userNo" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.userNo || ''}}"></td>
+							</tr>
+							<tr width="100%" >
+								<td align="center">下单时间：</td>
+								<td><input type="text" name="createdAt" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.createdAt || ''}}"></td>
+								<td align="center">原下单时间：</td>
+								<td><input type="text" name="oldCreatedAt" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.oldCreatedAt || ''}}"></td>
+								<td align="center">支付状态：</td>
+								<td><input type="text" name="payStatusTip" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.payStatusTip || ''}}"></td>
+								<td align="center">支付方式：</td>
+								<td><input type="text" name="payment" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.payment || ''}}"></td>
+							</tr>
+							<tr width="100%" >
+								<td align="center">订单金额：</td>
+								<td><input type="text" name="totalPay" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.totalPay / 100 || ''}}"></td>
+								<td align="center">订单来源：</td>
+								<td><input type="text" name="orderSourceTxt" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.orderSourceTxt || ''}}"></td>
+								<td align="center">创建人员：</td>
+								<td><input type="text" name="createdBy" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.createdBy || ''}}"></td>
+								<td align="center">第三方订单号：</td>
+								<td><input type="text" name="thirdpartyOrderId" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.thirdpartyOrderId || ''}}"></td>
+							</tr>
+							<tr width="100%" >
+								<td align="center">订单状态：</td>
+								<td><input type="text" name="orderStatusTxt" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.orderStatusTxt || ''}}"></td>
+								<td align="center">寄售类型：</td>
+								<td><input type="text" name="orderLableTip" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.orderLableTip || ''}}"></td>
+								<td align="center">审核时间：</td>
+								<td><input type="text" name="auditTime" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.auditTime || ''}}"></td>
+								<td align="center">妥投时间：</td>
+								<td><input type="text" name="arriveTime" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.arriveTime || ''}}"></td>
+							</tr>
+							<tr width="100%" >
+								<td align="center">是否问询通过：</td>
+								<td><input type="text" name="complianceStatus" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.complianceStatus == 1 ? '已通过' : '未通过' || ''}}"></td>
+								<td align="center">商品总额：</td>
+								<td><input type="text" name="totalPrice" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.totalPrice / 100 || ''}}"></td>
+								<td align="center">优惠券金额：</td>
+								<td><input type="text" name="voucherPay" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.voucherPay / 100 || ''}}"></td>
+								<td align="center">优惠金额：</td>
+								<td><input type="text" name="discountPay" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.discountPay / 100 || ''}}"></td>
+							</tr>
+							<tr width="100%" >
+								<td align="center">渠道优惠金额：</td>
+								<td><input type="text" name="channelDiscountPay" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.channelDiscountPay / 100 || ''}}"></td>
+								<td align="center">满减优惠金额：</td>
+								<td><input type="text" name="minusDiscountPay" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.minusDiscountPay / 100 || ''}}"></td>
+								<td align="center">会员折扣金额：</td>
+								<td><input type="text" name="userDiscountPay" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.userDiscountPay / 100 || ''}}"></td>
+								<td align="center">运费折扣金额：</td>
+								<td><input type="text" name="deliverPayDiscount" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.deliverPayDiscount / 100 || ''}}"></td>
+							</tr>
+							<tr width="100%" >
+								<td align="center">包装费：</td>
+								<td><input type="text" name="deliverPayDiscount" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.deliverPayDiscount / 100 || ''}}"></td>
+								<td align="center">叮当币金额：</td>
+								<td><input type="text" name="usercoinPay" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.usercoinPay / 100 || ''}}"></td>
+								<td align="center">渠道余额抵扣：</td>
+								<td><input type="text" name="thirdPlatHadPay" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.thirdPlatHadPay / 100 || ''}}"></td>
+								<td align="center">健康卡抵扣：</td>
+								<td><input type="text" name="cardPay" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.cardPay / 100 || ''}}"></td>
+							</tr>
+							<tr width="100%" >
+								<td align="center">电话类型：</td>
+								<td><input type="text" name="callerTypeTip" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.callerTypeTip || ''}}"></td>
+								<td align="center">会员等级：</td>
+								<td><input type="text" name="rank" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.rank || ''}}"></td>
+								<td align="center">企业折扣金额：</td>
+								<td><input type="text" name="companyUserDiscountPay" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.companyUserDiscountPay / 100 || ''}}"></td>
+								<td align="center">审核类型：</td>
+								<td><input type="text" name="auditTypeTip" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.auditTypeTip || ''}}"></td>
+							</tr>
+							<tr width="100%" >
+								<td align="center">纳税人识别码：</td>
+								<td><input type="text" name="invoiceCode" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.invoiceCode || ''}}"></td>
+								<td align="center">下单平台：</td>
+								<td><input type="text" name="orderPlatformTip" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.orderPlatformTip || ''}}"></td>
+								<td align="center">用户标记：</td>
+								<td><input type="text" name="userTags" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.userTags || ''}}"></td>
+								<td align="center">B2C分仓母单：</td>
+								<td><input type="text" name="superOrderId" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.superOrderId == 0 ? '' : d.superOrderId || ''}}"></td>
+							</tr>
+							<tr width="100%" >
+								<td align="center">发票备注：</td>
+								<td><input type="text" name="invoiceRemark" required lay-verify="required" placeholder="" readonly autocomplete="off" class="layui-input" value="{{d.invoiceRemark || ''}}"></td>
+								<!--<td align="center">是否自提：</td>
+								<td>
+									{{# if (d.isSelf == 1) { }}
+									<input type="text" name="isSelf" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="是">
+									{{# } else { }}
+									<input type="text" name="isSelf" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="否">
+									{{# } }}
+								</td>-->
+								<td align="center">订单状态：</td>
+								<td>
+									<input type="text" name="orderStatusTxt" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="{{d.orderStatusTxt || ''}}">
+									<!--{{# if (d.orderStatus == 1) { }}
+									<input type="text" name="orderStatus" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="待审核">
+									{{# } else if (d.orderStatus == 2) { }}
+									<input type="text" name="orderStatus" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="已审核">
+									{{# } else if (d.orderStatus == 3) { }}
+									<input type="text" name="orderStatus" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="提报客服">
+									{{# } else if (d.orderStatus == 4) { }}
+									<input type="text" name="orderStatus" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="客服已处理">
+									{{# } else if (d.orderStatus == 5) { }}
+									<input type="text" name="orderStatus" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="已确认">
+									{{# } else if (d.orderStatus == 6) { }}
+									<input type="text" name="orderStatus" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="配送中">
+									{{# } else if (d.orderStatus == 7) { }}
+									<input type="text" name="orderStatus" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="妥投">
+									{{# } else if (d.orderStatus == 8) { }}
+									<input type="text" name="orderStatus" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="拒收">
+									{{# } else if (d.orderStatus == 9) { }}
+									<input type="text" name="orderStatus" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="已完成">
+									{{# } else if (d.orderStatus == 10) { }}
+									<input type="text" name="orderStatus" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="已取消">
+									{{# } else { }}
+									<input type="text" name="orderStatus" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="未知">
+									{{# } }}-->
+								</td>
+								<td align="center">支付状态：</td>
+								<td>
+									<input type="text" name="payStatusTip" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="{{d.payStatusTip || ''}}">
+									<!--支付状态  1 未支付  2 已支付-->
+									<!--{{# if (d.payStatus == 1) { }}
+									<input type="text" name="payStatus" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="未支付">
+									{{# } else { }}
+									<input type="text" name="payStatus" required lay-verify="required" readonly placeholder="" autocomplete="off" class="layui-input" value="已支付">
+									{{# } }}-->
+								</td>
+								<input type="hidden" name="id"  value="{{d.id}}"/>
+							</tr>
+						</table>
+					</div>
+				</script>
+			</div>
+		</div>
+	</body>
+
+</html>
