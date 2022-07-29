@@ -12,21 +12,21 @@ import java.util.concurrent.TimeUnit;
 public interface DdkyExecutorFactory {
 
     /**
-     * 根据线程池名称获取线程池
+     * 创建线程池（不对线程池进行缓存）
      * @param poolName
      * @return
      */
-    DdkyExecutor getExecutor(String poolName);
+    DdkyExecutor createExecutor(String poolName);
 
     /**
-     * 创建新的线程池
+     * 创建线程池(对线程池进行缓存)
      * @param poolName
      * @return
      */
-    DdkyExecutor createNewExecutor(String poolName);
+    DdkyExecutor createCachedExecutor(String poolName);
 
     /**
-     * 关闭所有线程池
+     * 关闭缓存中所有线程池
      * @param timeout
      * @param timeUnit
      */

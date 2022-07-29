@@ -30,7 +30,7 @@ public class DefaultDdkyExecutors implements DdkyExecutors {
     public <V> Future<V> submit(DdkyExecutorTask<V> task) {
         Asserts.notNull(task, "task == null");
         String poolName = executorSelector.selectPoolKey(task.getTaskContext());
-        DdkyExecutor executor = ddkyExecutorFactory.getExecutor(poolName);
+        DdkyExecutor executor = ddkyExecutorFactory.createCachedExecutor(poolName);
         return executor.submit(task);
     }
 

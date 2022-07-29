@@ -19,13 +19,13 @@ public class DefaultDdkyExecutorFactoryTest {
 
         CompletableFuture<DdkyExecutor> f1 = CompletableFuture.supplyAsync(() -> {
             DdkyExecutorFactory factory = new DefaultDdkyExecutorFactory();
-            DdkyExecutor executor = factory.getExecutor("order-b-executor");
+            DdkyExecutor executor = factory.createCachedExecutor("order-b-executor");
             return executor;
         }, executorService);
 
         CompletableFuture<DdkyExecutor> f2 = CompletableFuture.supplyAsync(() -> {
             DdkyExecutorFactory factory = new DefaultDdkyExecutorFactory();
-            DdkyExecutor executor = factory.getExecutor("order-b-executor");
+            DdkyExecutor executor = factory.createCachedExecutor("order-b-executor");
             return executor;
         }, executorService);
 

@@ -2,7 +2,7 @@ package com.zzx.dynamic.thread.executor;
 
 import com.zzx.dynamic.thread.config.DdkyExecutorProperty;
 import com.zzx.dynamic.thread.config.DdkyExecutorsProperty;
-import com.zzx.dynamic.thread.factory.DefaultDdkyExecutorFactory;
+import com.zzx.dynamic.thread.factory.DdkyConfigurableExecutorFactory;
 import com.zzx.dynamic.thread.queue.BlockingQueueBuilder;
 import com.zzx.dynamic.thread.queue.ResizableBlockingQueue;
 import com.zzx.dynamic.thread.queue.ResizableLinkedBlockingQueue;
@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.LongAdder;
 /**
  * 叮当动态线程池执行器——从apollo读取线程池配置
  * <p>
- *     1. 仅支持使用form构建线程池执行器，从apollo读取线程池配置，如果apollo未配置，读取叮当默认线程池执行器
+ *     1. 从apollo读取线程池配置，如果apollo未配置，读取叮当默认线程池执行器
  * </p>
  * @author zhouzhixiang
  * @Date 2021-04-10
@@ -32,15 +32,19 @@ public class ConfigurableThreadPoolExecutor extends ThreadPoolExecutor implement
 
     private int workQueueCapacity;
 
-    private ConfigurableThreadPoolExecutor(String poolName, int corePoolSize, int maximumPoolSize, long keepAliveTime, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler) {
+    protected ConfigurableThreadPoolExecutor(String poolName, int corePoolSize, int maximumPoolSize, long keepAliveTime, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.MILLISECONDS, workQueue, threadFactory, new RejectedExecutionHandlerWrapper(rejectedExecutionHandler));
         this.poolName = poolName;
         // 由于队列是刚创建，所以剩余容量=容量
         this.workQueueCapacity = workQueue.remainingCapacity();
     }
 
+    public static ConcurrentMap<String, DdkyExecutor> getCachedExecutorsMap() {
+        return DdkyConfigurableExecutorFactory.getCachedExecutorsMap();
+    }
+
     /**
-     * 构建指定线程池名称的线程执行器(从apollo中获取配置）
+     * 构建指定线程池名称的线程执行器(从apollo中获取配置）（将创建的线程池缓存在内存中）
      * 1、如果已被构建，则从已构建的线程执行器缓存获取
      * 2、如果没有被构建，缓存没有，读取apollo配置，构建线程池执行器，放入缓存并返回
      * 3、如果apollo没有此线程池配置，返回叮当默认线程池执行器
@@ -50,47 +54,26 @@ public class ConfigurableThreadPoolExecutor extends ThreadPoolExecutor implement
      * @param poolName
      * @return
      */
-    public static DdkyExecutor createExecutor(String poolName) {
+    public static DdkyExecutor createCachedExecutor(String poolName) {
         Asserts.notEmpty(poolName, "poolName == null");
-        DdkyExecutorProperty ddkyExecutorProperty = DdkyExecutorsProperty.getDdkyExecutorProperty(poolName);
-        if (ddkyExecutorProperty == null) {
-            if (LOGGER.isWarnEnabled()) {
-                LOGGER.warn("[DdkyThreadPoolExecutor] 此线程池{}没有对应的配置，将采用默认配置构建默认线程池", poolName);
+
+        ConcurrentMap<String, DdkyExecutor> executorsCached = getCachedExecutorsMap();
+
+        DdkyExecutor ddkyExecutor = executorsCached.get(poolName);
+        if (ddkyExecutor == null) {
+            synchronized (ConfigurableThreadPoolExecutor.class) {
+                ddkyExecutor = executorsCached.get(poolName);
+                if (ddkyExecutor == null) {
+                    ddkyExecutor = createExecutor(poolName);
+                    executorsCached.putIfAbsent(poolName, ddkyExecutor);
+                }
             }
-            return DefaultDdkyThreadPoolExecutor.createExecutor(poolName);
         }
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("[DdkyThreadPoolExecutor] 线程池{}找到了配置, ddkyExecutorProperty = {}", poolName, ddkyExecutorProperty);
-        }
-        ConfigurableThreadPoolExecutor ddkyThreadPoolExecutor = null;
-
-        synchronized (ConfigurableThreadPoolExecutor.class) {
-            ConcurrentMap<String, DdkyExecutor> executorsCached = DefaultDdkyExecutorFactory.executorsCached;
-
-            if (executorsCached.get(poolName) != null) {
-                return executorsCached.get(poolName);
-            }
-
-            BlockingQueue<Runnable> workQueue = ddkyExecutorProperty.getWorkQueue();
-            if (workQueue instanceof ResizableLinkedBlockingQueue) {
-                // 设置队列容量
-                workQueue = new BlockingQueueBuilder<Runnable>().
-                        fair(false).
-                        capacity(ddkyExecutorProperty.getQueueCapacity())
-                        .build();
-            }
-
-            ddkyThreadPoolExecutor = new ConfigurableThreadPoolExecutor(poolName, ddkyExecutorProperty.getCorePoolSize(), ddkyExecutorProperty.getMaximumPoolSize(), ddkyExecutorProperty.getKeepAliveTime(),
-                    workQueue, ddkyExecutorProperty.getThreadFactory(), ddkyExecutorProperty.getRejectedHandler());
-
-            DefaultDdkyExecutorFactory.executorsCached.putIfAbsent(poolName, ddkyThreadPoolExecutor);
-        }
-
-        return ddkyThreadPoolExecutor;
+        return ddkyExecutor;
     }
 
     /**
-     * 构建指定线程池名称的线程执行器(从apollo中获取配置）
+     * 构建指定线程池名称的线程执行器(从apollo中获取配置）（不对此线程池进行缓存）
      * 1、读取apollo配置，构建线程池执行器，并返回
      * 2、如果apollo没有此线程池配置，返回叮当默认线程池执行器
      *
@@ -99,7 +82,7 @@ public class ConfigurableThreadPoolExecutor extends ThreadPoolExecutor implement
      * @param poolName
      * @return
      */
-    public static DdkyExecutor createNewExecutor(String poolName) {
+    public static DdkyExecutor createExecutor(String poolName) {
         Asserts.notEmpty(poolName, "poolName == null");
         DdkyExecutorProperty ddkyExecutorProperty = DdkyExecutorsProperty.getDdkyExecutorProperty(poolName);
         if (ddkyExecutorProperty == null) {
@@ -135,16 +118,17 @@ public class ConfigurableThreadPoolExecutor extends ThreadPoolExecutor implement
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info("线程池{}: workQueueCapacity 新值: {}和旧值: {}一样，不做修改更新操作", poolName, newWorkQueueCapacity, workQueueCapacity);
             }
-        }
-        if (workQueue instanceof ResizableBlockingQueue) {
-            ((ResizableBlockingQueue)workQueue).setCapacity(newWorkQueueCapacity);
-            this.workQueueCapacity = newWorkQueueCapacity;
-            if (LOGGER.isInfoEnabled()) {
-                LOGGER.info("线程池{}: 工作队列{}，容量 workQueueCapacity 已被修改生效，新值: {}, 旧值: {}", poolName, workQueue.getClass().getSimpleName(), newWorkQueueCapacity, workQueueCapacity);
-            }
         } else {
-            if (LOGGER.isWarnEnabled()) {
-                LOGGER.warn("线程池{}: 工作队列{}不支持修改容量", poolName, workQueue.getClass().getSimpleName());
+            if (workQueue instanceof ResizableBlockingQueue) {
+                ((ResizableBlockingQueue)workQueue).setCapacity(newWorkQueueCapacity);
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info("线程池{}: 工作队列{}，容量 workQueueCapacity 已被修改生效，新值: {}, 旧值: {}", poolName, workQueue.getClass().getSimpleName(), newWorkQueueCapacity, workQueueCapacity);
+                }
+                this.workQueueCapacity = newWorkQueueCapacity;
+            } else {
+                if (LOGGER.isWarnEnabled()) {
+                    LOGGER.warn("线程池{}: 工作队列{}不支持修改容量", poolName, workQueue.getClass().getSimpleName());
+                }
             }
         }
     }
@@ -346,7 +330,7 @@ public class ConfigurableThreadPoolExecutor extends ThreadPoolExecutor implement
 
     @Override
     public String getRejectedExecutionHandlerType() {
-        return getRejectedExecutionHandlerType().getClass().getSimpleName();
+        return getRejectedExecutionHandler().getClass().getSimpleName();
     }
 
     @Override

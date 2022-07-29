@@ -5,8 +5,9 @@ import com.ctrip.framework.apollo.ConfigChangeListener;
 import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.model.ConfigChange;
 import com.ctrip.framework.apollo.model.ConfigChangeEvent;
+import com.sun.org.apache.bcel.internal.generic.LOOKUPSWITCH;
+import com.zzx.dynamic.thread.executor.ConfigurableThreadPoolExecutor;
 import com.zzx.dynamic.thread.executor.DdkyExecutor;
-import com.zzx.dynamic.thread.factory.DefaultDdkyExecutorFactory;
 import com.zzx.dynamic.thread.queue.ResizableLinkedBlockingQueue;
 import com.zzx.dynamic.thread.selector.DefaultExecutorSelector;
 import com.zzx.dynamic.thread.util.Strings;
@@ -33,7 +34,7 @@ public class DdkyExecutorsProperty {
 
     private static String NAME_SPACE_VALUE = DEFAULT_NAME_SPACE;
 
-    private static final String PROPERTY_PREFIX = "ddky.executors.";;
+    private static final String PROPERTY_PREFIX = "ddky.executors.";
     private static final String SELECTOR = PROPERTY_PREFIX + "selector";
     private static final String METRICS_ENABLE = PROPERTY_PREFIX + "metricsEnable";
     private static final String EXECUTOR = PROPERTY_PREFIX + "executor";
@@ -57,16 +58,7 @@ public class DdkyExecutorsProperty {
 
     private static Config config;
 
-    //public DdkyExecutorsProperty() {
-    //    try {
-    //        initialize();
-    //        loadProps();
-    //    } catch (Throwable ex) {
-    //        if (LOGGER.isWarnEnabled()) {
-    //            LOGGER.warn("[DdkyExecutorsProperty] 解析失败", ex);
-    //        }
-    //    }
-    //}
+    private static String nameSpace;
 
     static {
         try {
@@ -77,29 +69,6 @@ public class DdkyExecutorsProperty {
             LOGGER.warn("[DdkyExecutorsProperty] 解析失败", ex);
         }
     }
-
-    //public DdkyExecutorsProperty(String nameSpace) {
-    //    try {
-    //        initialize();
-    //        props.put(NAME_SPACE, nameSpace);
-    //        loadProps();
-    //    } catch (Throwable ex) {
-    //        if (LOGGER.isWarnEnabled()) {
-    //            LOGGER.warn("[DdkyExecutorsProperty] 解析失败", ex);
-    //        }
-    //    }
-    //}
-
-    //public void init() {
-    //    try {
-    //        initialize();
-    //        loadProps();
-    //    } catch (Throwable ex) {
-    //        if (LOGGER.isWarnEnabled()) {
-    //            LOGGER.warn("[DdkyExecutorsProperty] 解析失败", ex);
-    //        }
-    //    }
-    //}
 
     /**
      * 监听apollo配置变化
@@ -156,7 +125,7 @@ public class DdkyExecutorsProperty {
                 return;
             }
 
-            DdkyExecutor executor = DefaultDdkyExecutorFactory.executorsCached.get(poolName);
+            DdkyExecutor executor = ConfigurableThreadPoolExecutor.getCachedExecutorsMap().get(poolName);
 
             if (executor == null) {
                 if (LOGGER.isWarnEnabled()) {
@@ -196,6 +165,10 @@ public class DdkyExecutorsProperty {
                         LOGGER.info("当前队列是弹性队列，可被修改，nameSpace = {}, 修改前的队列长度：{}，修改后的队列长度：{}", NAME_SPACE_VALUE, executor.getWorkQueueCapacity(), newValue);
                     }
                     ((ResizableLinkedBlockingQueue<Runnable>) executor.getWorkQueue()).setCapacity(Integer.parseInt(newValue));
+                } else {
+                    if (LOGGER.isInfoEnabled()) {
+                        LOGGER.info("线程池{}：当前队列不可被修改容量长度", poolName);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -222,7 +195,8 @@ public class DdkyExecutorsProperty {
     public static void initialize() {
         try {
             Properties properties = new Properties();
-            String nameSpace = properties.getProperty(NAME_SPACE);
+            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(DEFAULT_PROPRETIES_FILE_NAME));
+            nameSpace = properties.getProperty(NAME_SPACE);
             nameSpace = Strings.isNotBlank(nameSpace) ? nameSpace : DEFAULT_NAME_SPACE;
             NAME_SPACE_VALUE = nameSpace;
             config = ConfigService.getConfig(props.getOrDefault(nameSpace, DEFAULT_NAME_SPACE));
@@ -242,21 +216,21 @@ public class DdkyExecutorsProperty {
 
     public static void loadProps() throws IOException {
 
-        Properties properties = new Properties();
-        properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(DEFAULT_PROPRETIES_FILE_NAME));
-
-        String nameSpace = properties.getProperty(NAME_SPACE);
-        nameSpace = Strings.isNotBlank(nameSpace) ? nameSpace : DEFAULT_NAME_SPACE;
+        //Properties properties = new Properties();
+        //properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(DEFAULT_PROPRETIES_FILE_NAME));
+        //
+        //String nameSpace = properties.getProperty(NAME_SPACE);
+        //nameSpace = Strings.isNotBlank(nameSpace) ? nameSpace : DEFAULT_NAME_SPACE;
 
         //ConfigService.getConfig(PROPERTY_PREFIX + CORE_POOL_SIZE, );
-        Config config = null;
-        try {
-            config = ConfigService.getConfig(props.getOrDefault(nameSpace, DEFAULT_NAME_SPACE));
-        } catch (Exception e) {
-            if (LOGGER.isErrorEnabled()) {
-                LOGGER.error("[DdkyExecutorsProperty] 获取apollo配置异常, apollo配置名：{}", NAME_SPACE);
-            }
-        }
+        //Config config = null;
+        //try {
+        //    config = ConfigService.getConfig(props.getOrDefault(nameSpace, DEFAULT_NAME_SPACE));
+        //} catch (Exception e) {
+        //    if (LOGGER.isErrorEnabled()) {
+        //        LOGGER.error("[DdkyExecutorsProperty] 获取apollo配置异常, apollo配置名：{}", NAME_SPACE);
+        //    }
+        //}
 
         String selector = config.getProperty(SELECTOR, DEFAULT_SELECTOR);
         if (Strings.isNotBlank(selector)) {

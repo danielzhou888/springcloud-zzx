@@ -1,5 +1,8 @@
 package com.zzx.dynamic.thread.executor;
 
+import com.zzx.dynamic.thread.config.DdkyExecutorProperty;
+import com.zzx.dynamic.thread.config.DdkyExecutorsProperty;
+import com.zzx.dynamic.thread.factory.DefaultDdkyExecutorFactory;
 import com.zzx.dynamic.thread.queue.ResizableBlockingQueue;
 import com.zzx.dynamic.thread.task.DdkyExecutorTask;
 import com.zzx.dynamic.thread.task.DdkyTaskRejectedException;
@@ -20,7 +23,7 @@ import java.util.concurrent.atomic.LongAdder;
  * @author zhouzhixiang
  * @Date 2021-04-10
  */
-public class DefaultDdkyThreadPoolExecutor extends ThreadPoolExecutor implements DdkyExecutor {
+public class DefaultDdkyThreadPoolExecutor  extends ThreadPoolExecutor implements DdkyExecutor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDdkyThreadPoolExecutor.class);
 
@@ -32,14 +35,53 @@ public class DefaultDdkyThreadPoolExecutor extends ThreadPoolExecutor implements
         return new Builder();
     }
 
+    public static ConcurrentMap<String, DdkyExecutor> getCachedExecutorsMap() {
+        return DefaultDdkyExecutorFactory.getCachedExecutorsMap();
+    }
+
     /**
      * 创建默认线程池
      * @param poolName
      * @return
      */
     public static DdkyExecutor createExecutor(String poolName) {
+        DdkyExecutorProperty ddkyExecutorProperty = DdkyExecutorsProperty.getDdkyExecutorProperty(poolName);
+        if (ddkyExecutorProperty != null) {
+            return DefaultDdkyThreadPoolExecutor.newBuilder()
+                    .poolName(ddkyExecutorProperty.getPoolName())
+                    .corePoolSize(ddkyExecutorProperty.getCorePoolSize())
+                    .maximumPoolSize(ddkyExecutorProperty.getMaximumPoolSize())
+                    .keepAliveTime(ddkyExecutorProperty.getKeepAliveTime())
+                    .threadFactory(ddkyExecutorProperty.getThreadFactory())
+                    .workQueue(ddkyExecutorProperty.getWorkQueue())
+                    .rejectedExecutionHandler(ddkyExecutorProperty.getRejectedHandler())
+                    .builder();
+        }
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("没有找到线程池{}, 将使用默认线程池进行任务处理", poolName);
+        }
         return Builder.fromName(poolName);
     }
+
+    /**
+     * 创建缓存线程池
+     * @param poolName
+     * @return
+     */
+    public static DdkyExecutor createCachedExecutor(String poolName) {
+        DdkyExecutor ddkyExecutor = getCachedExecutorsMap().get(poolName);
+        if (ddkyExecutor == null) {
+            synchronized (DefaultDdkyThreadPoolExecutor.class) {
+                ddkyExecutor = getCachedExecutorsMap().get(poolName);
+                if (ddkyExecutor == null) {
+                    ddkyExecutor = createExecutor(poolName);
+                    getCachedExecutorsMap().putIfAbsent(poolName, ddkyExecutor);
+                }
+            }
+        }
+        return ddkyExecutor;
+    }
+
 
     private DefaultDdkyThreadPoolExecutor(String poolName, int corePoolSize, int maximumPoolSize, long keepAliveTime, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.MILLISECONDS, workQueue, threadFactory, new RejectedExecutionHandlerWrapper(rejectedExecutionHandler));
@@ -83,7 +125,7 @@ public class DefaultDdkyThreadPoolExecutor extends ThreadPoolExecutor implements
         }
 
         public Builder maximumPoolSize(int maximumPoolSize) {
-            Asserts.isFalse(maximumPoolSize <= 0 || maximumPoolSize < corePoolSize, "maximumPoolSize ,= 0 || maxmumPoolSize < corePoolSize");
+            Asserts.isFalse(maximumPoolSize <= 0 || maximumPoolSize < corePoolSize, "maximumPoolSize <= 0 || maxmumPoolSize < corePoolSize");
             this.maximumPoolSize = maximumPoolSize;
             return this;
         }
