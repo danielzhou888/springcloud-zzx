@@ -50,10 +50,34 @@ public class LongMessageConst {
                     " \uD83D\uDE80\uD83D\uDE80\uD83D\uDE80Lets go!",
             "They are doing an amazing job",
             "A friend of mine told me about this project yesterday",
-            "",
-            "",
-            "",
-            "",
-            ""
+            "/GETDAO_IS_THE_BEST",
+            "/GETDAO_IS_THE_BEST",
+            "/GETDAO_IS_THE_BEST",
+            "/GETDAO_IS_THE_BEST",
+            "Kindly read pinned message first will help you know more about GetDAO",
+            "Kindly read pinned message first will help you know more about GetDAO",
+            "Kindly read pinned message first will help you know more about GetDAO",
+            "Kindly read pinned message first will help you know more about GetDAO",
+            "Kindly read pinned message first will help you know more about GetDAO",
+            "/WE_ARE_STRONG",
+            "/WE_ARE_STRONG",
+            "Sure\uD83D\uDCAF\uD83D\uDCAF\uD83D\uDCAF\uD83D\uDCAF",
+            "Sure\uD83D\uDCAF\uD83D\uDCAF\uD83D\uDCAF\uD83D\uDCAF",
+            "Hey new members \uD83D\uDC4B\uD83C\uDFFB",
+            "Mooning things on board flying to the moon\uD83D\uDE80\uD83D\uDE80\uD83D\uDE80\uD83C\uDF0E\uD83C\uDF0E",
+            "Hey new members \uD83D\uDC4B\uD83C\uDFFB\n" +
+                    "\n" +
+                    "Welcome to GetDAO Official Chat\n" +
+                    " telegram group\uD83D\uDD25\n" +
+                    "\n" +
+                    "\n" +
+                    "No Spam Links \uD83D\uDC4E\n" +
+                    "No Advertising \uD83D\uDEAB\n" +
+                    "\n" +
+                    "\uD83D\uDCCC\uD83D\uDCCC Please read pinned messages for latest updates\uD83D\uDCCC\uD83D\uDCCC",
+            "\uD83D\uDE80GetDAO Make Your Dreams Come True\uD83D\uDE80",
+            "/WE_ARE_STRONG",
+            "/WE_ARE_STRONG",
+            "/WE_ARE_STRONG"
     };
 }

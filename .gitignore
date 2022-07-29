@@ -68,3 +68,5 @@ Thumbs.db
 
 .mvn/
 /mvn/
+/zzx-sentinel-parent/log/
+/log/

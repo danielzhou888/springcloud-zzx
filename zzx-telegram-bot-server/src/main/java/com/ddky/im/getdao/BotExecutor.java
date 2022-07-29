@@ -15,11 +15,11 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import static com.ddky.im.alphadao.LinkMessageConst.linkMessage;
-import static com.ddky.im.alphadao.LongMessageConst.longMessages;
-import static com.ddky.im.alphadao.NiceMessageConst.niceMessages;
-import static com.ddky.im.alphadao.WelcomeAdminMessageConst.WelcomeAdminMessages;
-import static com.ddky.im.alphadao.WelcomeCommonMessageConst.WelcomeCommonMessages;
+import static com.ddky.im.getdao.LinkMessageConst.linkMessage;
+import static com.ddky.im.getdao.LongMessageConst.longMessages;
+import static com.ddky.im.getdao.NiceMessageConst.niceMessages;
+import static com.ddky.im.getdao.WelcomeAdminMessageConst.WelcomeAdminMessages;
+import static com.ddky.im.getdao.WelcomeCommonMessageConst.WelcomeCommonMessages;
 
 /**
  * @author zhouzhixiang
@@ -33,42 +33,51 @@ public class BotExecutor {
 
     private static volatile Map<String,CircularFifoQueue<String>> msgCacheMap = new ConcurrentHashMap<>();
 
-    private static final String PROJECTNAME = "AlphaDAO";
+    private static final String PROJECTNAME = "GetDAO";
     private static final String PROJECT_NAME_TAG = "PROJECTNAME";
     private static final String CHAT_ID_TAG = "CHATIDREPLACE";
-    private static final String CHAT_ID = "-1001771292741"; // alphadao
+    private static final String CHAT_ID = "-1001646788585"; // getdao
     private static String PRE_URL = "https://api.telegram.org/bot";
     private static String POST_URL = "/sendMessage?chat_id=";
     private static String TEXT_URL = "&text=";
 
+//    private static int frequency = 4; // 次数
+//    private static int stickerFrequency = 2; // 次数
+//    private static int linkFrequency = 1; // 发送链接消息的频率
+////    private static int intervals = 50000000; // 发送消息的区间（ms=毫秒）
+////    private static int stickerIntervals = 50000000; // 发送消息的区间（ms=毫秒）
+////    private static int linkIntervals = 54450000; // 发送链接消息的时间区间 (ms=毫秒)
+//    private static int intervals = 10000000; // 发送消息的区间（ms=毫秒）
+//    private static int stickerIntervals = 360000; // 发送消息的区间（ms=毫秒）
+//    private static int linkIntervals = 15400000; // 发送链接消息的时间区间 (ms=毫秒)
+//    private static boolean isAllowedDuplicate = true; // 每个人防止最近15条消息重复开关
+
     private static int frequency = 2; // 次数
-    private static int stickerFrequency = 1; // 次数
+    private static int stickerFrequency = 2; // 次数
     private static int linkFrequency = 1; // 发送链接消息的频率
-//    private static int intervals = 50000000; // 发送消息的区间（ms=毫秒）
-//    private static int stickerIntervals = 50000000; // 发送消息的区间（ms=毫秒）
-//    private static int linkIntervals = 54450000; // 发送链接消息的时间区间 (ms=毫秒)
-    private static int intervals = 8000000; // 发送消息的区间（ms=毫秒）
-    private static int stickerIntervals = 8000000; // 发送消息的区间（ms=毫秒）
-    private static int linkIntervals = 15445000; // 发送链接消息的时间区间 (ms=毫秒)
+    private static int intervals = 1000000; // 发送消息的区间（ms=毫秒）
+    private static int stickerIntervals = 4000000; // 发送消息的区间（ms=毫秒）
+    private static int linkIntervals = 15440000; // 发送链接消息的时间区间 (ms=毫秒)
     private static boolean isAllowedDuplicate = true; // 每个人防止最近15条消息重复开关
 
 
 
-    private static final String[] AdminBots = {"5006175544:AAG62k_Fc1pjWfu5CE8e3QEE7Q18HUFseGY",
-            "5016489006:AAG4abPqsUwHxbnHhLpUvgKxcSXP2orcl2c"};
-    private static final String[] CommonBots = {"5057833185:AAE-bDGWYeXlZukQmRrY4uUHB0xv3AXTuhk",
-            "5006280104:AAGl_3T87XWrEOPdatY3qBRmpTGPFKBYBEY",
-            "5078619549:AAGflInjlqjIZFn6Ws1DlaJY5IYV6p37HNc",
-            "5043401593:AAFpjv_md263RrQ8LrW6pMlTVtKmIEWNQSE",
+    private static final String[] AdminBots = {"5021307993:AAHS0NuHHYAH6cB9DL054crrXa6tSntb9ek",
+            "5097639439:AAGSe47m62rxBeF-bauhpwr217BMiKNApao"};
+    private static final String[] CommonBots = {"5032494004:AAHG5ZMGcjudtfrQ4nt2dgzIMVVBhmC8uc8",
+            "5036928537:AAHKNjTRhOUDHrqhq7qRkL92n0U8MzJ_ZwQ",
+            "5079353378:AAGkmM2F3DoNUdxYLA3soOKF2OUWLzTvA1k",
+            "5017596810:AAGbiB48CnVMqJOSw20fA8pO_zcSo8Olq-0",
+            "5055727482:AAEEWVwDfz_216e-2UcQ0AebISb0_8CPDIU",
+            "5033143799:AAFSuI94N5law5XTSx-wwjFKbmT3ITB52yM",
+            "5079985841:AAErYGxJI8IzNKZjzCMMIuGXdNJxSouFBkE",
+            "5064279682:AAEaVjegrXTq5HdFT_GYQmk1Cr6xrAtMiW0",
+            "5023866477:AAGOUzZZZDsFBlKRzQ1g-cr07CsFQj0GQlE",
             "5034413348:AAEAKLiEn-aklP9Wlhhou_f3Ro5LHW-weCw",
-            "5042908752:AAH401WpDd2brFGjTx3UeJJ_STRF_YscbHA",
-            "5035819371:AAHOi5YP1cU0apwKmTrZZf7MXfR2QkoxZ-Y",
-            "5039622407:AAGCMBuUTtIHD7r46igoBX1m74O3KvFGWI0",
             "5006300020:AAGeeLDhAjsoeyyjGE4Zg3bsdIU2HE81Hk8",
-            "5064942496:AAH9OHJNlCH7o7WM4BBgGn_l9NgmIGZIDpE",
-            "5099010367:AAE2v_bt_o_gDR4AjrkYvWDZaCDBmmOt6Uo",
-            "5088172474:AAHNWotsLos7qtcEQhxERanX52NFw4XDeRw",
-            "5021137833:AAFr2CbYOMeseBwnHW9Y-NXHBj4X4p58BeY"
+            "5079985841:AAErYGxJI8IzNKZjzCMMIuGXdNJxSouFBkE",
+            "5008495686:AAFilhlLy_cG-zCU8ABOE_l81iHJCPQ-Wq0",
+            "5037297030:AAGlICdAutRN18dHWb_jJBe7BHMpO3xbPz8"
     };
 
 
@@ -278,10 +287,10 @@ public class BotExecutor {
     }
 
     public static void sendMsg2Group() {
-        sendAdminMessage2Group();
-//        sendAdminLinkMessage();
+//        sendAdminMessage2Group();
+        sendAdminLinkMessage();
         sendStickerMessage2Group();
-        sendCommonMessage2Group();
+//        sendCommonMessage2Group();
     }
 
     private static void sendAdminLinkMessage() {

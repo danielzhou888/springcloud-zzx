@@ -28,7 +28,7 @@ public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws UnknownHostException {
 
-        com.ddky.im.alphadao.BotExecutor.sendMsg2Group();
+        com.ddky.im.proofofswap.BotExecutor.sendMsg2Group();
 
 //        ConfigurableApplicationContext application=SpringApplication.run(Application.class, args);
 //        Environment env = application.getEnvironment();

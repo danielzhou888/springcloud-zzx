@@ -33,28 +33,33 @@ public class BotExecutor {
 
     private static volatile Map<String,CircularFifoQueue<String>> msgCacheMap = new ConcurrentHashMap<>();
 
-    private static final String PROJECTNAME = "PoldaSwap";
+    private static final String PROJECTNAME = "FootballCup";
     private static final String PROJECT_NAME_TAG = "PROJECTNAME";
     private static final String CHAT_ID_TAG = "CHATIDREPLACE";
-    private static final String CHAT_ID = "-1001592196115"; // PoldaSwap
+    private static final String CHAT_ID = "-1001592196115"; // FreeWorld
     private static String PRE_URL = "https://api.telegram.org/bot";
     private static String POST_URL = "/sendMessage?chat_id=";
     private static String TEXT_URL = "&text=";
 
-    private static int frequency = 2; // 次数
+    private static int frequency = 3; // 次数
     private static int stickerFrequency = 1; // 次数
     private static int linkFrequency = 1; // 发送链接消息的频率
 //    private static int intervals = 50000000; // 发送消息的区间（ms=毫秒）
 //    private static int stickerIntervals = 50000000; // 发送消息的区间（ms=毫秒）
 //    private static int linkIntervals = 54450000; // 发送链接消息的时间区间 (ms=毫秒)
-    private static int intervals = 8000000; // 发送消息的区间（ms=毫秒）
-    private static int stickerIntervals = 8000000; // 发送消息的区间（ms=毫秒）
-    private static int linkIntervals = 15445000; // 发送链接消息的时间区间 (ms=毫秒)
+
+//    private static int intervals = 24000; // 发送消息的区间（ms=毫秒）
+//    private static int stickerIntervals = 42000; // 发送消息的区间（ms=毫秒）
+//    private static int linkIntervals = 445000; // 发送链接消息的时间区间 (ms=毫秒)
+
+    private static int intervals = 4400000; // 发送消息的区间（ms=毫秒）
+    private static int stickerIntervals = 6200000; // 发送消息的区间（ms=毫秒）
+    private static int linkIntervals = 8450000; // 发送链接消息的时间区间 (ms=毫秒)
     private static boolean isAllowedDuplicate = true; // 每个人防止最近15条消息重复开关
 
 
 
-    private static final String[] AdminBots = {"5006175544:AAG62k_Fc1pjWfu5CE8e3QEE7Q18HUFseGY"};
+    private static final String[] AdminBots = {"5006175544:AAG62k_Fc1pjWfu5CE8e3QEE7Q18HUFseGY","5016489006:AAG4abPqsUwHxbnHhLpUvgKxcSXP2orcl2c"};
     private static final String[] CommonBots = {"5079985841:AAErYGxJI8IzNKZjzCMMIuGXdNJxSouFBkE",
             "5008495686:AAFilhlLy_cG-zCU8ABOE_l81iHJCPQ-Wq0",
             "5034413348:AAEAKLiEn-aklP9Wlhhou_f3Ro5LHW-weCw",
@@ -62,7 +67,19 @@ public class BotExecutor {
             "5033143799:AAFSuI94N5law5XTSx-wwjFKbmT3ITB52yM",
             "5006300020:AAGeeLDhAjsoeyyjGE4Zg3bsdIU2HE81Hk8",
             "5037297030:AAGlICdAutRN18dHWb_jJBe7BHMpO3xbPz8",
-            "5090826442:AAFXckVPrbN6E1aHULn2YozXFG_Q7E6A5hU"
+            "5090826442:AAFXckVPrbN6E1aHULn2YozXFG_Q7E6A5hU",
+            "5023866477:AAGOUzZZZDsFBlKRzQ1g-cr07CsFQj0GQlE",
+            "5034413348:AAEAKLiEn-aklP9Wlhhou_f3Ro5LHW-weCw",
+            "5006300020:AAGeeLDhAjsoeyyjGE4Zg3bsdIU2HE81Hk8",
+            "5079985841:AAErYGxJI8IzNKZjzCMMIuGXdNJxSouFBkE",
+            "5008495686:AAFilhlLy_cG-zCU8ABOE_l81iHJCPQ-Wq0",
+            "5037297030:AAGlICdAutRN18dHWb_jJBe7BHMpO3xbPz8",
+            "5006175544:AAG62k_Fc1pjWfu5CE8e3QEE7Q18HUFseGY",
+            "5057833185:AAE-bDGWYeXlZukQmRrY4uUHB0xv3AXTuhk",
+            "5006280104:AAGl_3T87XWrEOPdatY3qBRmpTGPFKBYBEY",
+            "5078619549:AAGflInjlqjIZFn6Ws1DlaJY5IYV6p37HNc",
+            "5043401593:AAFpjv_md263RrQ8LrW6pMlTVtKmIEWNQSE"
+
     };
 
 
@@ -158,50 +175,56 @@ public class BotExecutor {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        while (true) {
-                            int size = commonMessageList.size();
-                            Random random = new Random();
-                            int index = random.nextInt(size);
-                            String msg = commonMessageList.get(index);
-                            // 近15条消息同一个人防止重复
-                            if (!isAllowedDuplicate) {
-                                CircularFifoQueue<String> circularFifoQueue = msgCacheMap.get(adminUrl);
-                                if (circularFifoQueue != null) {
-                                    final String temp = msg;
-                                    List<String> result = circularFifoQueue.stream().collect(Collectors.toList());
-                                    if (CollectionUtil.isNotEmpty(result)) {
-                                        long count = result.stream().filter(c -> temp.equals(c)).count();
-                                        if (count > 0) {
-                                            continue;
-                                        }
-                                    }
-                                } else {
-                                    circularFifoQueue = new CircularFifoQueue<>(15);
-                                }
-                                circularFifoQueue.offer(msg);
-                                msgCacheMap.put(adminUrl, circularFifoQueue);
-                            }
-                            msg = msg.replaceAll(PROJECT_NAME_TAG, PROJECTNAME);
-                            String reqUrl = adminUrl + URLEncoder.encode(msg);
-                            reqUrl = reqUrl.replaceAll(CHAT_ID_TAG, CHAT_ID);
-                            //                            doGetAtRandomTime(reqUrl, 0,200);
-                            int start = 0;
-                            int end = intervals;
-                            int time = new Random().nextInt(end) % (end - start + 1) + start;
-                            try {
-                                Thread.sleep(time);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            HttpRequest post = HttpUtil.createPost(reqUrl);
-                            post.contentType(ContentType.FORM_URLENCODED.toString());
-                            HttpResponse response = post.execute();
+                        String reqUrl = "";
+                        try {
 
-                            if (response.getStatus() != 200) {
-                                logger.error(response.toString());
-                            } else {
-                                logger.info(response.toString());
+                            while (true) {
+                                int size = commonMessageList.size();
+                                Random random = new Random();
+                                int index = random.nextInt(size);
+                                String msg = commonMessageList.get(index);
+                                // 近15条消息同一个人防止重复
+                                if (!isAllowedDuplicate) {
+                                    CircularFifoQueue<String> circularFifoQueue = msgCacheMap.get(adminUrl);
+                                    if (circularFifoQueue != null) {
+                                        final String temp = msg;
+                                        List<String> result = circularFifoQueue.stream().collect(Collectors.toList());
+                                        if (CollectionUtil.isNotEmpty(result)) {
+                                            long count = result.stream().filter(c -> temp.equals(c)).count();
+                                            if (count > 0) {
+                                                continue;
+                                            }
+                                        }
+                                    } else {
+                                        circularFifoQueue = new CircularFifoQueue<>(15);
+                                    }
+                                    circularFifoQueue.offer(msg);
+                                    msgCacheMap.put(adminUrl, circularFifoQueue);
+                                }
+                                msg = msg.replaceAll(PROJECT_NAME_TAG, PROJECTNAME);
+                                reqUrl = adminUrl + URLEncoder.encode(msg);
+                                reqUrl = reqUrl.replaceAll(CHAT_ID_TAG, CHAT_ID);
+                                //                            doGetAtRandomTime(reqUrl, 0,200);
+                                int start = 0;
+                                int end = intervals;
+                                int time = new Random().nextInt(end) % (end - start + 1) + start;
+                                try {
+                                    Thread.sleep(time);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                HttpRequest post = HttpUtil.createPost(reqUrl);
+                                post.contentType(ContentType.FORM_URLENCODED.toString());
+                                HttpResponse response = post.execute();
+
+                                if (response.getStatus() != 200) {
+                                    logger.error(response.toString());
+                                } else {
+                                    logger.info(response.toString());
+                                }
                             }
+                        } catch (Exception e) {
+                            logger.error(String.format("send message error: reqUrl = %s, e = %s", reqUrl, e));
                         }
                     }
                 }).start();
@@ -273,7 +296,7 @@ public class BotExecutor {
 
     public static void sendMsg2Group() {
         sendAdminMessage2Group();
-//        sendAdminLinkMessage();
+        sendAdminLinkMessage();
         sendStickerMessage2Group();
         sendCommonMessage2Group();
     }

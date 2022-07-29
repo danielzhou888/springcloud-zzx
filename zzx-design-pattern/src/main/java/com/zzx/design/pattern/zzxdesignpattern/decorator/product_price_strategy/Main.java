@@ -1,6 +1,5 @@
 package com.zzx.design.pattern.zzxdesignpattern.decorator.product_price_strategy;
 
-import com.sun.tools.corba.se.idl.constExpr.Or;
 import com.zzx.design.pattern.zzxdesignpattern.decorator.product_price_strategy.factory.PromotionFactory;
 import com.zzx.design.pattern.zzxdesignpattern.decorator.product_price_strategy.po.*;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +29,6 @@ public class Main {
         userRedPacket.setSku("3333");
         userRedPacket.setUserId(1);
         userRedPacket.setRedPacket(new BigDecimal(20));
-
-
 
         Map<PromotionType, SupportPromotions> supportPromotionsMap = new HashMap<>();
 

@@ -10,10 +10,7 @@ import lombok.SneakyThrows;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author zhouzhixiang
@@ -94,5 +91,45 @@ public final class DataSourceConfiguration {
         return Optional.absent();
     }
 
-    // TODO
+    @Override
+    public boolean equals(final Object o) {
+        return this == o || null != o && getClass() == o.getClass() && equalsByProperties((DataSourceConfiguration) o);
+    }
+
+    private boolean equalsByProperties(final DataSourceConfiguration dataSourceConfiguration) {
+        if (!this.dataSourceClassName.equals(dataSourceConfiguration.getDataSourceClassName())) {
+            return false;
+        }
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            if (!String.valueOf(entry.getValue()).equals(String.valueOf(dataSourceConfiguration.getProperties().get(entry.getKey())))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            sb.append(entry.getKey()).append(entry.getValue().toString());
+        }
+        return Objects.hash(dataSourceClassName, sb.toString());
+    }
+
+    public void addAlias(final String... alias) {
+        Object value = null;
+        for (String each : alias) {
+            if (null != properties.get(each)) {
+                value = properties.get(each);
+            }
+        }
+        if (null == value) {
+            return;
+        }
+        for (String each : alias) {
+            properties.put(each, value);
+        }
+    }
+
 }
