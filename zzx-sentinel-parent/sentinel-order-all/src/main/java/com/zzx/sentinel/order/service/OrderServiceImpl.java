@@ -9,7 +9,7 @@ import com.zzx.sentinel.order.api.OrderApi;
 import com.zzx.sentinel.order.api.wrapper.VoucherWrapApi;
 import com.zzx.sentinel.order.mq.MQClient;
 import com.zzx.sentinel.order.resp.OrderResult;
-import com.zzx.sentinel.order.sentinel.VoucherApiSentinel;
+import com.zzx.sentinel.order.fallback.VoucherApiFallback;
 import com.zzx.sentinel.order.utils.OrderUtils;
 import com.zzx.sentinel.voucher.api.VoucherApi;
 import com.zzx.sentinel.voucher.po.Promotion;
@@ -18,7 +18,6 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import sun.nio.ch.ThreadPool;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -64,7 +63,7 @@ public class OrderServiceImpl implements OrderApi {
             // 本地调用优惠券查询用户会员折扣降级
             // 执行本地降级逻辑
             log.error("voucherApi.queryUserRankDiscount blockException {}", e);
-            Double userRankDiscount = VoucherApiSentinel.getUserRankDiscount(userId);
+            Double userRankDiscount = VoucherApiFallback.getUserRankDiscount(userId);
             userRankDisCountFuture.complete(userRankDiscount);
         }
 
@@ -125,7 +124,7 @@ public class OrderServiceImpl implements OrderApi {
             log.error("voucherApi.executePromotion blockException {}", e);
             // 执行促销失败降级处理
             // 不调用优惠券服务，不走优惠
-            boolean executeResult = VoucherApiSentinel.executePromotionLocal(userId, orderCode);
+            boolean executeResult = VoucherApiFallback.executePromotionLocal(userId, orderCode);
             result.setOrderId(orderCode);
             result.setExecuteResult(executeResult);
         } catch (Exception e) {

@@ -1,6 +1,8 @@
 package com.zzx.sentinel.voucher.config;
 
 import com.zzx.sentinel.client.annotation.aspectj.SentinelAnnotationAspect;
+import com.zzx.sentinel.client.init.SentinelFallbackIniter;
+import com.zzx.sentinel.voucher.fallback.VoucherApiFallback;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,5 +21,15 @@ public class SentinelAspectConfiguration {
     @Bean
     public SentinelAnnotationAspect sentinelAnnotationAspect() {
         return new SentinelAnnotationAspect();
+    }
+
+    @Bean
+    public VoucherApiFallback voucherApiSentinel() {
+        return new VoucherApiFallback();
+    }
+
+    @Bean
+    public SentinelFallbackIniter sentinelFallbackRegistry() {
+        return new SentinelFallbackIniter();
     }
 }

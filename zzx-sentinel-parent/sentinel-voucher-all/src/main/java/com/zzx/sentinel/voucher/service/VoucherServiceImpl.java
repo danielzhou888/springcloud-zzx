@@ -4,7 +4,7 @@ import com.zzx.sentinel.client.annotation.SentinelAnnotation;
 import com.zzx.sentinel.distribute.response.ServiceResponse;
 import com.zzx.sentinel.voucher.api.VoucherApi;
 import com.zzx.sentinel.voucher.po.Promotion;
-import com.zzx.sentinel.voucher.sentinel.VoucherApiSentinel;
+import com.zzx.sentinel.voucher.fallback.VoucherApiFallback;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Component;
@@ -36,7 +36,7 @@ public class VoucherServiceImpl implements VoucherApi {
     }
 
 
-    @SentinelAnnotation(value = "voucherAll-VoucherApi-cartCheckReturnResp-sentinel", fallbackClass = VoucherApiSentinel.class, fallback = "cartCheckReturnRespSentinel")
+    @SentinelAnnotation(value = "voucherAll-VoucherApi-cartCheckReturnResp-sentinel", fallbackClass = VoucherApiFallback.class, fallback = "cartCheckReturnRespSentinel")
     @Override
     public ServiceResponse cartCheckReturnResp() throws Exception {
         ServiceResponse response = new ServiceResponse();
@@ -51,7 +51,7 @@ public class VoucherServiceImpl implements VoucherApi {
         return response;
     }
 
-    @SentinelAnnotation(value = "voucherAll-VoucherApi-executePromotionReturnResp-sentinel", fallbackClass = VoucherApiSentinel.class, fallback = "executePromotionReturnRespSentinel")
+    @SentinelAnnotation(value = "voucherAll-VoucherApi-executePromotionReturnResp-sentinel", fallbackClass = VoucherApiFallback.class, fallback = "executePromotionReturnRespSentinel")
     @Override
     public ServiceResponse executePromotionReturnResp(Long userId, String orderCode) throws Exception {
         ServiceResponse response = new ServiceResponse();
@@ -67,7 +67,7 @@ public class VoucherServiceImpl implements VoucherApi {
         return response;
     }
 
-    @SentinelAnnotation(value = "voucherAll-VoucherApi-queryUserRankDiscountSentinel-sentinel", fallbackClass = VoucherApiSentinel.class, fallback = "queryUserRankDiscountSentinelSentinel")
+    @SentinelAnnotation(value = "voucherAll-VoucherApi-queryUserRankDiscountSentinel-sentinel", fallbackClass = VoucherApiFallback.class, fallback = "queryUserRankDiscountSentinelSentinel")
     @Override
     public ServiceResponse queryUserRankDiscountSentinel(Long userId) throws Exception {
         ServiceResponse response = new ServiceResponse();
@@ -89,7 +89,7 @@ public class VoucherServiceImpl implements VoucherApi {
         return new ServiceResponse();
     }
 
-    @SentinelAnnotation(value = "voucherAll-VoucherApi-testDefaultMachine-sentinel", fallbackClass = VoucherApiSentinel.class, fallback = "testDefaultMachineSentinel")
+    @SentinelAnnotation(value = "voucherAll-VoucherApi-testDefaultMachine-sentinel", fallbackClass = VoucherApiFallback.class, fallback = "testDefaultMachineSentinel")
     @Override
     public ServiceResponse testDefaultMachine() {
         return new ServiceResponse();

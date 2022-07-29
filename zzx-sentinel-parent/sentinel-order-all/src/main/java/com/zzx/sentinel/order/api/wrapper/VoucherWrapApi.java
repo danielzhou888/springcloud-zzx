@@ -5,7 +5,7 @@ import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.Tracer;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.zzx.sentinel.distribute.response.ServiceResponse;
-import com.zzx.sentinel.order.sentinel.VoucherApiSentinel;
+import com.zzx.sentinel.order.fallback.VoucherApiFallback;
 import com.zzx.sentinel.voucher.api.VoucherApi;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -47,7 +47,7 @@ public class VoucherWrapApi {
             log.error("VoucherWrapApi.queryUserRankDiscount blockException {}", e);
             // 降级 不走会员优惠折扣
             response.setLocalDownGrade(true);
-            Double userRankDiscount = VoucherApiSentinel.getUserRankDiscount(userId);
+            Double userRankDiscount = VoucherApiFallback.getUserRankDiscount(userId);
             response.setData(userRankDiscount);
         } catch (Exception ex) {
             log.error("VoucherWrapApi.queryUserRankDiscount exception {}", ex);
@@ -96,7 +96,7 @@ public class VoucherWrapApi {
             response = voucherApi.executePromotionReturnResp(userId, orderCode);
             if (response.isDownGrade()) {
                 // 如果优惠券执行降级了，走本地执行促销逻辑
-                boolean b = VoucherApiSentinel.executePromotionLocal(userId, orderCode);
+                boolean b = VoucherApiFallback.executePromotionLocal(userId, orderCode);
                 response.setData(b);
             }
         } catch (BlockException e) {

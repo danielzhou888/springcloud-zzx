@@ -10,7 +10,7 @@ import com.zzx.sentinel.client.util.SentinelResoucesNamer;
 import com.zzx.sentinel.distribute.enums.ResponseEnum;
 import com.zzx.sentinel.distribute.response.ServiceResponse;
 import com.zzx.sentinel.order.api.OrderApi;
-import com.zzx.sentinel.orderweb.sentinel.OrderControllerSentinell;
+import com.zzx.sentinel.orderweb.fallback.OrderControllerSentinell;
 import com.zzx.sentinel.orderweb.utils.OrderUtils;
 import com.zzx.sentinel.voucher.api.VoucherApi;
 import com.zzx.sentinel.wdc.api.WdcApi;

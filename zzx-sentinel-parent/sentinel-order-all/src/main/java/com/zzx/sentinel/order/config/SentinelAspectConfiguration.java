@@ -3,7 +3,7 @@ package com.zzx.sentinel.order.config;
 import com.zzx.sentinel.client.annotation.aspectj.SentinelAnnotationAspect;
 import com.zzx.sentinel.client.init.SentinelFallbackIniter;
 import com.zzx.sentinel.client.fallback.handler.GlobalDubboFallbackHandler;
-import com.zzx.sentinel.order.sentinel.VoucherApiSentinel;
+import com.zzx.sentinel.order.fallback.VoucherApiFallback;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,8 +31,8 @@ public class SentinelAspectConfiguration {
     }
 
     @Bean
-    public VoucherApiSentinel voucherApiSentinel() {
-        return new VoucherApiSentinel();
+    public VoucherApiFallback voucherApiSentinel() {
+        return new VoucherApiFallback();
     }
 
     @Bean
