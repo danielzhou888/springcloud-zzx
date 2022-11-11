@@ -1,4 +1,4 @@
-package com.zzx.algorithm.zzxalgorithm.shujujiegou;
+package com.zzx.algorithm.zzxalgorithm.排序算法;
 
 /**
  *

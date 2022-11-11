@@ -1,8 +1,12 @@
 package com.concurrency._11_completableFuture;
 
 import lombok.extern.slf4j.Slf4j;
+import sun.nio.ch.ThreadPool;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author zhouzhixiang
@@ -15,7 +19,9 @@ public class Main1 {
      * 获取股票价格
      */
     public static void main(String[] args) {
-        CompletableFuture<Double> fetchPriceFuture = CompletableFuture.supplyAsync(Main1::fetchPrice);
+        ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(1, 1, 2, TimeUnit.SECONDS, new LinkedBlockingQueue<>(1), new MyNamedThreadFactory("test-2"));
+
+        CompletableFuture<Double> fetchPriceFuture = CompletableFuture.supplyAsync(Main1::fetchPrice, poolExecutor);
         fetchPriceFuture.thenAccept((price) -> {
             log.info("price = {}", price);
         }).exceptionally((e) -> {
@@ -37,4 +43,5 @@ public class Main1 {
         }
         return 5 + Math.random() * 20;
     }
+
 }

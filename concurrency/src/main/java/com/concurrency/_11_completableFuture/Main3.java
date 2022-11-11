@@ -3,6 +3,7 @@ package com.concurrency._11_completableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author zhouzhixiang
@@ -12,6 +13,9 @@ import java.util.concurrent.CompletableFuture;
 public class Main3 {
 
     public static void main(String[] args) {
+
+//        ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor()
+
         CompletableFuture<String> zgsyFuture = CompletableFuture.supplyAsync(() -> {
             return queryCode("中国石油");
         });
@@ -25,6 +29,7 @@ public class Main3 {
         CompletableFuture<Double> i63Future = cfQuery.thenApplyAsync((code) -> {
             return fetchPrice(String.valueOf(code), "163");
         });
+
         CompletableFuture<Object> cfFetch = CompletableFuture.anyOf(sinaFuture, i63Future);
         cfFetch.thenAccept((result) -> {
             log.info("price = {}", result);
@@ -37,9 +42,9 @@ public class Main3 {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (Math.random() < 0.3) {
-            throw new RuntimeException("fetch price failed!");
-        }
+//        if (Math.random() < 0.3) {
+//            throw new RuntimeException("fetch price failed!");
+//        }
         return 5 + Math.random() * 20;
     }
 

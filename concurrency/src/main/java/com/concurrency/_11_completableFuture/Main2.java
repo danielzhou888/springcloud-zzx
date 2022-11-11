@@ -3,6 +3,9 @@ package com.concurrency._11_completableFuture;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author zhouzhixiang
@@ -12,17 +15,27 @@ import java.util.concurrent.CompletableFuture;
 public class Main2 {
 
     public static void main(String[] args) {
-        CompletableFuture<String> cfQuery = CompletableFuture.supplyAsync(() -> {
-            return queryCode("中国石油");
-        });
 
-        CompletableFuture<Double> cfFetch = cfQuery.thenApplyAsync((code) -> {
-            return fetchPrice(code);
-        });
+        ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(3, 3, 6, TimeUnit.SECONDS, new LinkedBlockingQueue<>(2), new MyNamedThreadFactory("test-1"));
 
-        cfFetch.thenAccept((result) -> {
-            log.info("price = {}", result);
-        }).join();
+        try {
+            CompletableFuture<String> cfQuery = CompletableFuture.supplyAsync(() -> {
+                return queryCode("中国石油");
+            }, poolExecutor);
+
+            CompletableFuture<Double> cfFetch = cfQuery.thenApplyAsync((code) -> {
+                return fetchPrice(code);
+            }, poolExecutor);
+
+            cfFetch.thenAccept((result) -> {
+                log.info("price = {}", result);
+            }).join();
+        } catch (Exception e) {
+            log.error("exception {}", e);
+        } finally {
+            poolExecutor.shutdown();
+        }
+
 
     }
 
