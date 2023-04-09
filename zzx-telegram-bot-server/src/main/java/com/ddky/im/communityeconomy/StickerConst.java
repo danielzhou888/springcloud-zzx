@@ -1,4 +1,4 @@
-package com.ddky.im.proofofswap;
+package com.ddky.im.communityeconomy;
 
 import java.util.Random;
 

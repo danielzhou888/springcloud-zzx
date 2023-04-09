@@ -1,4 +1,4 @@
-package com.ddky.im.proofofswap;
+package com.ddky.im.communityeconomy;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.http.ContentType;
@@ -12,14 +12,14 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URLEncoder;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
-import static com.ddky.im.proofofswap.LinkMessageConst.linkMessage;
-import static com.ddky.im.proofofswap.LongMessageConst.longMessages;
-import static com.ddky.im.proofofswap.NiceMessageConst.niceMessages;
-import static com.ddky.im.proofofswap.WelcomeAdminMessageConst.WelcomeAdminMessages;
-import static com.ddky.im.proofofswap.WelcomeCommonMessageConst.WelcomeCommonMessages;
+import static com.ddky.im.communityeconomy.LinkMessageConst.linkMessage;
+import static com.ddky.im.communityeconomy.LongMessageConst.longMessages;
+import static com.ddky.im.communityeconomy.NiceMessageConst.niceMessages;
+import static com.ddky.im.communityeconomy.WelcomeAdminMessageConst.WelcomeAdminMessages;
+import static com.ddky.im.communityeconomy.WelcomeCommonMessageConst.WelcomeCommonMessages;
 
 /**
  * @author zhouzhixiang
@@ -33,16 +33,16 @@ public class BotExecutor {
 
     private static volatile Map<String,CircularFifoQueue<String>> msgCacheMap = new ConcurrentHashMap<>();
 
-    private static final String PROJECTNAME = "ProofOfSwap";
+    private static final String PROJECTNAME = "CommunityEconomy";
     private static final String PROJECT_NAME_TAG = "PROJECTNAME";
     private static final String CHAT_ID_TAG = "CHATIDREPLACE";
-    private static final String CHAT_ID = "-1001786701964"; // FreeWorld
+    private static final String CHAT_ID = "-1001869375390"; // FreeWorld
     private static String PRE_URL = "https://api.telegram.org/bot";
     private static String POST_URL = "/sendMessage?chat_id=";
     private static String TEXT_URL = "&text=";
 
-    private static int frequency = 6; // 次数
-    private static int stickerFrequency = 3; // 次数
+    private static int frequency = 11; // 次数
+    private static int stickerFrequency = 5; // 次数
     private static int linkFrequency = 3; // 发送链接消息的频率
 //    private static int intervals = 50000000; // 发送消息的区间（ms=毫秒）
 //    private static int stickerIntervals = 50000000; // 发送消息的区间（ms=毫秒）
@@ -52,24 +52,24 @@ public class BotExecutor {
 //    private static int stickerIntervals = 42000; // 发送消息的区间（ms=毫秒）
 //    private static int linkIntervals = 445000; // 发送链接消息的时间区间 (ms=毫秒)
 
-    private static int intervals = 8021110; // 发送消息的区间（ms=毫秒）
-    private static int stickerIntervals = 14000000; // 发送消息的区间（ms=毫秒）
-    private static int linkIntervals = 14000000; // 发送链接消息的时间区间 (ms=毫秒)
+    private static int intervals = 1122110; // 发送消息的区间（ms=毫秒）
+    private static int stickerIntervals = 8110100; // 发送消息的区间（ms=毫秒）
+    private static int linkIntervals = 8421000; // 发送链接消息的时间区间 (ms=毫秒)
     private static boolean isAllowedDuplicate = true; // 每个人防止最近15条消息重复开关
 
-
-
     private static final String[] AdminBots = {"5042172402:AAFMNatuoqvyFTGGsqQszl9Ryj-4jt2yfnM","5080123567:AAERXlERUhB4C2-aqRmuI68GhNlWt-dH0U8"};
-    private static final String[] CommonBots = {"5023757013:AAHGD8Cn46x3IOT3Vq1VLfLOAazSFkk5fm0",
-            "5003444149:AAGQZ5Pe4EyYZYdR8oeGtGl2-trPKrMpqSQ",
-            "5003416431:AAFcsdYDjnf8KM3KZGsslzFMqX8fa77QTmU",
-            "5078583019:AAGE8lOFHNNuBp8NCXs1LnH_JLdb32aR6E0",
-            "5066785308:AAHNAsSBk0jXIpbVZjc9ZFjjI_ZjovnQD6A",
-            "5069155445:AAG4Fea8fXIhgiAuN9CjiDATqMMbIaQf8Jo",
-            "5043774428:AAFq_xRh5eEubwvNsxxEKVnRNg-TUHHgfXA",
-            "5072413442:AAEDXDiAJMrlpHaOq15E-DjAtWoCDpk_l4s",
-            "5019193652:AAFpX57HCIoBa4o4aLiFiN6bPzQVNLw2Aec",
-            "5006280104:AAGl_3T87XWrEOPdatY3qBRmpTGPFKBYBEY"
+    private static final String[] CommonBots = {"5006280104:AAGl_3T87XWrEOPdatY3qBRmpTGPFKBYBEY",
+            "5037297030:AAGlICdAutRN18dHWb_jJBe7BHMpO3xbPz8",
+            "5079985841:AAErYGxJI8IzNKZjzCMMIuGXdNJxSouFBkE",
+            "5032494004:AAHG5ZMGcjudtfrQ4nt2dgzIMVVBhmC8uc8",
+            "5097639439:AAGSe47m62rxBeF-bauhpwr217BMiKNApao",
+            "5005408105:AAHoEXjnGkyz8eMd5562m0uxqG3AFkYrauY",
+            "5042172402:AAFMNatuoqvyFTGGsqQszl9Ryj-4jt2yfnM",
+            "5080123567:AAERXlERUhB4C2-aqRmuI68GhNlWt-dH0U8",
+            "5005408105:AAHoEXjnGkyz8eMd5562m0uxqG3AFkYrauY",
+            "5014866194:AAFrCOYu_HmxvcuR4K-74JxVhnYx93YtyHw",
+            "5005408105:AAHoEXjnGkyz8eMd5562m0uxqG3AFkYrauY",
+            "5062657997:AAHziXnEY3HnFRe_8aMOb2pwLWnWtgyYnbA"
     };
 
 
@@ -94,6 +94,8 @@ public class BotExecutor {
     public static List<String> commonBots = new ArrayList<>();
     public static List<String> linkBots = new ArrayList<>();
     public static List<String> allBotTokens = new ArrayList<>();
+
+    public static ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(5, 20, 20, TimeUnit.SECONDS, new LinkedBlockingQueue(1000));
 
 
     static {
@@ -217,9 +219,14 @@ public class BotExecutor {
                             logger.error(String.format("send message error: reqUrl = %s, e = %s", reqUrl, e));
                         }
                     }
-                }).start();
+                });
+
             }
         }
+    }
+
+    public void sendMsg() {
+
     }
 
     public static void sendAdminMessage2Group() {
@@ -280,6 +287,8 @@ public class BotExecutor {
                         }
                     }
                 }).start();
+
+
             }
         }
     }

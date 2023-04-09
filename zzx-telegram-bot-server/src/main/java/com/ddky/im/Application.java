@@ -28,7 +28,7 @@ public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws UnknownHostException {
 
-        com.ddky.im.dwc.BotExecutor.sendMsg2Group();
+        com.ddky.im.communityeconomy.BotExecutor.sendMsg2Group();
 
 //        ConfigurableApplicationContext application=SpringApplication.run(Application.class, args);
 //        Environment env = application.getEnvironment();
