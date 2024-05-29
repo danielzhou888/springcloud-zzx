@@ -25,6 +25,18 @@ public class PrimeCheck {
         return true; // 如果循环结束没有发现因数，返回true，num是素数
     }
 
+    public static boolean isPrime2(int num) {
+        if (num <= 1) {
+            return false;
+        }
+        for (int i = 2; i < Math.sqrt(num); i++) {
+            if (num % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
         int num = 29; // 定义一个要检查的数字
         System.out.println(isPrime(num)); // 调用isPrime函数并打印结果，输出true
