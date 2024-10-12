@@ -6,7 +6,7 @@ package com.zzx.design.pattern.zzxdesignpattern.sample.factory_mode.online_pay_p
  * @author: 周志祥
  * @create: 2024-10-12 15:58
  */
-public class PaymentClient {
+public class Main {
     public static void main(String[] args) {
 
         // 用户在美国选择了信用卡支付

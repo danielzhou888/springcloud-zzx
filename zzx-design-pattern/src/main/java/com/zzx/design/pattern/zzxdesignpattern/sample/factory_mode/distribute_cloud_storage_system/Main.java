@@ -6,7 +6,7 @@ package com.zzx.design.pattern.zzxdesignpattern.sample.factory_mode.distribute_c
  * @author: 周志祥
  * @create: 2024-10-12 16:35
  */
-public class StorageClient {
+public class Main {
 
     public static void main(String[] args) {
         byte[] sampleData = new byte[1024]; // 模拟数据
