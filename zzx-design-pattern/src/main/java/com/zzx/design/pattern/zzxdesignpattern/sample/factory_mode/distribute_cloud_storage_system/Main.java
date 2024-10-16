@@ -1,6 +1,7 @@
 package com.zzx.design.pattern.zzxdesignpattern.sample.factory_mode.distribute_cloud_storage_system;
 
 /**
+ * 工厂模式案例-分布式的云存储系统
  * https://app.yinxiang.com/fx/96456f82-fb8b-4045-84ba-03d8be9ab06e
  * @Description: 测试类
  * @author: 周志祥

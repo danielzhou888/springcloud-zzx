@@ -1,6 +1,7 @@
 package com.zzx.design.pattern.zzxdesignpattern.sample.factory_mode.online_pay_platform;
 
 /**
+ * 工厂模式案例-在线支付平台
  * https://app.yinxiang.com/fx/0cdc7972-e670-48b0-b6a8-31e28ad9187e
  * @Description: 客户端测试
  * @author: 周志祥
