@@ -9,4 +9,7 @@ package com.zzx.design.pattern.zzxdesignpattern.sample.abstract_factory_mode.cro
  */
 public class Main {
 
+    public static void main(String[] args) {
+        PaymentFactory alipayFactory = new AlipayFactory();
+    }
 }
