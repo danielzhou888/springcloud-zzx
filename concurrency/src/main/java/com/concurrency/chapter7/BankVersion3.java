@@ -1,10 +1,6 @@
 package com.concurrency.chapter7;
 
-/***************************************
- * @author:Alex Wang
- * @Date:2017/2/19 QQ:532500648
- * QQ交流群:286081824
- ***************************************/
+
 public class BankVersion3 {
     public static void main(String[] args) {
         final SynchronizedRunnable ticketWindow = new SynchronizedRunnable();

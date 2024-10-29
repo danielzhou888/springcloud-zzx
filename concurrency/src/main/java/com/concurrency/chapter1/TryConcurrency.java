@@ -1,10 +1,5 @@
 package com.concurrency.chapter1;
 
-/***************************************
- * @author:Alex Wang
- * @Date:2017/2/14 QQ:532500648
- * QQ交流群:286081824
- ***************************************/
 public class TryConcurrency {
 
     public static void main(String[] args) {

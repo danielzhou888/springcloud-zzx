@@ -2,11 +2,7 @@ package com.concurrency.chapter4;
 
 import java.util.Optional;
 
-/***************************************
- * @author:Alex Wang
- * @Date:2017/2/17 QQ:532500648
- * QQ交流群:286081824
- ***************************************/
+
 public class ThreadSimpleAPI {
     public static void main(String[] args) {
         Thread t = new Thread(() -> {

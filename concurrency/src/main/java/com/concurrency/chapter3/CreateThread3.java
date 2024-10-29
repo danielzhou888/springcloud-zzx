@@ -1,10 +1,6 @@
 package com.concurrency.chapter3;
 
-/***************************************
- * @author:Alex Wang
- * @Date:2017/2/16 QQ:532500648
- * QQ交流群:286081824
- ***************************************/
+
 public class CreateThread3 {
 
     private int i = 0;
